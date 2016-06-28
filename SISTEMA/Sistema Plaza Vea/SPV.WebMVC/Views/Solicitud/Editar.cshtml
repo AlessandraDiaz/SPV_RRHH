@@ -1,0 +1,158 @@
+﻿@model SPV.BE.SolicitudPersonalBE
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Editar Solicitud</h2>
+
+
+@using (Html.BeginForm("Editar", "Solicitud", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.CodigoSol)
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.DescripcionSol, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextAreaFor(m => m.DescripcionSol, new { @class = "form-control required", @rows = 3 })
+                <div>
+                    @Html.ValidationMessageFor(m => m.DescripcionSol, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.FechaSol, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.FechaSol, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = true })
+                <div>
+                    @Html.ValidationMessageFor(m => m.FechaSol)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoSolicitudSol, new { @class = "control-label col-sm-3" })
+            <div class="col-md-9">
+                <select class="form-control selectpicker" name="cboTipo" id="cboTipo" style="width:150px"></select>
+            </div>
+        </div>
+
+        <div>
+                @Html.Partial("_Registrar", Model.Detalle)
+        </div>
+
+        <div>
+            <div style="float:right;">
+                <div style="float:left;">
+                    <input type="submit" value="Grabar" class="btn btn-primary" />
+                </div>
+
+                <div style="float:left;padding-left:10px;">
+                    <button class="btn btn-danger" type="button" onclick="ConfirmCancel();">
+                        <span class="glyphicon glyphicon-floppy-remove"> Cancelar</span>
+                    </button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+    </div>
+ }
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/Scripts/jsViews/Solicitud/solicitud.js")
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        cargarTipoSolicitud();
+
+        $("#btnGrabar").click(function () {
+            if ($("#cboTipo").val() == "0") {
+                alert("Seleccionar Tipo Solicitud");
+                return false;
+            }
+        });
+
+        $("#DescripcionSol").keypress(function () {
+            if (this.value.length >= 100)
+                return false;
+        });
+
+    });
+
+    function cargarTipoSolicitud() {
+        $.get('@Url.Action("ListaTipoSolicitud", "Solicitud")')
+        .done(function (data) {
+            $('#cboTipo').append('<option value="0">--Seleccione--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboTipo').append($option);
+            });
+            $("#cboTipo option").filter(function () {
+                return $(this).val() == "@(Model.TipoSolicitudSol.Codigo)";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function ConfirmCancel() {
+        var x = confirm("¿Está seguro que desea cancelar la edición de la solicitud?");
+        if (x)
+            location.href = '@Url.Action("Index", "Solicitud")';
+        else
+            return false;
+    }
+
+</script>
+<script>
+
+    // Run on page load
+    window.onload = function() {
+
+        // If sessionStorage is storing default values (ex. name), exit the function and do not restore data
+        if (sessionStorage.getItem('DescripcionSol') == "") {
+            return;
+        }
+
+        // If values are not blank, restore them to the fields
+        var des = sessionStorage.getItem('DescripcionSol');
+        if (des !== null) $('#DescripcionSol').val(des);
+
+        var tipo = sessionStorage.getItem('tipoSol');
+        if (tipo !== null)
+        {
+            $("#cboTipo select").val(tipo);
+        }
+    }
+
+    // Before refreshing the page, save the form data to sessionStorage
+    window.onbeforeunload = function() {
+        sessionStorage.setItem("DescripcionSol", $('#DescripcionSol').val());
+        sessionStorage.setItem("tipoSol", $('select[name=cboTipo]').val());
+    }
+
+</script>
+}

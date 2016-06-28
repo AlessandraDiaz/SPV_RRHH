@@ -1,0 +1,113 @@
+﻿<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal">
+
+                <span> <img src="~/Content/image/PlazaVea.png" class="icon-login" /> </span>
+
+                <div class="modal-header">
+                    <div id="mensaje"></div>
+                </div>
+
+                <br />
+
+                <div class="col-xs-12">
+                    <div class="input-group">
+                        <label for="NombreUsuario" class="col-lg-4 control-label"> Usuario: </label>
+                        <input class="form-control" id="NombreUsuario" placeholder="Usuario" type="text" style="width:250px;" />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="Password" class="col-lg-4 control-label"> Contraseña: </label>
+                        <input class="form-control" id="Password" placeholder="Contraseña" type="password" style="width:250px;" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary pull-left RbtnMargin" id="Login"> Login <span class="glyphicon glyphicon-check"></span> </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .modal-dialog {
+        max-width: 310px;
+    }
+
+    .modal-dialog {
+        transform: translate(0, 50%) !important;
+        -ms-transform: translate(0, 50%) !important;
+        -moz-transform: translate(0, 50%) !important;
+    }
+
+    .RbtnMargin {
+        margin-left: 85px;
+    }
+
+    .failed {
+        text-align: center;
+        font-weight: bold;
+        font-family: "Times New Roman";
+        color: white;
+        background-color: rgb(255, 66, 66);
+    }
+
+    .icon-login {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+<script>
+
+    $(document).ready(function ()
+    {
+        $("#myModal").modal({
+            backdrop: 'static',
+        });
+
+    });
+
+    var logoutUrl = '@Url.Action("Index", "Home")';
+
+    $("#Login").click(function () {
+
+        var dataObject = {NombreUsuario : $("#NombreUsuario").val() , Pass : $("#Password").val() };
+        $.ajax({
+            url: '@Url.Action("Login", "Usuario")',
+            type: "POST",
+            data: dataObject,
+            datatype: "json",
+            success: function (result)
+            {
+                if (result.toString() == "Exito")
+                {
+                    $("#myModal").modal("hide");
+                    alert("Bienvenido al sistema de Gestión de Recursos por Demanda");
+                    window.location.href = logoutUrl;
+                }
+                else
+                {
+                    $("#NombreUsuario").val("");
+                    $("#Password").val("");
+                    $("#NombreUsuario").focus();
+                    $("#mensaje").html('<div class="failed">' + result + '</div>');
+                }
+            },
+            error: function (result)
+            {
+                $("#NombreUsuario").val("");
+                $("#Password").val("");
+                $("#NombreUsuario").focus();
+                $("#mensaje").html('<div class="failed"> Error!! </div>');
+            }
+        });
+    });
+
+</script>
+

@@ -1,0 +1,129 @@
+﻿@model SPV.BE.ListaPaginada<SPV.BE.SolicitudPersonalBE>
+@{
+    ViewBag.Title = "Solicitudes de Personal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Solicitud de Personal</h2>
+
+@{
+    var message = TempData["msg"] ?? string.Empty;
+}
+
+<div class="well">
+    @using (Html.BeginForm("index", null, FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="input-group">
+
+                    <input type="text"
+                           name="descSol"
+                           value="@ViewBag.descSol"
+                           class="form-control"
+                           style="display: inline"
+                           placeholder="Buscar por descripción" />
+                    <span style="width:10px;"></span>
+
+                    <label class="control-label" style="padding-left:15px:">Tipo Solicitud: </label>
+                    <select id="cboTipo" name="cboTipo" class="form-control selectpicker" style="width:130px;" data-style="btn-success" required>
+                    </select>
+
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">Buscar</button>
+                    </span>
+
+                </div>
+            </div>
+
+            <div class="pull-left col-lg-1">
+                <button class="btn btn-success" type="button" onclick="location.href='@Url.Action("Registrar", "Solicitud")'">
+                    <span class="glyphicon glyphicon-plus">Crear Solicitud</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div style="margin-top:17px;">
+            @{
+                var grid = new WebGrid(
+                            canPage: true,
+                            rowsPerPage: Model.PageSize,
+                            canSort: true,
+                            ajaxUpdateContainerId: "grid");
+
+                grid.Bind(Model.Content, rowCount: Model.TotalRecords, autoSortAndPage: false);
+                grid.Pager(WebGridPagerModes.All);
+
+                @grid.GetHtml(htmlAttributes: new { id = "grid" }, 
+                    fillEmptyRows: false,
+                    tableStyle: "table table-bordered table-hover",
+                    mode: WebGridPagerModes.All,
+                    columns: grid.Columns(
+                      grid.Column("CodigoSol", "ID"),
+                      grid.Column("DescripcionSol", "Descripción", style: "col-lg-4"),
+                      grid.Column("FechaSol", "Fecha Solicitud", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaSol) </text>, style: "col-lg-2"),
+                      grid.Column("TipoSolicitudSol.Descripcion", "Tipo", style: "col-lg-1"),
+                      grid.Column("EstadoSol.Descripcion", "Estado", style: "col-lg-1"),
+                      grid.Column(header: "Acciones", canSort: false, style: "action",
+                        format: @<text>
+                            @if (item.EstadoSol.Codigo == 2)
+                            {
+                                <a href='#' id='" + item.CodigoSol + "' onClick= "alert('No es posible editar la solicitud aprobada.')" title='Editar'> <span class='glyphicon glyphicon-edit'> Editar </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible eliminar la solicitud aprobada.')" title='Eliminar'> <span class='glyphicon glyphicon-trash'> Eliminar </span> </a>
+                            }
+                            else
+                            {
+                                @Html.Raw("<a href='/Solicitud/editar/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Editar'> <span class='glyphicon glyphicon-edit'> Editar </span> </a>")
+                                @Html.Raw("<a data-modal='' href='/Solicitud/Eliminar/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Eliminar'> <span class='glyphicon glyphicon-trash'> Eliminar </span> </a>")
+                            }
+                           
+                        </text>)
+
+            ));
+}
+        </div>
+    }
+</div>
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/jsViews/Solicitud/solicitud.js")
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        cargarTipoSolicitud();
+    });
+
+    function cargarTipoSolicitud() {
+        $.get('@Url.Action("ListaTipoSolicitud", "Solicitud")')
+        .done(function (data) {
+            $('#cboTipo').append('<option value="0">--TODOS--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboTipo').append($option);
+            })
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+</script>
+<script type="text/javascript">
+    var message = '@message';
+    if(message)
+        alert(message);
+</script>
+}

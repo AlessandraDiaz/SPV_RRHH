@@ -1,0 +1,43 @@
+C:\Users\Sulca\Desktop\Jhonatan\Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.dll
+C:\Users\Sulca\Desktop\Jhonatan\Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.pdb
+C:\Users\Sulca\Desktop\Jhonatan\Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.dll
+C:\Users\Sulca\Desktop\Jhonatan\Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.pdb
+C:\Users\Sulca\Desktop\Jhonatan\Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Sulca\Desktop\Jhonatan\Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
+C:\Users\Sulca\Desktop\Jhonatan\Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb
+C:\Users\User\Desktop\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.dll
+C:\Users\User\Desktop\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.pdb
+C:\Users\User\Desktop\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.dll
+C:\Users\User\Desktop\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.pdb
+C:\Users\User\Desktop\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
+C:\Users\User\Desktop\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb
+H:\Nueva carpeta\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.dll
+H:\Nueva carpeta\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.pdb
+H:\Nueva carpeta\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.dll
+H:\Nueva carpeta\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.pdb
+H:\Nueva carpeta\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\ResolveAssemblyReference.cache
+H:\Nueva carpeta\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
+H:\Nueva carpeta\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb
+C:\Users\Sulca\Desktop\Jhonatan\SGS_PlazaVea_Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.dll
+C:\Users\Sulca\Desktop\Jhonatan\SGS_PlazaVea_Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.pdb
+C:\Users\Sulca\Desktop\Jhonatan\SGS_PlazaVea_Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.dll
+C:\Users\Sulca\Desktop\Jhonatan\SGS_PlazaVea_Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.pdb
+C:\Users\Sulca\Desktop\Jhonatan\SGS_PlazaVea_Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Sulca\Desktop\Jhonatan\SGS_PlazaVea_Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
+C:\Users\Sulca\Desktop\Jhonatan\SGS_PlazaVea_Proyecto a Seguir\plaza-vea-taller-proyecto-3-master\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb
+C:\Users\Jhonatan\Documents\TallerProyecto - TP3\app\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.dll
+C:\Users\Jhonatan\Documents\TallerProyecto - TP3\app\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.pdb
+C:\Users\Jhonatan\Documents\TallerProyecto - TP3\app\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.dll
+C:\Users\Jhonatan\Documents\TallerProyecto - TP3\app\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.pdb
+C:\Users\Jhonatan\Documents\TallerProyecto - TP3\app\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.csprojResolveAssemblyReference.cache
+C:\Users\Jhonatan\Documents\TallerProyecto - TP3\app\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
+C:\Users\Jhonatan\Documents\TallerProyecto - TP3\app\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.dll
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.pdb
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\bin\Debug\MySql.Data.dll
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.dll
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.pdb
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.csprojResolveAssemblyReference.cache
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
+C:\UPC\Sistema\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb

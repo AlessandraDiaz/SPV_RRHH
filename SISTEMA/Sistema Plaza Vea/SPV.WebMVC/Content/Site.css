@@ -1,0 +1,111 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+.navbar-brand {
+    padding-top: 5px;
+}
+
+.navbar-plazavea {
+    background: #ff0c2a;
+}
+
+.brand-img {
+    width: 125px;
+    height: auto;
+}
+
+.sidebar {
+    display: none;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: linear-gradient(45deg,#cd071c 28%,#cd071c 28%,#da081f 44%);
+        border-right: 3px solid #cd071c;
+        border-top: 3px solid #cd071c;
+    }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+.nav-sidebar > li > a {
+    color: whitesmoke;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.nav-sidebar > li > a:hover {
+    background-color: #880410
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    background-color: #880410 !important;
+}
+
+.nav-subitem-level-1 {
+    padding-left: 15px;
+}
+
+.nav-subitem-level-2 {
+    padding-left: 30px;
+}
+
+.nav-subitem-level-3 {
+    padding-left: 45px;
+}
+
+.nav>li>a {
+    padding: 5px 15px;
+}
+
+/*
+ * Main content
+ */
+
+.main {
+    padding: 20px;
+}
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+.main .page-header {
+    margin-top: 0;
+}
