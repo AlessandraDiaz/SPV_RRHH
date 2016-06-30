@@ -212,6 +212,17 @@ namespace SPV.WebMVC.Controllers
                     var listaPerfiles = FachadaSesion.listaPerfilesFS.Content;
                     if (listaPerfiles.Count() == 0)
                     {
+                        if (solicitud.Detalle == null)
+                        {
+                            ListaPaginada<SolicitudPerfilBE> listaPerfil = new ListaPaginada<SolicitudPerfilBE>();
+                            listaPerfil.PageSize = 10;
+                            listaPerfil.CurrentPage = 1;
+                            listaPerfil.TotalRecords = 0;
+                            listaPerfil.Content = new List<SolicitudPerfilBE>();
+                            solicitud.Detalle = listaPerfil;
+                            solicitud.TipoSolicitudSol = new ParametroBE();
+                        }
+
                         ModelState.AddModelError("MensajeError", "Agrege Perfiles");
                         return View(solicitud);
                     }
@@ -319,7 +330,11 @@ namespace SPV.WebMVC.Controllers
 
                     listaPerfilDetalleContent = listaPerfilDetalle.Content;
 
-                    var maxID = listaPerfilDetalleContent.Max(x => x.CodigoSolicitudPer);
+                    var maxID = 0;
+                    if (listaPerfilDetalleContent.Count() != 0)
+                    {
+                        maxID = listaPerfilDetalleContent.Max(x => x.CodigoSolicitudPer);
+                    }           
                     solicitudPerfil.Perfil = perfilEN;
                     solicitudPerfil.EstadoItem = 1;
                     solicitudPerfil.CodigoSolicitudPer = maxID + 1;

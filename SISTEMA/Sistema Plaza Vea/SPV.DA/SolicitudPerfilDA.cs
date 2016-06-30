@@ -76,7 +76,7 @@ namespace SPV.DA
                     {
                         item = new SolicitudPerfilBE();
                         item.CodigoSolicitudPer = (Int32)rd[0];
-                        item.SolicitudPersonal.CodigoSol = (Int32)rd[1];
+                        //item.SolicitudPersonal.CodigoSol = (Int32)rd[1];
 
                         PerfilBE perfil = new PerfilBE();
                         perfil.CodPerfil = (Int32)rd[2];
