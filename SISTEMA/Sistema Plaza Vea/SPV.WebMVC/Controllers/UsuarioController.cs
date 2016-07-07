@@ -14,12 +14,14 @@ namespace SPV.WebMVC.Controllers
         UsuarioGRH_BL usuarioBL = new UsuarioGRH_BL();
 
         // GET: Usuario
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Login(UsuarioBE usuario)
         {
             string mensaje = "";
@@ -30,6 +32,7 @@ namespace SPV.WebMVC.Controllers
 
                 if (usuarioLogeado != null)
                 {
+                    formsAuth.SetAuthCookie(usuario.NombreUsuario, true);
                     mensaje = "Exito";
                     FachadaSesion.Usuario = usuarioLogeado;
                 }
@@ -62,7 +65,9 @@ namespace SPV.WebMVC.Controllers
             if (entrada != null) { FachadaSesion.Usuario = null; }
 
             formsAuth.SignOut();
-            return Redirect(formsAuth.DefaultUrl);
+            Session.Clear();
+            Session.Abandon();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

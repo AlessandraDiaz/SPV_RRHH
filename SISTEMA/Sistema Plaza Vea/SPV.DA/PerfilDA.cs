@@ -12,43 +12,12 @@ namespace SPV.DA
     public class PerfilDA
     {
         private PerfilBE oPerfil;
-        private List<PerfilBE> lPerfil;
         private DataBaseDA cn = new DataBaseDA();
         private String querySQL;
 
         private String qSQL;
         DataBaseDA dbRRHH;
 
-        public Int32 IngresarPerfil(PerfilBE p_Perfil) {
-            Int32 codigoPerfil;
-            SqlCommand cmd = new SqlCommand();
-            try {
-                cmd.Connection = cn.getConecction();
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.CommandText = "GRH_SP_AGREGARPERFIL";
-                cmd.Parameters.AddWithValue("@CAREASPERFIL", p_Perfil.AreasPerfil);
-                cmd.Parameters.AddWithValue("@CNOMBREPERFIL", p_Perfil.NombrePerfil);
-                cmd.Parameters.AddWithValue("@CDESCRIPCION", p_Perfil.Descripcion);
-                cmd.Parameters.AddWithValue("@NSUELDO", p_Perfil.Sueldo);
-                codigoPerfil = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-                foreach (PerfilRequisitoBE oRequisito in p_Perfil.ListaRequisito) {
-                    new PerfilRequisitoDA().IngresarPerfilRequisto(codigoPerfil, oRequisito);
-                }
-
-            }
-            catch (Exception)
-            {
-                codigoPerfil = 0;
-            }
-            finally {
-                cmd.Connection.Close();
-            }
-            
-            return codigoPerfil;
-        }
-
-
-        //Codigo y Nombre
         public List<PerfilBE> ListarPerfil(PerfilBE perfil)
         {
             dbRRHH = new DataBaseDA();
@@ -87,6 +56,34 @@ namespace SPV.DA
             }
 
             return lista;
+        }
+
+        public Int32 IngresarPerfil(PerfilBE p_Perfil) {
+            Int32 codigoPerfil;
+            SqlCommand cmd = new SqlCommand();
+            try {
+                cmd.Connection = cn.getConecction();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "GRH_SP_AGREGARPERFIL";
+                cmd.Parameters.AddWithValue("@CAREASPERFIL", p_Perfil.AreasPerfil);
+                cmd.Parameters.AddWithValue("@CNOMBREPERFIL", p_Perfil.NombrePerfil);
+                cmd.Parameters.AddWithValue("@CDESCRIPCION", p_Perfil.Descripcion);
+                cmd.Parameters.AddWithValue("@NSUELDO", p_Perfil.Sueldo);
+                codigoPerfil = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                foreach (PerfilRequisitoBE oRequisito in p_Perfil.ListaRequisito) {
+                    new PerfilRequisitoDA().IngresarPerfilRequisto(codigoPerfil, oRequisito);
+                }
+
+            }
+            catch (Exception)
+            {
+                codigoPerfil = 0;
+            }
+            finally {
+                cmd.Connection.Close();
+            }
+            
+            return codigoPerfil;
         }
 
         public PerfilBE BuscarPefil(Int32 p_CodigoPerfil) {

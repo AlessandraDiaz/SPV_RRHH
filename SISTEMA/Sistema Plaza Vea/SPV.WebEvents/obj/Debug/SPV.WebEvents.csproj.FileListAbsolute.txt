@@ -23,3 +23,8 @@ C:\UPC\Sistema\Sistema Plaza Vea\SPV.WebEvents\bin\Debug\SPV.WebEvents.pdb
 C:\UPC\Sistema\Sistema Plaza Vea\SPV.WebEvents\obj\Debug\SPV.WebEvents.dll
 C:\UPC\Sistema\Sistema Plaza Vea\SPV.WebEvents\obj\Debug\SPV.WebEvents.pdb
 C:\UPC\Sistema\Sistema Plaza Vea\SPV.WebEvents\obj\Debug\SPV.WebEvents.csprojResolveAssemblyReference.cache
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.WebEvents\bin\Debug\SPV.WebEvents.dll
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.WebEvents\bin\Debug\SPV.WebEvents.pdb
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.WebEvents\obj\Debug\SPV.WebEvents.csprojResolveAssemblyReference.cache
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.WebEvents\obj\Debug\SPV.WebEvents.dll
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.WebEvents\obj\Debug\SPV.WebEvents.pdb

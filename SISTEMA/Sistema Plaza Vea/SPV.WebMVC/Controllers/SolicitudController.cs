@@ -6,33 +6,47 @@ using System.Web.Mvc;
 using System.Linq.Dynamic;
 using SPV.BE;
 using SPV.BL;
+using System.Configuration;
+using System.Text;
+using SPV.WebMVC.Helper;
 
 namespace SPV.WebMVC.Controllers
 {
     public class SolicitudController : Controller
     {
         private SolicitudPersonalBL solicitudBL = new SolicitudPersonalBL();
-        private SolicitudPerfilBL solicitudPerfilBL = new SolicitudPerfilBL();
         private ParametroBL parametroBL = new ParametroBL();
-        private PerfilBL perfilBL = new PerfilBL();
-        private ListaPaginada<SolicitudPerfilBE> listaPerfilDetalle = null;
-        private List<SolicitudPerfilBE> listaPerfilDetalleContent = null;
+        private CargoBL cargoBL = new CargoBL();
+        private CampanaBL oCampanaBL = new CampanaBL();
+        private ColaboradorBL oColaboradorBL = new ColaboradorBL();
+
         // GET: Solicitud
-        public ActionResult Index(string descSol = null, int cboTipo = 0, int page = 1, int pageSize = 10, string sort = "CodigoSol", string sortdir = "DESC")
+        public ActionResult Index(int cboTipoFiltro = 0, string desc = null, int cboFiltro = 0, string fechaIni = null, string fechaFin =null, int cboEstado=0,
+                                    int page = 1, int pageSize = 10, string sort = "CodigoSol", string sortdir = "DESC")
         {
             var records = new ListaPaginada<SolicitudPersonalBE>();
-            ViewBag.descSol = descSol;
-            ViewBag.tipSol = cboTipo;
+            ViewBag.TipoFiltro = cboTipoFiltro;
+            ViewBag.desc = desc;
+            ViewBag.cboTipo = cboFiltro;
+            ViewBag.cboEstado = cboEstado;
+            ViewBag.FIni = fechaIni;
+            ViewBag.FFin = fechaFin;
 
-            SolicitudPersonalBE solicitud = new SolicitudPersonalBE();
-            solicitud.DescripcionSol = (descSol == null ? "" : descSol);
 
-            ParametroBE tipoSolBE = new ParametroBE();
-            tipoSolBE.Codigo = cboTipo;
+            desc = (desc == null ? "" : desc);
+            fechaIni = (fechaIni == null ? "" : fechaIni);
+            fechaFin = (fechaFin == null ? "" : fechaFin);
 
-            solicitud.TipoSolicitudSol = tipoSolBE;
+            int usuarioID = FachadaSesion.Usuario.CodigoUsuario;
+            //administrador
+            if (FachadaSesion.Usuario.Perfil.CodPerfil == 1)
+            {
+                usuarioID = 0;
+            }
+            var local = FachadaSesion.Usuario.Local.CodTienda;
+            var area = FachadaSesion.Usuario.Area.CodArea;
 
-            List<SolicitudPersonalBE> listadoSolicitud = solicitudBL.Listar(solicitud);
+            List<SolicitudPersonalBE> listadoSolicitud = solicitudBL.Listar(cboTipoFiltro,desc,cboFiltro,fechaIni, fechaFin, cboEstado, usuarioID, local , area);
 
             records.Content = listadoSolicitud
                         .OrderBy(sort + " " + sortdir)
@@ -46,10 +60,6 @@ namespace SPV.WebMVC.Controllers
             records.CurrentPage = page;
             records.PageSize = pageSize;
 
-            FachadaSesion.EsEdicionSolicitud = false;
-            FachadaSesion.listaPerfilesFS = null;
-            FachadaSesion.SolicitudFS = null;
-
             return View(records);
         }
 
@@ -58,106 +68,55 @@ namespace SPV.WebMVC.Controllers
         public ActionResult Registrar()
         {
             SolicitudPersonalBE solicitud;
-            ListaPaginada<SolicitudPerfilBE> listaPerfil;
-            if (FachadaSesion.listaPerfilesFS != null)
-            {
-                if (FachadaSesion.SolicitudFS == null)
-                {
-                    solicitud = new SolicitudPersonalBE();
-                }
-                else
-                {
-                    solicitud = FachadaSesion.SolicitudFS;
-                }
-
-                solicitud.Detalle = FachadaSesion.listaPerfilesFS;
-            }
-            else
-            {
-                solicitud = new SolicitudPersonalBE();
-
-                FachadaSesion.SolicitudFS = solicitud;
-
-                listaPerfil = new ListaPaginada<SolicitudPerfilBE>();
-                listaPerfil.PageSize = 10;
-                listaPerfil.CurrentPage = 1;
-                listaPerfil.TotalRecords = 0;
-                listaPerfil.Content = new List<SolicitudPerfilBE>();
-                solicitud.Detalle = listaPerfil;
-                
-            }
-
+            solicitud = new SolicitudPersonalBE();
             return View("Registrar", solicitud);
         }
 
         [HttpPost]
-        public ActionResult Registrar(SolicitudPersonalBE solicitud, string cboTipo)
+        public ActionResult Registrar(SolicitudPersonalBE solicitud, string cboTipoConvoca, string cboTipoSolicitud,
+                    string cboMotivo, string cboCampana, string cboCargo, string cboMoneda)
         {
             try
             {
-                if (solicitud.Detalle == null)
-                {
-                    ListaPaginada<SolicitudPerfilBE> listaPerfil = new ListaPaginada<SolicitudPerfilBE>();
-                    listaPerfil.PageSize = 10;
-                    listaPerfil.CurrentPage = 1;
-                    listaPerfil.TotalRecords = 0;
-                    listaPerfil.Content = new List<SolicitudPerfilBE>();
-                    solicitud.Detalle = listaPerfil;
-                    solicitud.TipoSolicitudSol = new ParametroBE();
-                }
                 //validaciones
                 if (ModelState.IsValid)
                 {
 
-                    if (cboTipo == null || cboTipo == "0")
+                    if (cboTipoConvoca == null || cboTipoConvoca == "0")
                     {
                         ModelState.AddModelError("MensajeError", "Seleccione Tipo de solicitud");
                         return View(solicitud);
                     }
 
-                    if (FachadaSesion.listaPerfilesFS == null)
-                    {
-                        ModelState.AddModelError("MensajeError", "Agrege Perfiles");
-                        return View(solicitud);
-                    }
+                    var idSolicitud = 0;
 
-                    var listaPerfiles = FachadaSesion.listaPerfilesFS.Content;
-                    if (listaPerfiles.Count() == 0)
-                    {
-                        ModelState.AddModelError("MensajeError", "Agrege Perfiles");
-                        return View(solicitud);
-                    }
+                    ParametroBE tipoConvoca = new ParametroBE() { Codigo = Convert.ToInt32(cboTipoConvoca) };
+                    ParametroBE tipoSolicitud = new ParametroBE() { Codigo = Convert.ToInt32(cboTipoSolicitud) };
+                    ParametroBE motivo = new ParametroBE() { Codigo = Convert.ToInt32(cboMotivo) };
+                    CampanaBE campana ;
+                    if (cboCampana != "0")
+                        campana = new CampanaBE() { ID = Convert.ToInt32(cboCampana) };
                     else
-                    {
-                        var idSolicitud = 0;
+                        campana = new CampanaBE();
+                    
+                    CargoBE cargo = new CargoBE() { ID = Convert.ToInt32(cboCargo) };
+                    ParametroBE estado = new ParametroBE() { Codigo = Convert.ToInt32(1) };
+                    ParametroBE moneda = new ParametroBE() { Codigo = Convert.ToInt32(cboMoneda) };
 
-                        ParametroBE tipoSolicitud = new ParametroBE();
-                        tipoSolicitud.Codigo = Convert.ToInt32(cboTipo);
+                    solicitud.TipoConvocatoria = tipoConvoca;
+                    solicitud.TipoSolicitudSol = tipoSolicitud;
+                    solicitud.Motivo = motivo;
+                    solicitud.Campana = campana;
+                    solicitud.Cargo = cargo;
+                    solicitud.MonedaSolicitud = moneda;
+                    solicitud.EstadoSol = estado;
+                    solicitud.LocalUsuario = FachadaSesion.Usuario.Local.CodTienda;
+                    solicitud.CodigoUsuario = FachadaSesion.Usuario.CodigoUsuario;
 
-                        ParametroBE estado = new ParametroBE();
-                        estado.Codigo = Convert.ToInt32(1);
+                    idSolicitud = solicitudBL.IngresarSolicitudPersonal(solicitud);
 
-                        solicitud.TipoSolicitudSol = tipoSolicitud;
-                        solicitud.EstadoSol = estado;
-                        idSolicitud = solicitudBL.IngresarSolicitudPersonal(solicitud);
-
-                        if (idSolicitud != 0)
-                        {
-                            SolicitudPersonalBE sol = new SolicitudPersonalBE();
-                            sol.CodigoSol = idSolicitud;
-
-                            foreach (var item in listaPerfiles)
-                            {
-                                item.SolicitudPersonal = sol;
-                                solicitudPerfilBL.IngresarSolicitudPerfil(item);
-                            }
-                        }
-
-                        FachadaSesion.listaPerfilesFS = null;
-                        FachadaSesion.SolicitudFS = null;
-                        TempData["msg"] = "Grabado Correctamente";
-                        return RedirectToAction("Index", "Solicitud");
-                    }
+                    TempData["msg"] = "Grabado Correctamente";
+                    return RedirectToAction("Index", "Solicitud");
                 }
             }
             catch (Exception)
@@ -175,19 +134,9 @@ namespace SPV.WebMVC.Controllers
             {
                 try
                 {
-                    if (FachadaSesion.EsEdicionSolicitud)
-                    {
-                        solicitud = FachadaSesion.SolicitudFS;
-                    }
-                    else
-                    {
-                        solicitud = solicitudBL.GetSolicitudByID(id);
-                        FachadaSesion.SolicitudFS = solicitud;
-                        FachadaSesion.listaPerfilesFS = solicitud.Detalle;
-                        FachadaSesion.EsEdicionSolicitud = false;
-                    }
+                    solicitud = solicitudBL.GetSolicitudByID(id);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     ModelState.AddModelError("MensajeError", "Ocurrió un error.");
                     return View(solicitud);
@@ -197,81 +146,47 @@ namespace SPV.WebMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Editar(SolicitudPersonalBE solicitud, string cboTipo)
+        public ActionResult Editar(SolicitudPersonalBE solicitud, string cboTipoConvoca, string cboTipoSolicitud,
+                    string cboMotivo, string cboCampana, string cboCargo, string cboMoneda)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (cboTipo == null || cboTipo == "0")
+                    if (cboTipoSolicitud == null || cboTipoSolicitud == "0")
                     {
                         ModelState.AddModelError("MensajeError", "Seleccione Tipo de solicitud");
                         return View(solicitud);
                     }
 
-                    var listaPerfiles = FachadaSesion.listaPerfilesFS.Content;
-                    if (listaPerfiles.Count() == 0)
-                    {
-                        if (solicitud.Detalle == null)
-                        {
-                            ListaPaginada<SolicitudPerfilBE> listaPerfil = new ListaPaginada<SolicitudPerfilBE>();
-                            listaPerfil.PageSize = 10;
-                            listaPerfil.CurrentPage = 1;
-                            listaPerfil.TotalRecords = 0;
-                            listaPerfil.Content = new List<SolicitudPerfilBE>();
-                            solicitud.Detalle = listaPerfil;
-                            solicitud.TipoSolicitudSol = new ParametroBE();
-                        }
+                    SolicitudPersonalBE solictudActualizada = null;
 
-                        ModelState.AddModelError("MensajeError", "Agrege Perfiles");
-                        return View(solicitud);
-                    }
+                    ParametroBE tipoConvoca = new ParametroBE() { Codigo = Convert.ToInt32(cboTipoConvoca) };
+                    ParametroBE tipoSolicitud = new ParametroBE() { Codigo = Convert.ToInt32(cboTipoSolicitud) };
+                    ParametroBE motivo = new ParametroBE() { Codigo = Convert.ToInt32(cboMotivo) };
+                    CampanaBE campana;
+                    if (cboCampana != "0")
+                        campana = new CampanaBE() { ID = Convert.ToInt32(cboCampana) };
                     else
-                    {
-                        SolicitudPersonalBE solictudActualizada = null;
+                        campana = new CampanaBE();
 
-                        ParametroBE tipoSolicitud = new ParametroBE();
-                        tipoSolicitud.Codigo = Convert.ToInt32(cboTipo);
+                    CargoBE cargo = new CargoBE() { ID = Convert.ToInt32(cboCargo) };
+                    ParametroBE estado = new ParametroBE() { Codigo = Convert.ToInt32(1) };
+                    ParametroBE moneda = new ParametroBE() { Codigo = Convert.ToInt32(cboMoneda) };
 
-                        ParametroBE estado = new ParametroBE();
-                        estado.Codigo = Convert.ToInt32(1);
+                    solicitud.TipoConvocatoria = tipoConvoca;
+                    solicitud.TipoSolicitudSol = tipoSolicitud;
+                    solicitud.Motivo = motivo;
+                    solicitud.Campana = campana;
+                    solicitud.Cargo = cargo;
+                    solicitud.MonedaSolicitud = moneda;
+                    solicitud.EstadoSol = estado;                    
 
-                        solicitud.TipoSolicitudSol = tipoSolicitud;
-                        solicitud.EstadoSol = estado;
-                        solictudActualizada = solicitudBL.UpdateSolicitud(solicitud);
+                    solictudActualizada = solicitudBL.UpdateSolicitud(solicitud);
 
-                        if (solictudActualizada != null)
-                        {
-                            foreach (var item in listaPerfiles)
-                            {
-                                item.SolicitudPersonal = solictudActualizada;
-                                if (item.EstadoItem == 1) //NUEVO
-                                {
-                                    solicitudPerfilBL.IngresarSolicitudPerfil(item);
-                                }
-                                else if (item.EstadoItem == 2) // MODIFICADO
-                                {
-                                    solicitudPerfilBL.UpdateSolicitudPerfil(item);
-                                }
-                            }
-
-                            if (FachadaSesion.listaPerfilesEliminadosFS != null)
-                            {
-                                foreach (var item in FachadaSesion.listaPerfilesEliminadosFS)
-                                {
-                                    solicitudPerfilBL.EliminarSolicitudPerfil(item.CodigoSolicitudPer);
-                                }
-                            }
-                        }
-
-                        FachadaSesion.listaPerfilesFS = null;
-                        FachadaSesion.SolicitudFS = null;
-                        FachadaSesion.listaPerfilesEliminadosFS = null;
-                        FachadaSesion.EsEdicionSolicitud = false;
-
-                        TempData["msg"] = "Grabado Correctamente";
-                        return RedirectToAction("Index");
-                    }
+                    TempData["msg"] = "Grabado Correctamente";
+                    return RedirectToAction("Index");
+                    
                 }
             }
             catch (Exception)
@@ -301,187 +216,342 @@ namespace SPV.WebMVC.Controllers
             return Json(new { success = true });
         }
 
-        // GET: /Solicitud/RegistrarPerfil
-        [HttpGet]
-        public ActionResult RegistrarPerfil()
+        // GET: /Solicitud/Detalle/5
+        public ActionResult Detalle(int id = 0)
         {
-            var solicitudPerfil = new SolicitudPerfilBE();
-            return PartialView("RegistrarPerfil", solicitudPerfil);
+            SolicitudPersonalBE solicitud = solicitudBL.GetSolicitudByID(id);
+            if (solicitud == null)
+            {
+                return HttpNotFound();
+            }
+            return View("Detalle", solicitud);
         }
 
-        // POST: /Solicitud/RegistrarPerfil
-        [HttpPost]
-        public ActionResult RegistrarPerfil(SolicitudPerfilBE solicitudPerfil, string cboPerfil)
+        // GET: /Solicitud/Enviar/5
+        public ActionResult Enviar(int id = 0)
         {
-            if (ModelState.IsValid)
+            SolicitudPersonalBE solicitud = solicitudBL.GetSolicitudByID(id);
+            if (solicitud == null)
             {
-                if (cboPerfil == null || cboPerfil == "0")
+                return HttpNotFound();
+            }
+            return PartialView("Enviar", solicitud);
+        }
+
+        // POST: /Solicitud/Eliminar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EnviarMail(SolicitudPersonalBE solicitud)
+        {
+            try
+            {
+                SolicitudPersonalBE solicitudData = solicitudBL.GetSolicitudByID(solicitud.CodigoSol);
+
+                ParametroBE estadoSol = new ParametroBE();
+                estadoSol.Codigo = 4; //Enviado
+                solicitudData.EstadoSol = estadoSol;
+                solicitudData.FechaEnvio = DateTime.Now;
+                solicitudBL.UpdateSolicitud(solicitudData);
+
+                ColaboradorBE oParam = new ColaboradorBE();
+                UsuarioBE oParamUser = new UsuarioBE();
+                PerfilBE oPerfil = new PerfilBE() { CodPerfil = 3 };
+                TiendaBE olocal = new TiendaBE() { CodTienda = FachadaSesion.Usuario.Local.CodTienda };
+                oParamUser.Perfil = oPerfil;
+                oParamUser.Local = olocal;
+                oParam.usuario = oParamUser;
+
+                var listColaboradores = oColaboradorBL.ListarColaboradores(oParam);
+
+                if (listColaboradores != null)
                 {
-                    ModelState.AddModelError("MensajeError", "Seleccione Perfil");
-                }
-
-                PerfilBE pe = new PerfilBE { CodPerfil = Convert.ToInt32(cboPerfil), Perfil = string.Empty };
-                PerfilBE perfilEN = perfilBL.ListaPerfil(pe).FirstOrDefault();
-
-                if (FachadaSesion.listaPerfilesFS != null)
-                {
-                    listaPerfilDetalle = FachadaSesion.listaPerfilesFS;
-                   
-
-                    listaPerfilDetalleContent = listaPerfilDetalle.Content;
-
-                    var maxID = 0;
-                    if (listaPerfilDetalleContent.Count() != 0)
+                    if (listColaboradores.Count > 0)
                     {
-                        maxID = listaPerfilDetalleContent.Max(x => x.CodigoSolicitudPer);
-                    }           
-                    solicitudPerfil.Perfil = perfilEN;
-                    solicitudPerfil.EstadoItem = 1;
-                    solicitudPerfil.CodigoSolicitudPer = maxID + 1;
-                    listaPerfilDetalleContent.Add(solicitudPerfil);
+                        ColaboradorBE colaborador = listColaboradores.FirstOrDefault();
+                        // Configurar envio de correo
+                        string subject = string.Format("{0}: {1} - {2}", ConfigurationManager.AppSettings.Get("AsuntoMailEnvioSolicitud"), solicitudData.CodigoInterno ,DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss"));
+                        string mailFrom = ConfigurationManager.AppSettings.Get("MailEmisor");
+                        string passwordMailEmisor = ConfigurationManager.AppSettings.Get("PasswordMailEmisor");
+                        StringBuilder buffer = new StringBuilder();
+                        buffer.Append("Estimado <b>{0} {1}, {2}</b>");
+                        buffer.Append("Es grato saludarlo e informarle que se ha enviado la solicitud para la aprobación <br />");
+                        buffer.Append("Saludos cordiales. <br/><br/>");
+                        buffer.Append("<i>Nota: Por favor no responda este correo.<i>");
 
-                    listaPerfilDetalle.TotalRecords = listaPerfilDetalleContent.Count();
-                    listaPerfilDetalle.CurrentPage = 1;
-                    listaPerfilDetalle.PageSize = 10;
-                    listaPerfilDetalle.Content = listaPerfilDetalleContent;
-
-                    FachadaSesion.listaPerfilesFS = listaPerfilDetalle;
-                    FachadaSesion.EsEdicionSolicitud = true;
+                        MailHelper.SendMail(mailFrom, passwordMailEmisor, colaborador.Correo, subject, string.Format(buffer.ToString(), colaborador.ApellidoPaterno, colaborador.ApellidoMaterno, colaborador.Nombres), true, System.Net.Mail.MailPriority.Normal);
+                    }
                 }
-                else
-                {
-                    listaPerfilDetalle = new ListaPaginada<SolicitudPerfilBE>();
-                    listaPerfilDetalleContent = new List<SolicitudPerfilBE>();
-
-                    solicitudPerfil.Perfil = perfilEN;
-                    listaPerfilDetalleContent.Add(solicitudPerfil);
-
-                    listaPerfilDetalle.TotalRecords = listaPerfilDetalleContent.Count();
-
-                    listaPerfilDetalle.CurrentPage = 1;
-                    listaPerfilDetalle.PageSize = 10;
-
-                    listaPerfilDetalle.Content = listaPerfilDetalleContent;
-
-                    FachadaSesion.listaPerfilesFS = listaPerfilDetalle;
-                }
-
-                return Json(new { success = true });
             }
-            return PartialView("RegistrarPerfil", solicitudPerfil);
-        }
-
-        // GET: /Solicitud/EditarPerfil/5
-        [HttpGet]
-        public ActionResult EditarPerfil(int id = 0)
-        {
-            var listaPerfilesSolicitud = FachadaSesion.listaPerfilesFS;
-            listaPerfilDetalleContent = listaPerfilesSolicitud.Content;
-
-            var query = (from item in listaPerfilDetalleContent
-                         where item.CodigoSolicitudPer == id
-                         select item).ToList<SolicitudPerfilBE>();
-
-            SolicitudPerfilBE perfilSolicitud = query.FirstOrDefault();
-            if (perfilSolicitud == null)
+            catch (Exception)
             {
-                return HttpNotFound();
             }
-
-            return PartialView("EditarPerfil", perfilSolicitud);
-        }
-
-        // POST: /Solicitud/EditarPerfil/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditarPerfil(SolicitudPerfilBE solicitudPerfil, string cboPerfil)
-        {
-            if (ModelState.IsValid)
-            {
-                var listaPerfilesSolicitud = FachadaSesion.listaPerfilesFS;
-                listaPerfilDetalleContent = listaPerfilesSolicitud.Content;
-
-                listaPerfilDetalleContent.Find(p => p.CodigoSolicitudPer == solicitudPerfil.CodigoSolicitudPer).CantidadSolicitudPer = solicitudPerfil.CantidadSolicitudPer;
-                listaPerfilDetalleContent.Find(p => p.CodigoSolicitudPer == solicitudPerfil.CodigoSolicitudPer).Perfil.CodigoPerfil = Convert.ToInt32(cboPerfil);
-                listaPerfilDetalleContent.Find(p => p.CodigoSolicitudPer == solicitudPerfil.CodigoSolicitudPer).Funciones = solicitudPerfil.Funciones;
-                listaPerfilDetalleContent.Find(p => p.CodigoSolicitudPer == solicitudPerfil.CodigoSolicitudPer).Requisitos = solicitudPerfil.Requisitos;
-                listaPerfilDetalleContent.Find(p => p.CodigoSolicitudPer == solicitudPerfil.CodigoSolicitudPer).Sueldo = solicitudPerfil.Sueldo;
-                listaPerfilDetalleContent.Find(p => p.CodigoSolicitudPer == solicitudPerfil.CodigoSolicitudPer).EstadoItem = 2;
-                listaPerfilesSolicitud.Content = listaPerfilDetalleContent;
-                FachadaSesion.listaPerfilesFS = listaPerfilesSolicitud;
-                FachadaSesion.EsEdicionSolicitud = true;
-
-                return Json(new { success = true });
-            }
-            return PartialView("Edit", solicitudPerfil);
-        }
-
-        // GET: /Solicitud/EliminarPerfil/5
-        public ActionResult EliminarPerfils(int id = 0)
-        {
-            var listaPerfilesSolicitud = FachadaSesion.listaPerfilesFS;
-            listaPerfilDetalleContent = listaPerfilesSolicitud.Content;
-
-            var query = (from item in listaPerfilDetalleContent
-                         where item.CodigoSolicitudPer == id
-                         select item).ToList<SolicitudPerfilBE>();
-
-            SolicitudPerfilBE solicitudPerfil = query.FirstOrDefault();
-            FachadaSesion.EsEdicionSolicitud = true;
-            if (solicitudPerfil == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView("EliminarPerfils", solicitudPerfil);
-        }
-
-        // POST: /Solicitud/EliminarPerfils/5
-        [HttpPost, ActionName("EliminarPerfils")]
-        [ValidateAntiForgeryToken]
-        public ActionResult EliminarPerfilsConfirm(int id)
-        {
-            var listaPerfilesSolicitud = FachadaSesion.listaPerfilesFS;
-            listaPerfilDetalleContent = listaPerfilesSolicitud.Content;
-            List<SolicitudPerfilBE> listaNegra;
-
-            var query = (from item in listaPerfilDetalleContent
-                         where item.CodigoSolicitudPer == id
-                         select item).ToList<SolicitudPerfilBE>();
-
-            SolicitudPerfilBE solicitudPerfil = query.FirstOrDefault();
-
-            if (FachadaSesion.listaPerfilesEliminadosFS == null)
-            {
-                listaNegra = new List<SolicitudPerfilBE>();
-                listaNegra.Add(solicitudPerfil);
-            }
-            else
-            {
-                listaNegra = FachadaSesion.listaPerfilesEliminadosFS;
-                listaNegra.Add(solicitudPerfil);
-            }
-            FachadaSesion.listaPerfilesEliminadosFS = listaNegra;
-            listaPerfilDetalleContent.Remove(solicitudPerfil);
-
-            listaPerfilesSolicitud.Content = listaPerfilDetalleContent;
-            FachadaSesion.listaPerfilesFS = listaPerfilesSolicitud;
-
             return Json(new { success = true });
         }
 
+        // GET: /Solicitud/Enviar/5
+        public ActionResult Observacion(int id = 0)
+        {
+            SolicitudPersonalBE solicitud = solicitudBL.GetSolicitudByID(id);
+            if (solicitud == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("Observacion", solicitud);
+        }
+
+        // GET: /Solicitud/VerDetalleCargo
+        [HttpGet]
+        public ActionResult VerDetalleCargo(int id = 0)
+        {
+            List<CargoBE> listCargos = FachadaSesion.Cargos;
+            CargoBE cargo;
+            var query = (from c in listCargos
+                         where c.CodigoCargo == id
+                         select c).FirstOrDefault();
+
+            if (query == null)
+            {
+                cargo = new CargoBE();
+            }
+            else
+            {
+                cargo = query;
+            }
+
+            return PartialView("VerDetalleCargo", cargo);
+        }
         public JsonResult ListaTipoSolicitud()
         {
             ParametroBE param = new ParametroBE();
-            param.CodigoAgrupador = 1;
+            string codigoTipoSolicitud = ConfigurationManager.AppSettings["CodigoTipoSolicitud"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoTipoSolicitud);
             return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
         }
-        public JsonResult ListaPerfiles()
+        public JsonResult ListaMotivos(string tipo)
         {
-            PerfilBE perfil = new PerfilBE();
-            perfil.CodPerfil = 0;
-            perfil.Perfil = string.Empty;
-            return Json(perfilBL.ListaPerfil(perfil).ToList(), JsonRequestBehavior.AllowGet);
+            ParametroBE param = new ParametroBE();
+            string codigoTipoMotivo = ConfigurationManager.AppSettings["CodigoMotivoFiltro"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoTipoMotivo);
+
+            List<ParametroBE> lista = parametroBL.Listar(param).ToList();
+
+            var query = (from p in lista
+                         where p.Valor == tipo
+                         select p).ToList<ParametroBE>();
+
+            return Json(query, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult ListaTipoConvocatoria()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoTipoConvocatoria = ConfigurationManager.AppSettings["CodigoTipoConvocatoria"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoTipoConvocatoria);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaTipoFiltro()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoTipoFiltro = ConfigurationManager.AppSettings["CodigoTipoFiltro"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoTipoFiltro);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaMotivoFiltro()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoMotivoFiltro = ConfigurationManager.AppSettings["CodigoMotivoFiltro"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoMotivoFiltro);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaEstadoFiltro()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoEstadoFiltro = ConfigurationManager.AppSettings["CodigoEstadoSolFiltro"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoEstadoFiltro);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaCargoFiltro()
+        {
+            CargoBE param = new CargoBE();
+            param.CodigoCargo = 0;
+            param.Descripcion = "";
+            return Json(cargoBL.ListaCargo(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaCampanas()
+        {
+            CampanaBE param = new CampanaBE();
+            param.Descripcion = "";
+            param.ID = 0;
+
+            List<CampanaBE> lista = oCampanaBL.ListarCampana(param).ToList();
+            FachadaSesion.Campanas = lista;
+
+            return Json(lista, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetDataCampana(string ID)
+        {
+            List<CampanaBE> lista = FachadaSesion.Campanas;
+            var campana = (from c in lista
+                           where c.ID == Convert.ToInt32(ID)
+                           select c).FirstOrDefault();
+            return Json(campana, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaCargo()
+        {
+            CargoBE param = new CargoBE();
+            param.CodigoCargo = 0;
+            param.Descripcion = "";
+
+            List<CargoBE> lista = cargoBL.ListaCargo(param).ToList();
+            FachadaSesion.Cargos = lista;
+
+            return Json(lista, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetDataCargos(string ID)
+        {
+            List<CargoBE> lista = FachadaSesion.Cargos;
+
+            var cargo = (from c in lista
+                           where c.CodigoCargo == Convert.ToInt32(ID)
+                           select c).FirstOrDefault();
+
+            return Json(cargo, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaMonedas()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoMoneda = ConfigurationManager.AppSettings["CodigoMoneda"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoMoneda);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+
+        #region "CUS 02 -- Aprobacion de solicitudes"
+
+        // GET: IndexAprobar
+        public ActionResult IndexAprobar(int cboTipoFiltro = 0, string desc = null, int cboFiltro = 0, string fechaIni = null, string fechaFin = null, int cboEstado = 0,
+                                    int page = 1, int pageSize = 10, string sort = "CodigoSol", string sortdir = "DESC")
+        {
+            var records = new ListaPaginada<SolicitudPersonalBE>();
+            ViewBag.TipoFiltro = cboTipoFiltro;
+            ViewBag.desc = desc;
+            ViewBag.cboTipo = cboFiltro;
+            ViewBag.cboEstado = cboEstado;
+            ViewBag.FIni = fechaIni;
+            ViewBag.FFin = fechaFin;
+
+
+            desc = (desc == null ? "" : desc);
+            fechaIni = (fechaIni == null ? "" : fechaIni);
+            fechaFin = (fechaFin == null ? "" : fechaFin);
+
+            int usuarioID = 0; //FachadaSesion.Usuario.CodigoUsuario;
+            //administrador
+            if (FachadaSesion.Usuario.Perfil.CodPerfil == 1)
+            {
+                usuarioID = 0;
+            }
+
+            var local = FachadaSesion.Usuario.Local.CodTienda;
+            var area = FachadaSesion.Usuario.Area.CodArea;
+
+            List<SolicitudPersonalBE> listadoSolicitud = solicitudBL.Listar(cboTipoFiltro, desc, cboFiltro, fechaIni, fechaFin, cboEstado, usuarioID, local, area);
+
+            records.Content = listadoSolicitud
+                        .OrderBy(sort + " " + sortdir)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+
+            // Count
+            records.TotalRecords = listadoSolicitud.Count();
+
+            records.CurrentPage = page;
+            records.PageSize = pageSize;
+
+            return View(records);
+        }
+
+        // GET: /Solicitud/DetalleAprobar/5
+        public ActionResult DetalleAprobar(int id = 0)
+        {
+            SolicitudPersonalBE solicitud = solicitudBL.GetSolicitudByID(id);
+            if (solicitud == null)
+            {
+                return HttpNotFound();
+            }
+            return View("DetalleAprobar", solicitud);
+        }
+
+        // GET: /Solicitud/Aprobar/5
+        public ActionResult Aprobar(int id = 0)
+        {
+            SolicitudPersonalBE solicitud = solicitudBL.GetSolicitudByID(id);
+            if (solicitud == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("Aprobar", solicitud);
+        }
+
+        // POST: /Solicitud/Aprobar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Aprobar(SolicitudPersonalBE solicitud)
+        {
+            if (ModelState.IsValid)
+            {
+                SolicitudPersonalBE solicitudPorActualizar = solicitudBL.GetSolicitudByID(solicitud.CodigoSol);
+
+                ParametroBE estado = new ParametroBE();
+                estado.Codigo = 2;
+                solicitudPorActualizar.EstadoSol = estado;
+                solicitudPorActualizar.Comentarios = solicitud.Comentarios;
+
+                solicitudBL.UpdateSolicitud(solicitudPorActualizar);
+                return Json(new { success = true });
+            }
+            return PartialView("Aprobar", solicitud);
+        }
+
+        // GET: /Solicitud/Rechazar/5
+        public ActionResult Rechazar(int id = 0)
+        {
+            SolicitudPersonalBE solicitud = solicitudBL.GetSolicitudByID(id);
+            if (solicitud == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("Rechazar", solicitud);
+        }
+
+        // POST: /Solicitud/Rechazar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Rechazar(SolicitudPersonalBE solicitud)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (solicitud.Comentarios == "" || solicitud.Comentarios == null)
+                {
+                    return Json(new { success = false, msg= "Ingrese observación" });
+                }
+
+                SolicitudPersonalBE solicitudPorActualizar = solicitudBL.GetSolicitudByID(solicitud.CodigoSol);
+
+                ParametroBE estado = new ParametroBE();
+                estado.Codigo = 3;
+                solicitudPorActualizar.EstadoSol = estado;
+                solicitudPorActualizar.Comentarios = solicitud.Comentarios;
+
+                solicitudBL.UpdateSolicitud(solicitudPorActualizar);
+                return Json(new { success = true });
+            }
+            return PartialView("Rechazar", solicitud);
+        }
+
+        #endregion
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

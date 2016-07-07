@@ -20,33 +20,6 @@ namespace SPV.WebMVC
             set { Asignar("entrada", value); }
         }
 
-        public static bool EsEdicionSolicitud
-        {
-            get
-            {
-                return Obtener<bool>("bEsEdicionSolicitud");
-            }
-            set { Asignar("bEsEdicionSolicitud", value); }
-        }
-
-        public static List<SolicitudPerfilBE> listaPerfilesEliminadosFS
-        {
-            get
-            {
-                return Obtener<List<SolicitudPerfilBE>>("listaPerfilEliSol");
-            }
-            set { Asignar("listaPerfilEliSol", value); }
-        }
-
-        public static ListaPaginada<SolicitudPerfilBE> listaPerfilesFS
-        {
-            get
-            {
-                return Obtener<ListaPaginada<SolicitudPerfilBE>>("listaPerfilSol");
-            }
-            set { Asignar("listaPerfilSol", value); }
-        }
-
         public static SolicitudPersonalBE SolicitudFS
         {
             get
@@ -54,6 +27,24 @@ namespace SPV.WebMVC
                 return Obtener<SolicitudPersonalBE>("SolicitudPer");
             }
             set { Asignar("SolicitudPer", value); }
+        }
+
+        public static List<CampanaBE> Campanas
+        {
+            get
+            {
+                return Obtener<List<CampanaBE>>("ListCampanas");
+            }
+            set { Asignar("ListCampanas", value); }
+        }
+
+        public static List<CargoBE> Cargos
+        {
+            get
+            {
+                return Obtener<List<CargoBE>>("ListCargos");
+            }
+            set { Asignar("ListCargos", value); }
         }
 
         private static void Asignar(string key, object value)

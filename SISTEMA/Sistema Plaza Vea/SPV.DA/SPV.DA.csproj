@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaTiendaDA.cs" />
+    <Compile Include="CampanaDA.cs" />
+    <Compile Include="CargoDA.cs" />
     <Compile Include="ColaboradorDA.cs" />
     <Compile Include="ConvocatoriaDA.cs" />
     <Compile Include="Database.cs" />
@@ -59,7 +61,6 @@
     <Compile Include="PreguntaAlternativaDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankingPostulanteDA.cs" />
-    <Compile Include="SolicitudPerfilDA.cs" />
     <Compile Include="SolicitudPersonalDA.cs" />
     <Compile Include="SPV_Seguridad\UsuarioDA.cs" />
     <Compile Include="TurnoDA.cs" />

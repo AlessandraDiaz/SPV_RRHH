@@ -27,3 +27,8 @@ C:\UPC\Sistema\Sistema Plaza Vea\SPV.BE\bin\Debug\SPV.BE.pdb
 C:\UPC\Sistema\Sistema Plaza Vea\SPV.BE\obj\Debug\SPV.BE.dll
 C:\UPC\Sistema\Sistema Plaza Vea\SPV.BE\obj\Debug\SPV.BE.pdb
 C:\UPC\Sistema\Sistema Plaza Vea\SPV.BE\obj\Debug\SPV.BE.csprojResolveAssemblyReference.cache
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.BE\bin\Debug\SPV.BE.dll
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.BE\bin\Debug\SPV.BE.pdb
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.BE\obj\Debug\SPV.BE.dll
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.BE\obj\Debug\SPV.BE.pdb
+C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.BE\obj\Debug\SPV.BE.csprojResolveAssemblyReference.cache

@@ -15,7 +15,8 @@
     <title>@ViewBag.Title - Sistema de Gestión de Recursos Humanos</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -52,19 +53,9 @@
                     <img class="brand-img" src="~/Content/image/PlazaVea.png" alt="Plaza Vea">
                 </a>
             </div>
-            @*<div class="navbar-collapse collapse">
-                @using (Html.BeginForm("Logout", "Login", FormMethod.Post, new { id = "frmCerrar" }))
-                {
-                    @Html.AntiForgeryToken()
-                }
-
-                @if (FachadaSesion.Usuario != null)
-                { 
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="javascript:document.getElementById('frmCerrar').submit()">@FachadaSesion.Usuario.Perfil.Perfil.ToUpper()  -  @usuario.NombreUsuario - Cerrar Sesión</a></li>
-                </ul>
-                }
-            </div>*@
+            <div class="navbar-collapse collapse">
+                @Html.Partial("_LoginPartial")
+            </div>
         </div>
     </nav>
 
@@ -72,26 +63,76 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
+                    <li ><a href="#">Gestión de góndolas</a></li>
+                    <li class="nav-subitem-level-1"><a href="#">CUS001</a></li>
+                    <li class="nav-subitem-level-2"><a href="#">CUS001 Opcion 1</a></li>
+                    <li class="nav-subitem-level-2"><a href="#">CUS001 Opcion 2</a></li>
+                    <li class="nav-subitem-level-1"><a href="#">CUS002</a></li>
+                    <li class="nav-subitem-level-1"><a href="#">CUS003</a></li>
+                    <li class="nav-subitem-level-1"><a href="#">CUS004</a></li>
+                    <li class="nav-subitem-level-1"><a href="#">CUS005</a></li>
+                </ul>
+                <ul class="nav nav-sidebar">
+                    <li><a href="#">Gestión de terceros</a></li>
+                    <li><a href="#">CUS001</a></li>
+                    <li><a href="#">CUS002</a></li>
+                    <li><a href="#">CUS003</a></li>
+                    <li><a href="#">CUS004</a></li>
+                    <li><a href="#">CUS005</a></li>
+                </ul>
+                <ul class="nav nav-sidebar">
+                    <li><a href="#">Campañas y promociones</a></li>
+                    <li><a href="#">CUS001</a></li>
+                    <li><a href="#">CUS002</a></li>
+                    <li><a href="#">CUS003</a></li>
+                    <li><a href="#">CUS004</a></li>
+                    <li><a href="#">CUS005</a></li>
+                </ul>
+                <ul class="nav nav-sidebar">
                     <li class="active"><a href="#">Gestión de Recursos Humanos</a></li>
                     @if (FachadaSesion.Usuario != null)
-                    { 
-                        if(FachadaSesion.Usuario.Perfil.CodPerfil == 2)
+                    {
+                        if(FachadaSesion.Usuario.Perfil.CodPerfil == 2 || FachadaSesion.Usuario.Perfil.CodPerfil == 1)
                         {
                             <li class="nav-subitem-level-1">
-                                @Html.ActionLink("Solicitud de Personal", "Index", "Solicitud")
+                                @Html.ActionLink("CUS001 - Solicitud de Personal", "Index", "Solicitud")
                             </li>
                         }
                         else
                         {
                             <li class="nav-subitem-level-1">
-                                <a href = "#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">Solicitud de Personal</a>
+                                <a href = "#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">CUS001 - Solicitud de Personal</a>
                             </li>
                         }
-                    }
-                            @*<li><a href="#">CUS002</a></li>
-                            <li><a href="#">CUS003</a></li>
-                            <li><a href="#">CUS004</a></li>
-                            <li><a href="#">CUS005</a></li>*@
+
+                        if (FachadaSesion.Usuario.Perfil.CodPerfil == 3 || FachadaSesion.Usuario.Perfil.CodPerfil == 1)
+                        {
+                            <li class="nav-subitem-level-1">
+                                @Html.ActionLink("CUS002 - Aprobar Solicitud", "IndexAprobar", "Solicitud")
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-subitem-level-1">
+                                <a href="#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">CUS002 - Aprobar Solicitud</a>
+                            </li>
+                        }
+
+                        if (FachadaSesion.Usuario.Perfil.CodPerfil == 7 || FachadaSesion.Usuario.Perfil.CodPerfil == 1)
+                        {
+                            <li class="nav-subitem-level-1">
+                                @Html.ActionLink("CUS003 - Convocatorias", "Index", "Convocatoria")
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-subitem-level-1">
+                                <a href="#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">CUS003 - Convocatorias</a>
+                            </li>
+                        }
+                        <li><a href="#">CUS004</a></li>
+                        <li><a href="#">CUS005</a></li>
+                    }   
                 </ul>
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

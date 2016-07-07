@@ -14,25 +14,43 @@
     @using (Html.BeginForm("index", null, FormMethod.Get))
     {
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-lg-10">
                 <div class="input-group">
+                    <div style="float:left;" id="ComboFiltro">
+                        <label class="control-label" style="padding-left:15px:">Filtrado por: </label>
+                        <select id="cboTipoFiltro" name="cboTipoFiltro" class="form-control selectpicker" style="width:150px;" data-style="btn-success" required></select>
+                    </div>
 
-                    <input type="text"
-                           name="descSol"
-                           value="@ViewBag.descSol"
-                           class="form-control"
-                           style="display: inline"
-                           placeholder="Buscar por descripción" />
-                    <span style="width:10px;"></span>
+                    <div style="float:left;display:none;" id="Filtro1">
+                        <input type="text"
+                               name="desc"
+                               value="@ViewBag.desc"
+                               class="form-control"
+                               style="display: inline"
+                               placeholder="Buscar" />
+                        <span style="width:10px;"></span>
+                    </div>
+                    
+                    <div style="float:left;display:none;" id="Filtro2">
+                        <select id="cboFiltro" name="cboFiltro" class="form-control selectpicker" style="width:150px;" data-style="btn-success"></select>
+                    </div>
 
-                    <label class="control-label" style="padding-left:15px:">Tipo Solicitud: </label>
-                    <select id="cboTipo" name="cboTipo" class="form-control selectpicker" style="width:130px;" data-style="btn-success" required>
-                    </select>
+                    <div style="float:left;display:none;" id="Filtro3">
+                        <label class="control-label" style="padding-left:15px;">F. inicio: </label>
+                        <input class='form-control date-picker' id="fechaIni" name="fechaIni" value="@ViewBag.FIni" placeholder="Inicio" style="padding-left:5px;width:95px;" />
+                        <label class="control-label" style="padding-left:15px;">F. Fin: </label>
+                        <input class='form-control date-picker' id="fechaFin" name="fechaFin" value="@ViewBag.FFin" placeholder="Fin" style="padding-left:5px;width:95px;"/>
+                    </div>
+
+                    <div style="float:left;padding-left:10px;">
+                        <label class="control-label" style="padding-left:15px:">Estado: </label>
+                        <select id="cboEstado" name="cboEstado" class="form-control selectpicker" style="width:130px;" data-style="btn-success" required></select>
+                    </div>
 
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="submit">Buscar</button>
                     </span>
-
+                    <div style="clear:both;"></div>
                 </div>
             </div>
 
@@ -60,24 +78,43 @@
                     tableStyle: "table table-bordered table-hover",
                     mode: WebGridPagerModes.All,
                     columns: grid.Columns(
-                      grid.Column("CodigoSol", "ID"),
-                      grid.Column("DescripcionSol", "Descripción", style: "col-lg-4"),
-                      grid.Column("FechaSol", "Fecha Solicitud", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaSol) </text>, style: "col-lg-2"),
-                      grid.Column("TipoSolicitudSol.Descripcion", "Tipo", style: "col-lg-1"),
-                      grid.Column("EstadoSol.Descripcion", "Estado", style: "col-lg-1"),
+                      grid.Column("CodigoInterno", "Código"),
+                      grid.Column("TipoSolicitudSol.Descripcion", "Tipo", style: "col-xs-1"),
+                      grid.Column("Motivo.Descripcion", "Motivo", style: "col-xs-1"),
+                      grid.Column("Cargo.Descripcion", "Cargo", style: "col-xs-1"),
+                      grid.Column("FechaSol", "Fecha Solicitud", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.GetStringFechaSol) </text>, style: "col-xs-2"),
+                      grid.Column("FechaPresentacion", "Fecha Presentación", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.GetStringFechaPresentacion)</text>, style: "col-xs-1"),
+                      grid.Column("FechaEnvio", "Fecha envío", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.GetStringFechaEnvio) </text>, style: "col-xs-2"),
+                      grid.Column("EstadoSol.Descripcion", "Estado", style: "col-xs-1"),
                       grid.Column(header: "Acciones", canSort: false, style: "action",
                         format: @<text>
-                            @if (item.EstadoSol.Codigo == 2)
+                            @Html.Raw("<a href='/Solicitud/Detalle/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Ver Detalle'> <span class='glyphicon glyphicon-search'>  </span> </a>")
+                            @if (item.EstadoSol.Codigo == 4)
                             {
-                                <a href='#' id='" + item.CodigoSol + "' onClick= "alert('No es posible editar la solicitud aprobada.')" title='Editar'> <span class='glyphicon glyphicon-edit'> Editar </span> </a>
-                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible eliminar la solicitud aprobada.')" title='Eliminar'> <span class='glyphicon glyphicon-trash'> Eliminar </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible editar la solicitud enviada.')" title='Editar'> <span class='glyphicon glyphicon-edit'>  </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible eliminar la solicitud enviada.')" title='Eliminar'> <span class='glyphicon glyphicon-trash'>  </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('La solicitud seleccionada ya fue enviada.')" title='Enviar'> <span class='glyphicon glyphicon-send'>  </span> </a>
+                            }
+                            else if (item.EstadoSol.Codigo == 3)
+                            {
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible editar la solicitud ya fue rechazada.')" title='Editar'> <span class='glyphicon glyphicon-edit'>  </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible eliminar la solicitud ya fue rechazada.')" title='Eliminar'> <span class='glyphicon glyphicon-trash'>  </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('La solicitud seleccionada la solicitud ya fue rechazada.')" title='Enviar'> <span class='glyphicon glyphicon-send'>  </span> </a>
+                            }
+                            else if (item.EstadoSol.Codigo == 2)
+                            {
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible editar la solicitud ya fue aprobada.')" title='Editar'> <span class='glyphicon glyphicon-edit'>  </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible eliminar la solicitud ya fue aprobada.')" title='Eliminar'> <span class='glyphicon glyphicon-trash'>  </span> </a>
+                                <a href='#' id='" + item.CodigoSol + "' onClick="alert('La solicitud seleccionada la solicitud ya fue aprobada.')" title='Enviar'> <span class='glyphicon glyphicon-send'>  </span> </a>
                             }
                             else
                             {
-                                @Html.Raw("<a href='/Solicitud/editar/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Editar'> <span class='glyphicon glyphicon-edit'> Editar </span> </a>")
-                                @Html.Raw("<a data-modal='' href='/Solicitud/Eliminar/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Eliminar'> <span class='glyphicon glyphicon-trash'> Eliminar </span> </a>")
+                                @Html.Raw("<a href='/Solicitud/Editar/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Editar'> <span class='glyphicon glyphicon-edit'> </span> </a>")
+                                @Html.Raw("<a data-modal='' href='/Solicitud/Eliminar/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Eliminar'> <span class='glyphicon glyphicon-trash'> </span> </a>")
+                                @Html.Raw("<a data-modal='' href='/Solicitud/Enviar/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Enviar'> <span class='glyphicon glyphicon-send'>  </span> </a>")
                             }
-                           
+                            @Html.Raw("<a data-modal='' href='/Solicitud/Observacion/" + item.CodigoSol + "' id='" + item.CodigoSol + "' title='Ver Observaciones'> <span class='glyphicon glyphicon-info-sign'>  </span> </a>")
+
                         </text>)
 
             ));
@@ -96,24 +133,163 @@
 </div>
 
 @section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/jsViews/Solicitud/solicitud.js")
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-        cargarTipoSolicitud();
+        cargarTipoFiltro();
+        cargarEstadoFiltro();
+    });
+
+    $(function () {
+        $("#fechaIni").datepicker({ format: 'dd/mm/yyyy' });
+        $("#fechaFin").datepicker({ format: 'dd/mm/yyyy' });
+
+        $("#fechaIni").on("changeDate", function (e) {
+            $('#fechaFin').data("DateTimePicker").minDate(e.date);
+        });
+        $("#fechaFin").on("changeDate", function (e) {
+            $('#fechaIni').data("DateTimePicker").maxDate(e.date);
+        });
+
+    });
+
+    $('#cboTipoFiltro').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+
+        if (valueSelected == 1) {
+            $("#Filtro1").show();
+            $("#Filtro2").hide();
+            $("#Filtro3").hide();
+        } else if (valueSelected == 2) {
+            $("#Filtro1").hide();
+            $("#Filtro2").show();
+            $("#Filtro3").hide();
+            cargarTipoSolicitud();
+        } else if (valueSelected == 3) {
+            $("#Filtro1").hide();
+            $("#Filtro2").show();
+            $("#Filtro3").hide();
+            cargarMotivoFiltro();
+        } else if (valueSelected == 4) {
+            $("#Filtro1").hide();
+            $("#Filtro2").show();
+            $("#Filtro3").hide();
+            cargarCargosFiltro();
+        } else if (valueSelected == 5) {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").show();
+        } else if (valueSelected == 6) {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").show();
+        } else if (valueSelected == 7) {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").show();
+        } else {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").hide();
+        }
     });
 
     function cargarTipoSolicitud() {
         $.get('@Url.Action("ListaTipoSolicitud", "Solicitud")')
         .done(function (data) {
-            $('#cboTipo').append('<option value="0">--TODOS--</option>');
+            $('#cboFiltro').empty();
+            $('#cboFiltro').append('<option value="0">--TODOS--</option>');
             $.each(data, function (i, row) {
                 var $option = $('<option>');
                 $option.val(row.Codigo);
                 $option.html(row.Descripcion);
-                $('#cboTipo').append($option);
-            })
+                $('#cboFiltro').append($option);
+            });
+            $("#cboFiltro option").filter(function () {
+                return $(this).val() == "@ViewBag.cboTipo";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function cargarTipoFiltro() {
+        $.get('@Url.Action("ListaTipoFiltro", "Solicitud")')
+        .done(function (data) {
+            $('#cboTipoFiltro').append('<option value="0">--TODOS--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboTipoFiltro').append($option);
+            });
+            $("#cboTipoFiltro option").filter(function () {
+                return $(this).val() == "@ViewBag.TipoFiltro";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function cargarMotivoFiltro() {
+        $.get('@Url.Action("ListaMotivoFiltro", "Solicitud")')
+        .done(function (data) {
+            $('#cboFiltro').empty();
+            $('#cboFiltro').append('<option value="0">--TODOS--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboFiltro').append($option);
+            });
+            $("#cboFiltro option").filter(function () {
+                return $(this).val() == "@ViewBag.cboTipo";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function cargarEstadoFiltro() {
+        $.get('@Url.Action("ListaEstadoFiltro", "Solicitud")')
+        .done(function (data) {
+            $('#cboEstado').append('<option value="0">--TODOS--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboEstado').append($option);
+            });
+            $("#cboEstado option").filter(function () {
+                return $(this).val() == "@ViewBag.cboEstado";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function cargarCargosFiltro() {
+        $.get('@Url.Action("ListaCargoFiltro", "Solicitud")')
+        .done(function (data) {
+            $('#cboFiltro').empty();
+            $('#cboFiltro').append('<option value="0">--TODOS--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.CodigoCargo);
+                $option.html(row.Descripcion);
+                $('#cboFiltro').append($option);
+            });
+            $("#cboFiltro option").filter(function () {
+                return $(this).val() == "@ViewBag.cboTipo";
+            }).prop('selected', true);
         })
         .fail(function (data) {
             console.log('error');

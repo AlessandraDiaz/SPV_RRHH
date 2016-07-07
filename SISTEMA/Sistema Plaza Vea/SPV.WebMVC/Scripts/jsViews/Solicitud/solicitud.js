@@ -2,16 +2,13 @@
     $.ajaxSetup({ cache: false });
     $("a[data-modal]").on("click", function (e) {
         $('#myModalContent').load(this.href, function () {
-            $('#myModal').modal({
-                keyboard: true
-            }, 'show');
-
-            bindForm(this);
+                $('#myModal').modal({
+                    keyboard: true
+                }, 'show');
+                bindForm(this);
         });
         return false;
     });
-
-
 });
 
 function bindForm(dialog) {
@@ -29,7 +26,8 @@ function bindForm(dialog) {
                     location.reload();
                 } else {
                     $('#progress').hide();
-                    $('#myModalContent').html(result);
+                    //$('#myModalContent').html(result);
+                    alert(result.msg);
                     bindForm();
                 }
             }
@@ -37,3 +35,4 @@ function bindForm(dialog) {
         return false;
     });
 }
+

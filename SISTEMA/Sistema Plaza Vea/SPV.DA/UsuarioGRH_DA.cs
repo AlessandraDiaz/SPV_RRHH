@@ -35,15 +35,17 @@ namespace SPV.DA
 
                         PerfilBE perfil = new PerfilBE();
                         perfil.CodPerfil = (Int32)rd[2];
-                        perfil.Perfil = rd[5].ToString();
+                        perfil.Perfil = rd[3].ToString();
                         usuarioLogeado.Perfil = perfil;
 
                         AreaTiendaBE area = new AreaTiendaBE();
-                        area.CodArea = (Int32)rd[3];
+                        area.CodArea = (Int32)rd[4];
+                        area.Descripcion = rd[5].ToString();
                         usuarioLogeado.Area = area;
 
                         TiendaBE tienda = new TiendaBE();
-                        tienda.CodTienda = (Int32)rd[4];
+                        tienda.CodTienda = (Int32)rd[6];
+                        tienda.NombreTienda = rd[7].ToString();
                         usuarioLogeado.Local = tienda;
                     }
                     rd.Close();

@@ -1,0 +1,484 @@
+﻿@model SPV.BE.SolicitudPersonalBE
+
+@{
+    ViewBag.Title = "Detalle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalle Solicitud</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+        <div>
+            <fieldset>
+                <legend>Solicitud de Personal</legend>
+                @Html.HiddenFor(m => m.CodigoSol)
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => Model.CodigoInterno, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.CodigoInterno, new { @class = "form-control required", @disabled = true, @style = "width:150px;" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.CodigoInterno, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.TipoConvocatoria, new { @class = "control-label col-sm-1" })
+                    <div class="col-md-4">
+                        <select class="form-control selectpicker" name="cboTipoConvoca" id="cboTipoConvoca" style="width:200px" disabled></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.TipoSolicitudSol, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <select class="form-control selectpicker" name="cboTipoSolicitud" id="cboTipoSolicitud" style="width:200px" disabled></select>
+                    </div>
+                    @Html.LabelFor(model => model.Motivo, new { @class = "control-label col-sm-1" })
+                    <div class="col-md-4">
+                        <select class="form-control selectpicker" name="cboMotivo" id="cboMotivo" style="width:200px" disabled></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(m => Model.FechaSol, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.FechaSol, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = true, @style = "width:120px;" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.FechaSol, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.LabelFor(m => Model.FechaPresentacion, new { @class = "control-label col-sm-1" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.GetStringFechaPresentacion, "{0:dd/MM/yyyy}", new { @disabled = true, @class = "form-control date-picker required", @style = "width:120px;" })
+                        @Html.HiddenFor(m => m.FechaPresentacion)
+                        <div>
+                            @Html.ValidationMessageFor(m => m.FechaPresentacion, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div id="divCampana" style="display:none;">
+            <fieldset>
+                <legend>Campaña</legend>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Campana, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <select class="form-control selectpicker" name="cboCampana" id="cboCampana" style="width:200px" disabled></select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => Model.Campana.FechaInicio, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Campana.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = true, @style = "width:120px;" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Campana.FechaInicio, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.LabelFor(m => Model.Campana.FechaFin, new { @class = "control-label col-sm-1" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Campana.FechaFin, "{0:dd/MM/yyyy}", new { @class = "form-control date-picker required", @disabled = true, @style = "width:120px;" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Campana.FechaFin, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div>
+            <fieldset>
+                <legend>Detalle de Solicitud</legend>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Cargo, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <select class="form-control selectpicker" name="cboCargo" id="cboCargo" style="width:200px" disabled></select>
+                    </div>
+                    <div class="col-md-4">
+                        <a data-modal='' class="btn btn-success" href='/Solicitud/VerDetalleCargo/0' id='VerDetalleCargo' title='Ver Detalle Cargo'>
+                            <span class='glyphicon glyphicon-search'>
+                                Ver Detalle Cargo
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(m => Model.Cargo.RangoSueldo, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Cargo.RangoSueldo, new { @class = "form-control required", @disabled = true })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Cargo.RangoSueldo, "", new { @class = "text-danger" })
+                            <input type="hidden" id="hddSueldoMax" name="hddSueldoMax" value="" />
+                            <input type="hidden" id="hddSueldoMin" name="hddSueldoMin" value="" />
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.MonedaSolicitud, new { @class = "control-label col-sm-1" })
+                    <div class="col-md-4">
+                        <select class="form-control selectpicker" name="cboMoneda" id="cboMoneda" style="width:200px" disabled></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(m => Model.SueldoSolicitud, new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.SueldoSolicitud, new { @class = "form-control required", @disabled = true, @onkeypress = "return validateFloatKeyPress(this,event);", @maxlength = "7", @style = "width:120px;" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.SueldoSolicitud, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.LabelFor(m => Model.Cantidad, new { @class = "control-label col-sm-1" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Cantidad, new { @class = "form-control solo-numero required", @disabled = true, @maxlength = "3", @style = "width:120px;" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Cantidad, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div style="padding-right: 70px;">
+            <div style="float:right;">
+                <div style="float:left;padding-left:10px;">
+                    <button class="btn btn-danger" type="button" onclick="ConfirmCancel();">
+                        <span class="glyphicon glyphicon-floppy-remove"> Cancelar</span>
+                    </button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+    </div>
+}
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jsViews/Solicitud/solicitud.js")
+
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+        CargarTipoSolicitud();
+        CargarTipoConvocatoria();
+        CargarMonedas();
+        CargarCampanas();
+        CargarCargos();
+        ValidaRangoSueldo();
+
+        $('#cboMotivo').append('<option value="0">--Seleccione--</option>');
+        $('.solo-numero').keyup(function () {
+            this.value = (this.value + '').replace(/[^0-9]/g, '');
+        });
+
+    });
+
+    $(function () {
+
+        $("#GetStringFechaPresentacion").datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+        }).on('changeDate', function (selected) {
+            var optionSelectedMotivo = $('select[name=cboMotivo]').val();
+            if (optionSelectedMotivo == 3) {
+                var maxValue = $("#Campana_FechaInicio").val();
+                var from = maxValue.split("/");
+                var endDate = new Date(from[2], from[1] - 1, from[0]);
+
+                if (Date.parse(selected.date) >= Date.parse(endDate)) {
+                    alert("La fecha seleccionada debe ser menor al inicio de campaña.");
+                    $('#GetStringFechaPresentacion').val("");
+                    $('#GetStringFechaPresentacion').datepicker('setDate', null);
+                    $('#FechaPresentacion').val("");
+                }
+            }
+
+            var date = new Date(selected.date);
+            if (date) {
+                var formattedDate = date.getDate() + "/" +
+                                    (date.getMonth() + 1) + "/" +
+                                    date.getFullYear();
+                $('#FechaPresentacion').val(formattedDate);
+            }
+        }).on('clearDate', function (selected) {
+            $('#FechaPresentacion').datepicker('setEndDate', null);
+        });
+    });
+
+    function CargarTipoSolicitud() {
+        $.get('@Url.Action("ListaTipoSolicitud", "Solicitud")')
+        .done(function (data) {
+            $('#cboTipoSolicitud').append('<option value="0">--Seleccione--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboTipoSolicitud').append($option);
+            });
+            $("#cboTipoSolicitud option").filter(function () {
+                CargarMotivos("@(Model.TipoSolicitudSol.Codigo)");
+                return $(this).val() == "@(Model.TipoSolicitudSol.Codigo)";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function CargarTipoConvocatoria() {
+        $.get('@Url.Action("ListaTipoConvocatoria", "Solicitud")')
+        .done(function (data) {
+            $('#cboTipoConvoca').append('<option value="0">--Seleccione--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboTipoConvoca').append($option);
+            });
+            $("#cboTipoConvoca option").filter(function () {
+                return $(this).val() == "@(Model.TipoConvocatoria.Codigo)";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function CargarMotivos(id) {
+        $.get('@Url.Action("ListaMotivos", "Solicitud")', { tipo: id })
+        .done(function (data) {
+            $('#cboMotivo').empty();
+            $('#cboMotivo').append('<option value="0">--Seleccione--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboMotivo').append($option);
+            });
+            $("#cboMotivo option").filter(function () {
+                if ("@(Model.Motivo.Codigo)" == "3")
+                {
+                    $("#divCampana").show();
+                } else {
+                    $("#divCampana").hide();
+                }
+                return $(this).val() == "@(Model.Motivo.Codigo)";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function CargarCampanas() {
+        $.get('@Url.Action("ListaCampanas", "Solicitud")')
+        .done(function (data) {
+            $('#cboCampana').append('<option value="0">--Seleccione--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.ID);
+                $option.html(row.Descripcion);
+                $('#cboCampana').append($option);
+            });
+            $("#cboCampana option").filter(function () {
+                CargarFechaCampana("@(Model.Campana.ID)");
+                return $(this).val() == "@(Model.Campana.ID)";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function CargarCargos() {
+        $.get('@Url.Action("ListaCargo", "Solicitud")')
+        .done(function (data) {
+            $('#cboCargo').append('<option value="0">--Seleccione--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.CodigoCargo);
+                $option.html(row.Descripcion);
+                $('#cboCargo').append($option);
+            });
+            $("#cboCargo option").filter(function () {
+                CargarRangoSueldo("@(Model.Cargo.ID)");
+                return $(this).val() == "@(Model.Cargo.ID)";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function CargarMonedas() {
+        $.get('@Url.Action("ListaMonedas", "Solicitud")')
+        .done(function (data) {
+            $('#cboMoneda').append('<option value="0">--Seleccione--</option>');
+            $.each(data, function (i, row) {
+                var $option = $('<option>');
+                $option.val(row.Codigo);
+                $option.html(row.Descripcion);
+                $('#cboMoneda').append($option);
+            });
+            $("#cboMoneda option").filter(function () {
+                return $(this).val() == "@(Model.MonedaSolicitud.Codigo)";
+            }).prop('selected', true);
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    $('#cboTipoSolicitud').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        CargarMotivos(valueSelected);
+    });
+
+    $('#cboCargo').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        CargarRangoSueldo(valueSelected);
+    });
+
+    $('#cboMotivo').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+
+        if (valueSelected == 3) {
+            $("#divCampana").show();
+        } else {
+            $("#divCampana").hide();
+        }
+    });
+
+    $('#cboCampana').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+
+        CargarFechaCampana(valueSelected);
+    });
+
+    function CargarFechaCampana(id) {
+        $.get('@Url.Action("GetDataCampana", "Solicitud")', { ID: id })
+        .done(function (data) {
+
+            if (data == null) {
+                $('#Campana_FechaInicio').val("");
+                $('#Campana_FechaFin').val("");
+            } else {
+                var parsedDateIni = new Date(parseInt(data.FechaInicio.substr(6)));
+                var jsDateIni = new Date(parsedDateIni); //Date object
+
+                var parsedDateFin = new Date(parseInt(data.FechaFin.substr(6)));
+                var jsDateFin = new Date(parsedDateFin); //Date object
+
+                $('#Campana_FechaInicio').val(formatJSONDate(jsDateIni));
+                $('#Campana_FechaFin').val(formatJSONDate(jsDateFin));
+
+                $('#FechaPresentacion').val("");
+            }
+
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function formatJSONDate(jsonDate) {
+        var newDate = dateFormat(jsonDate, "dd/mm/yyyy");
+        return newDate;
+    }
+
+    function ConfirmCancel() {
+        location.href = '@Url.Action("Index", "Solicitud")';
+        return false;
+    }
+
+    function CargarRangoSueldo(id) {
+        $.get('@Url.Action("GetDataCargos", "Solicitud")', { ID: id })
+        .done(function (data) {
+            if (data == null) {
+                var url = '/Solicitud/VerDetalleCargo/0';
+                $("#VerDetalleCargo").attr("href", url);
+            } else {
+                var url = '/Solicitud/VerDetalleCargo/' + id;
+                $('#Cargo_RangoSueldo').val(data.RangoSueldo);
+                $("#VerDetalleCargo").attr("href", url);
+                $('#hddSueldoMax').val(data.SueldoMax);
+                $('#hddSueldoMin').val(data.SueldoMin);
+
+                $("#SueldoSolicitud").attr({
+                    "max": data.SueldoMax,
+                    "min": data.SueldoMin
+                });
+            }
+        })
+        .fail(function (data) {
+            console.log('error');
+        });
+    }
+
+    function ValidaRangoSueldo() {
+        var txtsueldo = $("input[type='text']#SueldoSolicitud");
+        txtsueldo.change(function () {
+            var min = txtsueldo.attr("min");
+            var max = txtsueldo.attr("max");
+            var value = txtsueldo.val();
+            var optionSelectedCargo = $('select[name=cboCargo]').val()
+
+            if (optionSelectedCargo == 0) {
+                alert("Seleccionar Cargo");
+                txtsueldo.val("0");
+            } else {
+                if ((parseFloat(value) < parseFloat(min)) || (parseFloat(value) > parseFloat(max))) {
+                    alert("El valor debe estar comprendido dentro del rango del sueldos.");
+                    txtsueldo.val(min);
+                }
+            }
+        });
+    }
+
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if (number.length > 1 && charCode == 46) {
+            return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1)) {
+            return false;
+        }
+        return true;
+    }
+
+    function getSelectionStart(o) {
+        if (o.createTextRange) {
+            var r = document.selection.createRange().duplicate()
+            r.moveEnd('character', o.value.length)
+            if (r.text == '') return o.value.length
+            return o.value.lastIndexOf(r.text)
+        } else return o.selectionStart
+    }
+
+    </script>
+}

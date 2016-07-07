@@ -8,6 +8,7 @@ namespace SPV.BE
 {
     public class ParametroBE
     {
+        #region "PropiedadesMySQL"
         public int CodigoParametro { get; set; }
         public int CodigoAgrupador { get; set; }
         public string DescripcionAgrupador { get; set; }
@@ -15,5 +16,6 @@ namespace SPV.BE
         public string Descripcion { get; set; }
         public string Valor { get; set; }
         public int Estado { get; set; }
+        #endregion
     }
 }

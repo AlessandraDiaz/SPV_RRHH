@@ -9,9 +9,10 @@ namespace SPV.BL
 {
     public class SolicitudPersonalBL
     {
-        public List<SolicitudPersonalBE> Listar(SolicitudPersonalBE solicitud)
+        public List<SolicitudPersonalBE> Listar(int tipoFiltro, string desc, int codigo, string fechaini,
+                                                    string fechafin, int estado, int usuario, int local, int area)
         {
-            return new SolicitudPersonalDA().Listar(solicitud);
+            return new SolicitudPersonalDA().Listar(tipoFiltro,desc, codigo,fechaini,fechafin,estado, usuario, local,area);
         }
 
         public SolicitudPersonalBE GetSolicitudByID(int Id)

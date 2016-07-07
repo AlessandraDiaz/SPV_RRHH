@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaTiendaBL.cs" />
+    <Compile Include="CampanaBL.cs" />
+    <Compile Include="CargoBL.cs" />
     <Compile Include="ColaboradorBL.cs" />
     <Compile Include="ConvocatoriaBL.cs" />
     <Compile Include="ExamenBL.cs" />
@@ -51,7 +53,6 @@
     <Compile Include="PreguntaAlternativaBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankingPostulanteBL.cs" />
-    <Compile Include="SolicitudPerfilBL.cs" />
     <Compile Include="SolicitudPersonalBL.cs" />
     <Compile Include="SPV_Seguridad\UsuarioBL.cs" />
     <Compile Include="TurnoBL.cs" />

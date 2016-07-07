@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SPV.DA;
+using SPV.BE;
 
 namespace SPV.BL
 {
@@ -21,6 +22,11 @@ namespace SPV.BL
         public Int32 ObtenerContratoColaborador(String p_CodigoUsuario)
         {
             return oColaboradorDA.ObtenerContratoColaborador(p_CodigoUsuario);
+        }
+
+        public List<ColaboradorBE> ListarColaboradores(ColaboradorBE colaborador)
+        {
+            return new ColaboradorDA().ListarColaboradores(colaborador);
         }
     }
 }

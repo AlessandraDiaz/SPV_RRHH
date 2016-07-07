@@ -1,0 +1,40 @@
+﻿@{
+    var usuario = FachadaSesion.Usuario;
+}
+
+<div class="area-usuario">
+
+    @if (@usuario != null)
+    {
+        using (Html.BeginForm("LogOut", "Usuario", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="btn-group">
+                <div style="float:left;">
+                    <a href="#" class="btnLogin"><span class="fa-stack fa-lg pull-left"><i class="fa fa-user fa-stack-1x "></i></span>Bienvenido @usuario.NombreUsuario  - @usuario.Perfil.Perfil </a>
+                </div>
+                <div style="float:left;">
+                    <a href="javascript:document.getElementById('logoutForm').submit()" class="btnLogin">
+                        <span class="fa-stack fa-lg pull-left"><i class="fa fa-sign-out fa-stack-1x "></i></span>
+                        Cerrar Sesión
+                    </a>
+                </div>
+                <div style="clear:both;" />
+            </div>
+        }
+    }
+    else
+    {
+        <div class="btn-group">
+            <div style="float:left;">
+                <span class="fa-stack fa-lg pull-left"><i class="fa fa-sign-in fa-stack-1x " style="color:#999999"></i></span>
+                @Html.ActionLink("Iniciar Sesión", "Login", "Usuario", routeValues: null, htmlAttributes: new { id = "loginLink" , @class= "btnLogin" })
+            </div>
+            <div style="clear:both;" />   
+        </div>
+    }
+</div>
+@section scripts
+{
+}

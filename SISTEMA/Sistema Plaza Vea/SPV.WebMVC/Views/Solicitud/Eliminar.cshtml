@@ -12,26 +12,62 @@
     <div class="modal-body">
 
         <div class="form-horizontal">
-            <div class="form-group">
-                @Html.LabelFor(m => Model.DescripcionSol, new { @class = "control-label col-sm-3" })
+            <div class="form-group row">
+                @Html.LabelFor(m => Model.CodigoInterno, new { @class = "control-label col-sm-3" })
                 <div class="col-sm-9">
-                    @Html.TextBoxFor(m => m.DescripcionSol, new { @class = "form-control required", @disabled = "disabled" })
+                    @Html.TextBoxFor(m => m.CodigoInterno, new { @class = "form-control required", @disabled = "disabled" })
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group row">
+                @Html.LabelFor(m => Model.TipoConvocatoria, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.TipoConvocatoria.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(m => Model.TipoSolicitudSol, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.TipoSolicitudSol.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(m => Model.Motivo, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.Motivo.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="form-group row">
                 @Html.LabelFor(m => Model.FechaSol, new { @class = "control-label col-sm-3" })
                 <div class="col-sm-9">
                     @Html.TextBoxFor(m => m.FechaSol, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = "disabled" })
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => Model.TipoSolicitudSol, new { @class = "control-label col-sm-3" })
+            <div class="form-group row">
+                @Html.LabelFor(m => Model.Cargo, new { @class = "control-label col-sm-3" })
                 <div class="col-sm-9">
-                    @Html.TextBoxFor(m => m.TipoSolicitudSol.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
+                    @Html.TextBoxFor(m => m.Cargo.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
                 </div>
             </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(m => Model.SueldoSolicitud, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.SueldoSolicitud, new { @class = "form-control required", @disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(m => Model.Cantidad, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.Cantidad, new { @class = "form-control required", @disabled = "disabled" })
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-9 col-sm-offset-3">
                     <h3>
@@ -46,8 +82,7 @@
 
 
     <div class="modal-footer">
-            <input class="btn btn-primary" type="submit" value="Si" />
-            <button class="btn btn-danger" data-dismiss="modal">No</button>
-            
-        </div>
+        <input class="btn btn-primary" type="submit" value="Si" />
+        <button class="btn btn-danger" data-dismiss="modal">No</button>
+    </div>
 }

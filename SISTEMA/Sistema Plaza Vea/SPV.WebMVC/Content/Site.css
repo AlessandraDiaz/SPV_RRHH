@@ -109,3 +109,35 @@ textarea {
 .main .page-header {
     margin-top: 0;
 }
+
+.area-usuario {
+    float: right;
+    vertical-align: top;
+    margin: 5px 4px;
+    padding-right: 40px;
+    padding-top: 20px;
+    width: 620px;
+    height: 41px;
+    text-align: right;
+    color: #fff;
+    font-size: large;
+    font-family: sans-serif;
+}
+
+.btnLogin {
+    display:inline-block;
+    background-color:#ff0c2a;
+    color: #FFFFFF;
+    padding: 14px 5px;
+    text-align: center;	
+    text-decoration: none;
+    font-size:16px;
+    font-weight:bold;
+    margin-left:20px;
+    opacity:0.9;
+}
+.btnLogin:hover {
+    color:white;
+    background-color:red;
+    opacity:1;
+}
