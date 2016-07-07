@@ -50,6 +50,7 @@
     <Compile Include="ColaboradorTurnoBE.cs" />
     <Compile Include="ConstanteBE.cs" />
     <Compile Include="ContratoBE.cs" />
+    <Compile Include="Convocatoria2BE.cs" />
     <Compile Include="ConvocatoriaBE.cs" />
     <Compile Include="ConvocatoriaPostulanteBE.cs" />
     <Compile Include="DetalleRequerimientoCompraBE.cs" />

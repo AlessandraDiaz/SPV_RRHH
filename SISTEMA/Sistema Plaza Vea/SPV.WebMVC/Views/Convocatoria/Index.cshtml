@@ -1,0 +1,163 @@
+﻿@model SPV.BE.ListaPaginada<SPV.BE.Convocatoria2BE>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #divFiltro > .row {
+        margin-top: 5px;
+    }
+</style>
+
+<h2>Convocatoria de Personal</h2>
+
+@{
+    var message = TempData["msg"] ?? string.Empty;
+}
+
+<div class="well">
+    @using (Html.BeginForm("Index", null, FormMethod.Get))
+    {
+        
+        <div>
+            <div class="form-group" id="divFiltro">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <input type="text" class="form-control disabled" name="txtCodigoBusqueda" id="txtCodigoBusqueda" placeholder="Código" value="@ViewBag.id"/>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="text" class="form-control" name="txtNombreBusqueda" id="txtNombreBusqueda" placeholder="Nombre" />
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="input-group date">
+                            <input type="text" class="form-control" name="dpFechaInicio" id="dpFechaInicio" placeholder="F. inicio" />
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="input-group date">
+                            <input type="text" class="form-control" name="dpFechaFin" id="dpFechaFin" placeholder="F. fin" />
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">Buscar</button>
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        @Html.DropDownList("cboTipoConvocatoria", @ViewBag.TiposConvocatoria as SelectList, "--Tipo convocatoria--", new { id = "cboTipoConvocatoria", @class = "form-control" })
+                    </div>
+                    <div class="col-lg-2">
+                        @Html.DropDownList("cboTipoSolicitud", @ViewBag.TiposSolicitud as SelectList, "--Tipo solicitud--", new { id = "cboTipoSolicitud", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="pull-left col-lg-1">
+                        <button class="btn btn-success" type="button" onclick="location.href='@Url.Action("Create", "Convocatoria")'">
+                            <span class="glyphicon glyphicon-plus">Crear Solicitud</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:17px;">
+            @{
+                var grid = new WebGrid(
+                            canPage: true,
+                            rowsPerPage: Model.PageSize,
+                            canSort: true,
+                            ajaxUpdateContainerId: "grid");
+
+                grid.Bind(Model.Content, rowCount: Model.TotalRecords, autoSortAndPage: false);
+                grid.Pager(WebGridPagerModes.All);
+
+                @grid.GetHtml(htmlAttributes: new { id = "grid" },
+                    fillEmptyRows: false,
+                    tableStyle: "table table-bordered table-hover",
+                    mode: WebGridPagerModes.All,
+                    columns: grid.Columns(
+                      grid.Column("Nombre", "Nombre", style: "col-xs-1"),
+                      grid.Column("TipoConvocatoria", "Tipo Convocatoria", style: "col-xs-1"),
+                      grid.Column("FechaInicio", "Fecha Inicio", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaInicio) </text>, style: "col-xs-2"),
+                      grid.Column("FechaFin", "Fecha Fin", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaFin)</text>, style: "col-xs-2"),
+                      grid.Column("Solicitud", "Solicitud", style: "col-xs-1"),
+                      grid.Column("FechaCreacion", "Fecha Creación", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaCreacion) </text>, style: "col-xs-1"),
+                      grid.Column("Estado", "Estado", style: "col-xs-1"),
+                      grid.Column(header: "Acciones", canSort: false, style: "action",
+                        format: @<text>
+                        @Html.Raw("<a data-modal='' href='/Convocatoria/Details/" + item.Id + "' id='" + item.Id + "' title='Ver Detalle'> <span class='glyphicon glyphicon-search'> Ver Detalle </span> </a>")
+                        </text>)
+
+            ));
+            }
+        </div>
+}
+</div>
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jsViews/Convocatoria/Index.js")
+
+
+<script type="text/javascript">
+    var message = '@message';
+    if(message)
+        alert(message);
+
+    $(function () {
+        $.ajaxSetup({ cache: false });
+        $("a[data-modal]").on("click", function (e) {
+            $('#myModalContent').load(this.href, function () {
+                $('#myModal').modal({
+                    keyboard: true
+                }, 'show');
+                bindForm(this);
+            });
+            return false;
+        });
+    });
+
+    function bindForm(dialog) {
+        $('form', dialog).submit(function () {
+            $('#progress').show();
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (result) {
+                    if (result.success) {
+                        $('#myModal').modal('hide');
+                        $('#progress').hide();
+                        alert("Grabado Correctamente.");
+                        location.reload();
+                    } else {
+                        $('#progress').hide();
+                        //$('#myModalContent').html(result);
+                        alert(result.msg);
+                        bindForm();
+                    }
+                }
+            });
+            return false;
+        });
+    }
+
+</script>
+}

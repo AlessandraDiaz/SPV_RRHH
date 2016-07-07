@@ -49,6 +49,7 @@
     <Compile Include="CampanaDA.cs" />
     <Compile Include="CargoDA.cs" />
     <Compile Include="ColaboradorDA.cs" />
+    <Compile Include="Convocatoria2DA.cs" />
     <Compile Include="ConvocatoriaDA.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DataBaseDA.cs" />

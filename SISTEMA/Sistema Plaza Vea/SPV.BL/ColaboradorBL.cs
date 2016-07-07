@@ -28,5 +28,18 @@ namespace SPV.BL
         {
             return new ColaboradorDA().ListarColaboradores(colaborador);
         }
+
+
+        public List<ColaboradorBE> List()
+        {
+            try
+            {
+                return new ColaboradorDA().List();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

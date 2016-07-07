@@ -1,0 +1,79 @@
+﻿@model SPV.BE.SolicitudPersonalBE
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 class="modal-title">Detalle de Solicitud</h3>
+</div>
+
+<div class="modal-body">
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(m => Model.CodigoInterno, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.CodigoInterno, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.TipoConvocatoria, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextAreaFor(m => m.TipoConvocatoria.Descripcion, new { @class = "form-control required", @disabled = "disabled"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.TipoSolicitudSol, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextAreaFor(m => m.TipoSolicitudSol.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.FechaSol, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.FechaSol, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Campana, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.Campana.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.FechaPresentacion, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.FechaPresentacion, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Cargo, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.Cargo.Descripcion, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.SueldoSolicitud, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.SueldoSolicitud, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Cantidad, new { @class = "control-label col-sm-3" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.Cantidad, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+</div>

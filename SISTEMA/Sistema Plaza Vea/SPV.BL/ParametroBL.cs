@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using SPV.BE;
 using SPV.DA;
-using SPV.BE;
+using System;
+using System.Collections.Generic;
 
 
 namespace SPV.BL
@@ -13,6 +11,18 @@ namespace SPV.BL
         public List<ParametroBE> Listar(ParametroBE parametro)
         {
             return new ParametroDA().Listar(parametro);
+        }
+
+        public List<ParametroBE> ListarXCodAgrupador(int codigoAgrupador)
+        {
+            try
+            {
+                return new ParametroDA().ListarXCodAgrupador(codigoAgrupador);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

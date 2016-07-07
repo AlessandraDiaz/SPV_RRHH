@@ -124,6 +124,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ConvocatoriaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SolicitudController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
@@ -201,6 +202,9 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jsViews\Convocatoria\Create.js" />
+    <Content Include="Scripts\jsViews\Convocatoria\Index.js" />
+    <Content Include="Scripts\jsViews\Convocatoria\UtilJS.js" />
     <Content Include="Scripts\jsViews\Solicitud\solicitud.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
@@ -236,6 +240,9 @@
     <Content Include="Views\Solicitud\DetalleAprobar.cshtml" />
     <Content Include="Views\Solicitud\Aprobar.cshtml" />
     <Content Include="Views\Solicitud\Rechazar.cshtml" />
+    <Content Include="Views\Convocatoria\Index.cshtml" />
+    <Content Include="Views\Convocatoria\Create.cshtml" />
+    <Content Include="Views\Convocatoria\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

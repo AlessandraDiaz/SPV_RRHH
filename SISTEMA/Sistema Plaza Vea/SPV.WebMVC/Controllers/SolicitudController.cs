@@ -508,6 +508,31 @@ namespace SPV.WebMVC.Controllers
                 solicitudPorActualizar.Comentarios = solicitud.Comentarios;
 
                 solicitudBL.UpdateSolicitud(solicitudPorActualizar);
+
+                ColaboradorBE oParam = new ColaboradorBE();
+                UsuarioBE oParamUser = new UsuarioBE();
+                PerfilBE oPerfil = new PerfilBE() { CodPerfil = 0 };
+                TiendaBE olocal = new TiendaBE() { CodTienda = 0 };
+                oParamUser.Perfil = oPerfil;
+                oParamUser.Local = olocal;
+                oParam.usuario = oParamUser;
+
+                List<ColaboradorBE> colaboradores = oColaboradorBL.ListarColaboradores(oParam);
+                var usuarioCrea = colaboradores.FirstOrDefault(t => t.usuario.CodigoUsuario == solicitudPorActualizar.CodigoUsuario);
+
+                // Configurar envio de correo
+                string subject = string.Format("{0}: {1} - {2}", ConfigurationManager.AppSettings.Get("AsuntoMailEnvioSolicitud"), solicitudPorActualizar.CodigoInterno, DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss"));
+                string mailFrom = ConfigurationManager.AppSettings.Get("MailEmisor");
+                string passwordMailEmisor = ConfigurationManager.AppSettings.Get("PasswordMailEmisor");
+                StringBuilder buffer = new StringBuilder();
+                buffer.Append("Estimado <b>{0} {1}, {2}</b>");
+                buffer.Append("Es grato saludarlo e informarle que se su solicitud ha sido aprobada. <br />");
+                buffer.Append("Saludos cordiales. <br/><br/>");
+                buffer.Append("<i>Nota: Por favor no responda este correo.<i>");
+
+                MailHelper.SendMail(mailFrom, passwordMailEmisor, usuarioCrea.Correo, subject, string.Format(buffer.ToString(), usuarioCrea.ApellidoPaterno, usuarioCrea.ApellidoMaterno, usuarioCrea.Nombres), true, System.Net.Mail.MailPriority.Normal);
+
+
                 return Json(new { success = true });
             }
             return PartialView("Aprobar", solicitud);
@@ -545,6 +570,31 @@ namespace SPV.WebMVC.Controllers
                 solicitudPorActualizar.Comentarios = solicitud.Comentarios;
 
                 solicitudBL.UpdateSolicitud(solicitudPorActualizar);
+
+
+                ColaboradorBE oParam = new ColaboradorBE();
+                UsuarioBE oParamUser = new UsuarioBE();
+                PerfilBE oPerfil = new PerfilBE() { CodPerfil = 0 };
+                TiendaBE olocal = new TiendaBE() { CodTienda = 0 };
+                oParamUser.Perfil = oPerfil;
+                oParamUser.Local = olocal;
+                oParam.usuario = oParamUser;
+
+                List<ColaboradorBE> colaboradores = oColaboradorBL.ListarColaboradores(oParam);
+                var usuarioCrea = colaboradores.FirstOrDefault(t => t.usuario.CodigoUsuario == solicitudPorActualizar.CodigoUsuario);
+
+                // Configurar envio de correo
+                string subject = string.Format("{0}: {1} - {2}", ConfigurationManager.AppSettings.Get("AsuntoMailEnvioSolicitud"), solicitudPorActualizar.CodigoInterno, DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss"));
+                string mailFrom = ConfigurationManager.AppSettings.Get("MailEmisor");
+                string passwordMailEmisor = ConfigurationManager.AppSettings.Get("PasswordMailEmisor");
+                StringBuilder buffer = new StringBuilder();
+                buffer.Append("Estimado <b>{0} {1}, {2}</b>");
+                buffer.Append("Su solicitud ha sido rechazada. Ver los detalles en el panel de solicitudes. <br />");
+                buffer.Append("Saludos cordiales. <br/><br/>");
+                buffer.Append("<i>Nota: Por favor no responda este correo.<i>");
+
+                MailHelper.SendMail(mailFrom, passwordMailEmisor, usuarioCrea.Correo, subject, string.Format(buffer.ToString(), usuarioCrea.ApellidoPaterno, usuarioCrea.ApellidoMaterno, usuarioCrea.Nombres), true, System.Net.Mail.MailPriority.Normal);
+
                 return Json(new { success = true });
             }
             return PartialView("Rechazar", solicitud);

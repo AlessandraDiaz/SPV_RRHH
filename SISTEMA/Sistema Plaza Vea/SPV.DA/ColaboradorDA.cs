@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using SPV.BE;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Configuration;
 
 namespace SPV.DA
 {
@@ -169,5 +170,57 @@ namespace SPV.DA
             return lista;
         }
 
+		
+public List<ColaboradorBE> List()
+        {
+            querySQL = "SELECT PK_CODIGOCOLABORADOR AS CODIGO, APELLIDOPATERNO, APELLIDOMATERNO, NOMBRE, DNI, FECHANACIMIENTO, SEXO, DIRECCION, TELEFONO, CORREO, CURRICULUMVITAE, ESTADOCIVIL, CANTIDADHIJOS, SEGURO, CODIGOESSALUD, FECHACESE, ANTECEDENTEPOLICIAL FROM RRHH.TB_COLABORADOR A";
+            
+            try
+            {
+                var lista = new List<ColaboradorBE>();
+
+                using (var conexion = new MySqlConnection())
+                {
+                    conexion.ConnectionString = ConfigurationManager.ConnectionStrings["cnMySql"].ConnectionString;
+
+                    using (var comando = conexion.CreateCommand())
+                    {
+                        comando.Connection = conexion;
+                        comando.CommandText = querySQL;
+                        comando.CommandType = System.Data.CommandType.Text;
+
+                        conexion.Open();
+
+                        using (var lector = comando.ExecuteReader())
+                        {
+                            ColaboradorBE entidad = null;
+
+                            while (lector.Read())
+                            {
+                                entidad = new ColaboradorBE();
+                                entidad.ID = Convert.ToInt32(lector["CODIGO"]);
+                                entidad.ApellidoPaterno = Convert.ToString(lector["APELLIDOPATERNO"]);
+                                entidad.ApellidoMaterno = Convert.ToString(lector["APELLIDOMATERNO"]);
+                                entidad.Nombres = Convert.ToString(lector["NOMBRE"]);
+                                entidad.DNI = Convert.ToString(lector["DNI"]);
+                                entidad.FechaNacimiento = Convert.ToDateTime(lector["FECHANACIMIENTO"]);
+                                entidad.Sexo = Convert.ToString(lector["SEXO"]);
+                                entidad.Direccion = Convert.ToString(lector["DIRECCION"]);
+                                entidad.Telefono = Convert.ToString(lector["TELEFONO"]);
+                                entidad.Correo = Convert.ToString(lector["CORREO"]);
+
+                                lista.Add(entidad);
+                            }
+                        }
+                    }
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
