@@ -1,0 +1,67 @@
+-- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
+--
+-- Host: localhost    Database: rrhh
+-- ------------------------------------------------------
+-- Server version	5.5.50-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `tb_colaborador`
+--
+
+DROP TABLE IF EXISTS `tb_colaborador`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tb_colaborador` (
+  `PK_CodigoColaborador` int(11) NOT NULL AUTO_INCREMENT,
+  `ApellidoPaterno` varchar(50) NOT NULL,
+  `ApellidoMaterno` varchar(50) NOT NULL,
+  `Nombre` varchar(100) NOT NULL,
+  `Dni` varchar(8) NOT NULL,
+  `FechaNacimiento` datetime NOT NULL,
+  `Sexo` varchar(1) NOT NULL,
+  `Direccion` varchar(100) NOT NULL,
+  `Telefono` varchar(10) NOT NULL,
+  `Correo` varchar(100) NOT NULL,
+  `CurriculumVitae` varchar(100) NOT NULL,
+  `EstadoCivil` varchar(1) NOT NULL,
+  `CantidadHijos` int(45) NOT NULL,
+  `Seguro` varchar(45) NOT NULL,
+  `CodigoEssalud` varchar(45) NOT NULL,
+  `Fechacese` datetime NOT NULL,
+  `AntecedentePolicial` varchar(100) NOT NULL,
+  `FK_CodigoUsuario` int(11) DEFAULT NULL,
+  PRIMARY KEY (`PK_CodigoColaborador`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_colaborador`
+--
+
+LOCK TABLES `tb_colaborador` WRITE;
+/*!40000 ALTER TABLE `tb_colaborador` DISABLE KEYS */;
+INSERT INTO `tb_colaborador` VALUES (1,'VARGAS','PAUCAR','ROGERD','40521561','2011-08-21 14:11:09','M','AV PASEO DE LA REPUBLICA 3717','985456855','Carlosdevelop@gmail.com','CV_40521561.docx','S',0,'SNP-40521561','ESS-40521561','2011-08-21 14:11:09','AP_40521561.docx',2),(2,'PINEDA','SALAZAR','ROSARIO','41524875','2011-08-21 14:11:09','F','CALLE MONTI 112','963258745','carloscastillo@outlook.com','CV_41524875.docx','S',0,'SNP-41524875','ESS-41524875','2011-08-21 14:11:09','AP_41524875.docx',3),(3,'CABELLO','SOTO','SOFIA','43215894','2011-08-21 14:11:09','F','AV. CENTRAL 1518','945632587','CABELLO.SOTO.S@gmail.com','CV_43215894.docx','C',1,'SNP-43215894','ESS-43215894','2011-08-21 14:11:09','AP_43215894.docx',4),(4,'SANCHEZ','BACA','RAUL','40254156','2011-08-21 14:11:09','M','AV. PRIMAVERA 3817','3258745','SANCHEZ.BACA.R@gmail.com','CV_40254156.docx','S',1,'SNP-40254156','ESS-40254156','2011-08-21 14:11:09','AP_40254156.docx',NULL),(5,'ALVARADO','LOPEZ','JOSE','42515461','2011-08-21 14:11:09','M','CALLE 48 5876','985647124','ALVARADO.LOPEZ.J@gmail.com','CV_42515461.docx','C',2,'AFP-42515461','ESS-42515461','2011-08-21 14:11:09','AP_42515461.docx',NULL),(6,'PACHAS','PACHAS','ALEX','44518597','2011-08-21 14:11:09','M','CALLE LAS GARZAS 258','945135483','PACHAS.PACHAS.A@gmail.com','CV_44518597.docx','C',1,'AFP-44518597','ESS-44518597','2011-08-21 14:11:09','AP_44518597.docx',NULL),(7,'ROQUE','HUARICO','ANTONIO','32154879','2011-08-21 14:11:09','M','AV LA MARINA 2330','978741542','ROQUE.HUARICO.A@gmail.com','CV_32154879.docx','S',0,'AFP-32154879','ESS-32154879','2011-08-21 14:11:09','AP_32154879.docx',NULL),(8,'CONTACTO','CONTACTO','CONTACTO','45792116','2011-08-21 14:11:09','M','AV LA SALA 2330','978741542','Carlosdevelop@gmail.com','CV_32154879.docx','S',0,'AFP-32154879','ESS-32154879','2011-08-21 14:11:09','AP_32154879.docx',0);
+/*!40000 ALTER TABLE `tb_colaborador` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-07-07  8:48:20
