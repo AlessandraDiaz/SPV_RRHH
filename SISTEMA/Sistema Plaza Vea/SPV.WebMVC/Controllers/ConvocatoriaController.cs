@@ -69,9 +69,7 @@ namespace SPV.WebMVC.Controllers
         // GET: Convocatoria/Details/5
         public ActionResult Detalle(int id)
         {
-            var convocatoria = new Convocatoria2BL().Get(id);
-            var solicitud = new SolicitudPersonalBL().GetSolicitudByID(convocatoria.Solicitud.CodigoSol);
-
+            var solicitud = new SolicitudPersonalBL().GetSolicitudByID(id);
             return PartialView(solicitud);
         }
 

@@ -95,43 +95,43 @@
                         if(FachadaSesion.Usuario.Perfil.CodPerfil == 2 || FachadaSesion.Usuario.Perfil.CodPerfil == 1)
                         {
                             <li class="nav-subitem-level-1">
-                                @Html.ActionLink("CUS001 - Solicitud de Personal", "Index", "Solicitud")
+                                @Html.ActionLink("Solicitud de Personal", "Index", "Solicitud")
                             </li>
                         }
                         else
                         {
                             <li class="nav-subitem-level-1">
-                                <a href = "#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">CUS001 - Solicitud de Personal</a>
+                                <a href = "#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">Solicitud de Personal</a>
                             </li>
                         }
 
                         if (FachadaSesion.Usuario.Perfil.CodPerfil == 3 || FachadaSesion.Usuario.Perfil.CodPerfil == 1)
                         {
                             <li class="nav-subitem-level-1">
-                                @Html.ActionLink("CUS002 - Aprobar Solicitud", "IndexAprobar", "Solicitud")
+                                @Html.ActionLink("Aprobar Solicitud", "IndexAprobar", "Solicitud")
                             </li>
                         }
                         else
                         {
                             <li class="nav-subitem-level-1">
-                                <a href="#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">CUS002 - Aprobar Solicitud</a>
+                                <a href="#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">Aprobar Solicitud</a>
                             </li>
                         }
 
                         if (FachadaSesion.Usuario.Perfil.CodPerfil == 7 || FachadaSesion.Usuario.Perfil.CodPerfil == 1)
                         {
                             <li class="nav-subitem-level-1">
-                                @Html.ActionLink("CUS003 - Convocatorias", "Index", "Convocatoria")
+                                @Html.ActionLink("Convocatorias", "Index", "Convocatoria")
                             </li>
                         }
                         else
                         {
                             <li class="nav-subitem-level-1">
-                                <a href="#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">CUS003 - Convocatorias</a>
+                                <a href="#" onclick="alert('No esta autorizado para ingresar a esta opción'); return false;">Convocatorias</a>
                             </li>
                         }
-                        <li><a class="nav-subitem-level-1" href="#">CUS004</a></li>
-                        <li><a class="nav-subitem-level-1" href="#">CUS005</a></li>
+                        <li class="nav-subitem-level-1"><a href="#">Exámen Psicotécnico</a></li>
+                        <li class="nav-subitem-level-1"><a href="#">Gestionar Postulantes Aptos</a></li>
                     }   
                 </ul>
             </div>
