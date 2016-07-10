@@ -47,6 +47,15 @@ namespace SPV.WebMVC
             set { Asignar("ListCargos", value); }
         }
 
+        public static int TipoFiltro
+        {
+            get
+            {
+                return Obtener<int>("TipoFiltro");
+            }
+            set { Asignar("TipoFiltro", value); }
+        }
+
         private static void Asignar(string key, object value)
         {
             if (HttpContext.Current.Session[key] == null)

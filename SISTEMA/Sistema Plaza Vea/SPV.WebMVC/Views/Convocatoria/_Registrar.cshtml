@@ -1,0 +1,80 @@
+﻿@model SPV.BE.ListaPaginada<SPV.BE.SolicitudPersonalBE>
+
+<div class="well">
+    @using (Html.BeginForm("_Registrar", "Convocatoria", FormMethod.Post, new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        UpdateTargetId = "buscar"
+    }))
+    {
+        <fieldset>
+            <legend>Buscar solicitud</legend>
+            <div class="form-group row">
+                <label class="control-label col-md-1" style="padding-left:15px;">Cargo: </label>
+                <div class="col-md-2">
+                    @Html.DropDownList("cboCargo", @ViewBag.Cargos as SelectList, "-- Todos --", new { id = "cboCargo", @class = "form-control" })
+                </div>
+                <label class="control-label col-md-2" style="padding-left:15px;">Tipo Solicitud: </label>
+                <div class="col-md-2">
+                    @Html.DropDownList("cboTipoSolicitud", @ViewBag.TipoSolicitud as SelectList, "-- Todos --", new { id = "cboTipoSolictud", @class = "form-control" })
+                </div>
+                <label class="control-label col-md-1" style="padding-left:15px;">Motivo: </label>
+                <div class="col-md-3">
+                    @Html.DropDownList("cboMotivo", @ViewBag.Motivos as SelectList, "-- Todos --", new { id = "cboMotivo", @class = "form-control" })
+                </div>
+
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Buscar</button>
+                </span>
+            </div>
+
+            <div style="margin-top:17px;">
+                @{
+                    var grid = new WebGrid(
+                                canPage: true,
+                                rowsPerPage: Model.PageSize,
+                                canSort: true,
+                                ajaxUpdateContainerId: "grid");
+
+    grid.Bind(Model.Content, rowCount: Model.TotalRecords, autoSortAndPage: false);
+                    grid.Pager(WebGridPagerModes.All);
+                    @grid.GetHtml(htmlAttributes: new { id = "grid" },
+                    fillEmptyRows: false,
+                    tableStyle: "table table-bordered table-hover",
+                    mode: WebGridPagerModes.All,
+                    columns: grid.Columns(
+                      grid.Column(format: @<text><input id="IdSolicitud" class="chkWg" name="IdSolicitud" type="checkbox" value="@item.CodigoSol" /></text>, style: "col-sm-1"),
+                      grid.Column("CodigoInterno", "Código", style: "col-xs-1"),
+                      grid.Column("TipoSolicitudSol.Descripcion", "Tipo", style: "col-xs-1"),
+                      grid.Column("Motivo.Descripcion", "Motivo", style: "col-xs-1"),
+                      grid.Column("Cargo.Descripcion", "Cargo", style: "col-xs-1"),
+                      grid.Column("FechaSol", "Fecha Solicitud", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.GetStringFechaSol) </text>, style: "col-xs-2"),
+                      grid.Column("FechaPresentacion", "Fecha Presentación", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.GetStringFechaPresentacion)</text>, style: "col-xs-1"),
+                      grid.Column("FechaEnvio", "Fecha envío", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.GetStringFechaEnvio) </text>, style: "col-xs-2"),
+                      grid.Column("EstadoSol.Descripcion", "Estado", style: "col-xs-1")
+                      ));
+                }
+            </div>   
+        </fieldset>
+    }
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('input.chkWg').on('change', function () {
+            $('input.chkWg').not(this).prop('checked', false);
+            var codigo = $(this).val();
+            $("#hddCodigo").val(codigo);
+        });
+
+        $("#grid td:first-child").click(function () {
+            var value = $(this).closest('tr').find('td:eq(6)').text();
+            $("#hddFechaPresentacion").val(value);
+        });
+
+    });
+
+</script>

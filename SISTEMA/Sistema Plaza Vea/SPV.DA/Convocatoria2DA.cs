@@ -30,13 +30,6 @@ namespace SPV.DA
                         pNombre.Direction = System.Data.ParameterDirection.Input;
                         comando.Parameters.Add(pNombre);
 
-                        var pCodigoTipo = new MySqlParameter();
-                        pCodigoTipo.ParameterName = "P_CODIGO_TIPO";
-                        pCodigoTipo.MySqlDbType = MySqlDbType.Int32;
-                        pCodigoTipo.Value = entidad.CodTipoConvocatoria;
-                        pCodigoTipo.Direction = System.Data.ParameterDirection.Input;
-                        comando.Parameters.Add(pCodigoTipo);
-
                         var pFechaInicio = new MySqlParameter();
                         pFechaInicio.ParameterName = "P_FECHA_INICIO";
                         pFechaInicio.MySqlDbType = MySqlDbType.DateTime;
@@ -54,7 +47,7 @@ namespace SPV.DA
                         var pCodigoSolicitud = new MySqlParameter();
                         pCodigoSolicitud.ParameterName = "P_CODIGO_SOLICITUD";
                         pCodigoSolicitud.MySqlDbType = MySqlDbType.Int32;
-                        pCodigoSolicitud.Value = entidad.CodSolicitud;
+                        pCodigoSolicitud.Value = entidad.Solicitud.CodigoSol;
                         pCodigoSolicitud.Direction = System.Data.ParameterDirection.Input;
                         comando.Parameters.Add(pCodigoSolicitud);
 
@@ -108,16 +101,34 @@ namespace SPV.DA
                                 entidad = new Convocatoria2BE();
 
                                 entidad.Id = Convert.ToInt32(lector["ID"]);
+                                entidad.CodigoInterno = lector["CodigoInterno"].ToString();
                                 entidad.Nombre = Convert.ToString(lector["NOMBRE"]);
-                                entidad.CodTipoConvocatoria = Convert.ToInt32(lector["CODIGOTIPO"]);
-                                entidad.TipoConvocatoria = Convert.ToString(lector["TIPOCONVOCATORIA"]);
                                 entidad.FechaInicio = Convert.ToDateTime(lector["FECHAINICIO"]);
                                 entidad.FechaFin = Convert.ToDateTime(lector["FECHAFIN"]);
-                                entidad.CodSolicitud = Convert.ToInt32(lector["CODIGOSOLICITUD"]);
-                                entidad.Solicitud = Convert.ToString(lector["SOLICITUD"]);
+
+                                SolicitudPersonalBE oSol = new SolicitudPersonalBE();
+                                ParametroBE paramConvoc = new ParametroBE();
+                                paramConvoc.Codigo = Convert.ToInt32(lector["CODTIPOCONVOCATORIA"]);
+                                paramConvoc.Descripcion = Convert.ToString(lector["TIPOCONVOCATORIA"]);
+                                oSol.TipoConvocatoria = paramConvoc;
+                                oSol.Cantidad = Convert.ToInt32(lector["Cantidad"]);
+                                oSol.CodigoSol = Convert.ToInt32(lector["CODIGOSOLICITUD"]);
+                                CargoBE oCargo = new CargoBE();
+                                oCargo.ID = Convert.ToInt32(lector["FK_CodigoCargo"]);
+                                oCargo.Descripcion = Convert.ToString(lector["CARGO"]);
+
+                                oSol.Cargo = oCargo;
+
                                 entidad.FechaCreacion = Convert.ToDateTime(lector["FECHACREACION"]);
-                                entidad.CodEstado = Convert.ToInt32(lector["CODIGOESTADO"]);
-                                entidad.Estado = Convert.ToString(lector["ESTADO"]);
+
+                                ParametroBE pEstado = new ParametroBE();
+                                pEstado.Codigo = Convert.ToInt32(lector["CODIGOESTADO"]);
+                                pEstado.Descripcion = Convert.ToString(lector["ESTADO"]);
+                                entidad.Estado = pEstado;
+
+                                entidad.Solicitud = oSol;
+
+
                             }
                         }
                     }
@@ -152,7 +163,7 @@ namespace SPV.DA
                         pId.Direction = System.Data.ParameterDirection.Input;
                         if (id != null && id != "")
                         {   
-                            pId.MySqlDbType = MySqlDbType.Int32;
+                            pId.MySqlDbType = MySqlDbType.VarChar;
                             pId.Value = id;
                         }
                         else
@@ -214,7 +225,7 @@ namespace SPV.DA
                         comando.Parameters.Add(pFechaFin);
 
                         var pCodigoSolicitud = new MySqlParameter();
-                        pCodigoSolicitud.ParameterName = "P_CODIGO_TIPO_SOLICITUD";
+                        pCodigoSolicitud.ParameterName = "P_CODIGO_CARGO";
                         pCodigoSolicitud.Direction = System.Data.ParameterDirection.Input;
                         if (codTipoSolicitud != null)
                         {   
@@ -236,16 +247,32 @@ namespace SPV.DA
                                 entidad = new Convocatoria2BE();
 
                                 entidad.Id = Convert.ToInt32(lector["ID"]);
+                                entidad.CodigoInterno = lector["CodigoInterno"].ToString();
                                 entidad.Nombre = Convert.ToString(lector["NOMBRE"]);
-                                entidad.CodTipoConvocatoria = Convert.ToInt32(lector["CODIGOTIPO"]);
-                                entidad.TipoConvocatoria = Convert.ToString(lector["TIPOCONVOCATORIA"]);
                                 entidad.FechaInicio = Convert.ToDateTime(lector["FECHAINICIO"]);
                                 entidad.FechaFin = Convert.ToDateTime(lector["FECHAFIN"]);
-                                entidad.CodSolicitud = Convert.ToInt32(lector["CODIGOSOLICITUD"]);
-                                entidad.Solicitud = Convert.ToString(lector["SOLICITUD"]);
+
+                                SolicitudPersonalBE oSol = new SolicitudPersonalBE();
+                                ParametroBE paramConvoc = new ParametroBE();
+                                paramConvoc.Codigo = Convert.ToInt32(lector["CODTIPOCONVOCATORIA"]);
+                                paramConvoc.Descripcion = Convert.ToString(lector["TIPOCONVOCATORIA"]);
+                                oSol.TipoConvocatoria = paramConvoc;
+                                oSol.Cantidad = Convert.ToInt32(lector["Cantidad"]);
+                                oSol.CodigoSol = Convert.ToInt32(lector["CODIGOSOLICITUD"]);
+                                CargoBE oCargo = new CargoBE();
+                                oCargo.ID = Convert.ToInt32(lector["FK_CodigoCargo"]);
+                                oCargo.Descripcion = Convert.ToString(lector["CARGO"]);
+
+                                oSol.Cargo = oCargo;
+
                                 entidad.FechaCreacion = Convert.ToDateTime(lector["FECHACREACION"]);
-                                entidad.CodEstado = Convert.ToInt32(lector["CODIGOESTADO"]);
-                                entidad.Estado = Convert.ToString(lector["ESTADO"]);
+
+                                ParametroBE pEstado = new ParametroBE();
+                                pEstado.Codigo = Convert.ToInt32(lector["CODIGOESTADO"]);
+                                pEstado.Descripcion = Convert.ToString(lector["ESTADO"]);
+                                entidad.Estado = pEstado;
+
+                                entidad.Solicitud = oSol;
 
                                 lista.Add(entidad);
                             }

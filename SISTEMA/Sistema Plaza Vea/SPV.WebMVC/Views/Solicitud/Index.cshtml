@@ -8,6 +8,7 @@
 
 @{
     var message = TempData["msg"] ?? string.Empty;
+    var gTipoFiltro = FachadaSesion.TipoFiltro;
 }
 
 <div class="well">
@@ -164,33 +165,40 @@
             $("#Filtro1").show();
             $("#Filtro2").hide();
             $("#Filtro3").hide();
+            $("#desc").val("");
         } else if (valueSelected == 2) {
             $("#Filtro1").hide();
             $("#Filtro2").show();
             $("#Filtro3").hide();
-            cargarTipoSolicitud();
+            cargarTipoSolicitud(0);
         } else if (valueSelected == 3) {
             $("#Filtro1").hide();
             $("#Filtro2").show();
             $("#Filtro3").hide();
-            cargarMotivoFiltro();
+            cargarMotivoFiltro(0);
         } else if (valueSelected == 4) {
             $("#Filtro1").hide();
             $("#Filtro2").show();
             $("#Filtro3").hide();
-            cargarCargosFiltro();
+            cargarCargosFiltro(0);
         } else if (valueSelected == 5) {
             $("#Filtro1").hide();
             $("#Filtro2").hide();
             $("#Filtro3").show();
+            $("#fechaIni").val("");
+            $("#fechaFin").val("");
         } else if (valueSelected == 6) {
             $("#Filtro1").hide();
             $("#Filtro2").hide();
             $("#Filtro3").show();
+            $("#fechaIni").val("");
+            $("#fechaFin").val("");
         } else if (valueSelected == 7) {
             $("#Filtro1").hide();
             $("#Filtro2").hide();
             $("#Filtro3").show();
+            $("#fechaIni").val("");
+            $("#fechaFin").val("");
         } else {
             $("#Filtro1").hide();
             $("#Filtro2").hide();
@@ -198,7 +206,7 @@
         }
     });
 
-    function cargarTipoSolicitud() {
+    function cargarTipoSolicitud(s) {
         $.get('@Url.Action("ListaTipoSolicitud", "Solicitud")')
         .done(function (data) {
             $('#cboFiltro').empty();
@@ -209,9 +217,15 @@
                 $option.html(row.Descripcion);
                 $('#cboFiltro').append($option);
             });
-            $("#cboFiltro option").filter(function () {
-                return $(this).val() == "@ViewBag.cboTipo";
-            }).prop('selected', true);
+            if (s != 0) {
+                $("#cboFiltro option").filter(function () {
+                    return $(this).val() == "@ViewBag.cboTipo";
+                }).prop('selected', true);
+            } else {
+                $("#cboFiltro option").filter(function () {
+                    return $(this).val() == "0";
+                }).prop('selected', true);
+            }
         })
         .fail(function (data) {
             console.log('error');
@@ -231,13 +245,14 @@
             $("#cboTipoFiltro option").filter(function () {
                 return $(this).val() == "@ViewBag.TipoFiltro";
             }).prop('selected', true);
+            ShowCajas(@ViewBag.TipoFiltro);
         })
         .fail(function (data) {
             console.log('error');
         });
     }
 
-    function cargarMotivoFiltro() {
+    function cargarMotivoFiltro(s) {
         $.get('@Url.Action("ListaMotivoFiltro", "Solicitud")')
         .done(function (data) {
             $('#cboFiltro').empty();
@@ -248,9 +263,15 @@
                 $option.html(row.Descripcion);
                 $('#cboFiltro').append($option);
             });
-            $("#cboFiltro option").filter(function () {
-                return $(this).val() == "@ViewBag.cboTipo";
-            }).prop('selected', true);
+            if (s != 0) {
+                $("#cboFiltro option").filter(function () {
+                    return $(this).val() == "@ViewBag.cboTipo";
+                }).prop('selected', true);
+            } else {
+                $("#cboFiltro option").filter(function () {
+                    return $(this).val() == "0";
+                }).prop('selected', true);
+            }
         })
         .fail(function (data) {
             console.log('error');
@@ -276,24 +297,70 @@
         });
     }
 
-    function cargarCargosFiltro() {
+    function cargarCargosFiltro(s) {
         $.get('@Url.Action("ListaCargoFiltro", "Solicitud")')
         .done(function (data) {
             $('#cboFiltro').empty();
             $('#cboFiltro').append('<option value="0">--TODOS--</option>');
             $.each(data, function (i, row) {
                 var $option = $('<option>');
-                $option.val(row.CodigoCargo);
+                $option.val(row.ID);
                 $option.html(row.Descripcion);
                 $('#cboFiltro').append($option);
             });
-            $("#cboFiltro option").filter(function () {
-                return $(this).val() == "@ViewBag.cboTipo";
-            }).prop('selected', true);
+            if (s != 0) {
+                $("#cboFiltro option").filter(function () {
+                    return $(this).val() == "@ViewBag.cboTipo";
+                }).prop('selected', true);
+            } else {
+                $("#cboFiltro option").filter(function () {
+                    return $(this).val() == "0";
+                }).prop('selected', true);
+            }
         })
         .fail(function (data) {
             console.log('error');
         });
+    }
+
+    function ShowCajas(valueSelected)
+    {
+        if (valueSelected == 1) {
+            $("#Filtro1").show();
+            $("#Filtro2").hide();
+            $("#Filtro3").hide();
+        } else if (valueSelected == 2) {
+            $("#Filtro1").hide();
+            $("#Filtro2").show();
+            $("#Filtro3").hide();
+            cargarTipoSolicitud(1);
+        } else if (valueSelected == 3) {
+            $("#Filtro1").hide();
+            $("#Filtro2").show();
+            $("#Filtro3").hide();
+            cargarMotivoFiltro(1);
+        } else if (valueSelected == 4) {
+            $("#Filtro1").hide();
+            $("#Filtro2").show();
+            $("#Filtro3").hide();
+            cargarCargosFiltro(1);
+        } else if (valueSelected == 5) {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").show();
+        } else if (valueSelected == 6) {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").show();
+        } else if (valueSelected == 7) {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").show();
+        } else {
+            $("#Filtro1").hide();
+            $("#Filtro2").hide();
+            $("#Filtro3").hide();
+        }
     }
 
 </script>

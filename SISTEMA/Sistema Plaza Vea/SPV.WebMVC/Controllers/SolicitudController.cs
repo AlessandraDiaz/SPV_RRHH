@@ -32,6 +32,7 @@ namespace SPV.WebMVC.Controllers
             ViewBag.FIni = fechaIni;
             ViewBag.FFin = fechaFin;
 
+            FachadaSesion.TipoFiltro = cboTipoFiltro;
 
             desc = (desc == null ? "" : desc);
             fechaIni = (fechaIni == null ? "" : fechaIni);
@@ -372,7 +373,7 @@ namespace SPV.WebMVC.Controllers
         public JsonResult ListaCargoFiltro()
         {
             CargoBE param = new CargoBE();
-            param.CodigoCargo = 0;
+            param.ID = 0;
             param.Descripcion = "";
             return Json(cargoBL.ListaCargo(param).ToList(), JsonRequestBehavior.AllowGet);
         }

@@ -309,7 +309,7 @@
             $('#cboCargo').append('<option value="0">--Seleccione--</option>');
             $.each(data, function (i, row) {
                 var $option = $('<option>');
-                $option.val(row.CodigoCargo);
+                $option.val(row.ID);
                 $option.html(row.Descripcion);
                 $('#cboCargo').append($option);
             });

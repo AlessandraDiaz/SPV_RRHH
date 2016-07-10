@@ -4,12 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    #divFiltro > .row {
-        margin-top: 5px;
-    }
-</style>
-
 <h2>Convocatoria de Personal</h2>
 
 @{
@@ -19,17 +13,31 @@
 <div class="well">
     @using (Html.BeginForm("Index", null, FormMethod.Get))
     {
-        
         <div>
-            <div class="form-group" id="divFiltro">
-                <div class="row">
-                    <div class="col-lg-2">
-                        <input type="text" class="form-control disabled" name="txtCodigoBusqueda" id="txtCodigoBusqueda" placeholder="Código" value="@ViewBag.id"/>
+
+            <fieldset>
+                <legend>Búsqueda</legend>
+                <div class="form-group row">
+                    <label class="control-label col-md-1" style="padding-left:15px;">Codigo: </label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control disabled" name="txtCodigoBusqueda" id="txtCodigoBusqueda" placeholder="Código" value="@ViewBag.id" />
                     </div>
-                    <div class="col-lg-2">
+                    <label class="control-label col-md-1" style="padding-left:15px;">Nombre: </label>
+                    <div class="col-md-2">
                         <input type="text" class="form-control" name="txtNombreBusqueda" id="txtNombreBusqueda" placeholder="Nombre" />
                     </div>
-                    <div class="col-lg-2">
+                    <label class="control-label col-md-2" style="padding-left:15px;">Tipo Convocatoria: </label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("cboTipoConvocatoria", @ViewBag.TiposConvocatoria as SelectList, "-- Todos --", new { id = "cboTipoConvocatoria", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-1" style="padding-left:15px;">Cargo: </label>
+                    <div class="col-md-2">
+                        @Html.DropDownList("cboCargo", @ViewBag.Cargos as SelectList, "-- Todos --", new { id = "cboCargo", @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-1" style="padding-left:15px;">Fecha Inicio: </label>
+                    <div class="col-md-2">
                         <div class="input-group date">
                             <input type="text" class="form-control" name="dpFechaInicio" id="dpFechaInicio" placeholder="F. inicio" />
                             <div class="input-group-addon">
@@ -37,7 +45,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2">
+                    <label class="control-label col-md-2" style="padding-left:15px;">Fecha Fin: </label>
+                    <div class="col-md-3">
                         <div class="input-group date">
                             <input type="text" class="form-control" name="dpFechaFin" id="dpFechaFin" placeholder="F. fin" />
                             <div class="input-group-addon">
@@ -49,25 +58,16 @@
                         <button class="btn btn-default" type="submit">Buscar</button>
                     </span>
                 </div>
-                <div class="row">
-                    <div class="col-lg-2">
-                        @Html.DropDownList("cboTipoConvocatoria", @ViewBag.TiposConvocatoria as SelectList, "--Tipo convocatoria--", new { id = "cboTipoConvocatoria", @class = "form-control" })
-                    </div>
-                    <div class="col-lg-2">
-                        @Html.DropDownList("cboTipoSolicitud", @ViewBag.TiposSolicitud as SelectList, "--Tipo solicitud--", new { id = "cboTipoSolicitud", @class = "form-control" })
-                    </div>
+            </fieldset>
+            <div class="row">
+                <div class="pull-left col-lg-1">
+                    <button class="btn btn-success" type="button" onclick="location.href='@Url.Action("Registrar", "Convocatoria")'">
+                        <span class="glyphicon glyphicon-plus">Crear Convocatoria</span>
+                    </button>
                 </div>
-                <div class="row">
-                    <div class="pull-left col-lg-1">
-                        <button class="btn btn-success" type="button" onclick="location.href='@Url.Action("Create", "Convocatoria")'">
-                            <span class="glyphicon glyphicon-plus">Crear Solicitud</span>
-                        </button>
-                    </div>
 
-                </div>
             </div>
         </div>
-
         <div style="margin-top:17px;">
             @{
                 var grid = new WebGrid(
@@ -84,18 +84,18 @@
                     tableStyle: "table table-bordered table-hover",
                     mode: WebGridPagerModes.All,
                     columns: grid.Columns(
-                      grid.Column("Nombre", "Nombre", style: "col-xs-1"),
-                      grid.Column("TipoConvocatoria", "Tipo Convocatoria", style: "col-xs-1"),
-                      grid.Column("FechaInicio", "Fecha Inicio", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaInicio) </text>, style: "col-xs-2"),
-                      grid.Column("FechaFin", "Fecha Fin", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaFin)</text>, style: "col-xs-2"),
-                      grid.Column("Solicitud", "Solicitud", style: "col-xs-1"),
-                      grid.Column("FechaCreacion", "Fecha Creación", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaCreacion) </text>, style: "col-xs-1"),
-                      grid.Column("Estado", "Estado", style: "col-xs-1"),
+                      grid.Column("CodigoInterno", "Código", style: "col-xs-1"),
+                      grid.Column("Nombre", "Nombre", style: "col-xs-4"),
+                      grid.Column("Solicitud.TipoConvocatoria.Descripcion", "Tipo Convocatoria", style: "col-xs-1"),
+                      grid.Column("Solicitud.Cargo.Descripcion", "Cargo", style: "col-xs-1"),
+                      grid.Column("FechaInicio", "Fecha Inicio", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaInicio) </text>, style: "col-sm-2"),
+                      grid.Column("FechaFin", "Fecha Fin", format: @<text>@String.Format("{0:dd-MM-yyyy}", item.FechaFin)</text>, style: "col-sm-2"),
+                      grid.Column("Solicitud.Cantidad", "Vacantes", style: "col-xs-1"),
+                      grid.Column("Estado.Descripcion", "Estado", style: "col-xs-1"),
                       grid.Column(header: "Acciones", canSort: false, style: "action",
                         format: @<text>
-                        @Html.Raw("<a data-modal='' href='/Convocatoria/Details/" + item.Id + "' id='" + item.Id + "' title='Ver Detalle'> <span class='glyphicon glyphicon-search'> Ver Detalle </span> </a>")
+                        @Html.Raw("<a data-modal='' href='/Convocatoria/Detalle/" + item.Solicitud.CodigoSol + "' id='" + item.Solicitud.CodigoSol + "' title='Ver Detalle'> <span class='glyphicon glyphicon-search'> Ver Detalle </span> </a>")
                         </text>)
-
             ));
             }
         </div>
@@ -149,7 +149,6 @@
                         location.reload();
                     } else {
                         $('#progress').hide();
-                        //$('#myModalContent').html(result);
                         alert(result.msg);
                         bindForm();
                     }

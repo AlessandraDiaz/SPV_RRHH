@@ -1,0 +1,183 @@
+﻿@model SPV.BE.Convocatoria2BE
+
+@{
+    ViewBag.Title = "Registrar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Crear Convocatoria</h2>
+
+<div class="form-horizontal">
+    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+    <div>
+        <fieldset>
+            <legend></legend>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { id = "txtNombre", @class = "form-control", @style = "width:400px;", @Value = ViewBag.nombre } })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+                @Html.LabelFor(model => model.FechaInicio, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-1 input-group date">
+                    <input class='form-control date-picker' id="fechaIni" name="fechaIni" value="@ViewBag.FIni" placeholder="Inicio" style="padding-left:5px;width:120px;" />
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+                @Html.LabelFor(model => model.FechaFin, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-1 input-group date">
+                    <input class='form-control date-picker' id="fechaFin" name="fechaFin" value="@ViewBag.FFin" placeholder="Fin" style="padding-left:5px;width:120px;" />
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <div id="buscar">
+            @Html.Partial("_Registrar", Model.ListaSolicitud)
+        </div>
+
+    </div>
+
+    <div style="padding-right: 70px;">
+        <div style="float:right;">
+            <div style="float:left;">
+                <span id="progress" class="text-center" style="display: none;">
+                    <img src="~/Content/image/Wait.gif" alt="wiat" />
+                            Espere por favor..
+                </span>
+            </div>
+            <div style="float:left;padding-left:15px;">
+                <input type="button" value="Grabar" class="btn btn-primary" id="btnGrabar" onclick="Grabar();" />
+                <input type="hidden" value="" id="hddCodigo">
+                <input type="hidden" value="" id="hddFechaPresentacion">
+            </div>
+
+            <div style="float:left;padding-left:10px;">
+                <button class="btn btn-danger" type="button" onclick="ConfirmCancel();">
+                    <span class="glyphicon glyphicon-floppy-remove"> Cancelar</span>
+                </button>
+            </div>
+            <div style="clear:both;"></div>
+            </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function Grabar() {
+
+        var nombre = $('#txtNombre').val();
+        var fechaIni = $('#fechaIni').val();
+        var fechaFin = $('#fechaFin').val();
+        var codigoSel = $('#hddCodigo').val();
+        var fPresentacion = $('#hddFechaPresentacion').val();
+         
+        if (nombre == "") {
+            alert("Ingrese nombre de convocatoria.");
+            return;
+        }
+
+        if (fechaIni == "") {
+            alert("Seleccione fecha de inicio.");
+            return;
+        }
+
+        if (fechaFin == "") {
+            alert("Seleccione fecha de fin.");
+            return;
+        }
+
+        if (codigoSel == "") {
+            alert("Seleccione solicitud.");
+            return;
+        }
+
+        var from = fechaFin.split("/");
+        var f1 = new Date(from[2], from[1] - 1, from[0]);
+
+        var from1 = fPresentacion.split("/");
+        var f2 = new Date(from1[2], from1[1] - 1, from1[0]);
+
+        if (Date.parse(f1) > Date.parse(f2)) {
+            alert("La fecha de fin debe ser menor a la fecha de presentación.");
+            $('#fechaFin').val("");
+            $('#fechaFin').datepicker('setDate', null);
+            return;
+        }
+
+        var someData = {
+            Nombre: nombre,
+            GetStringFechaInicio: fechaIni,
+            GetStringFechaFin: fechaFin,
+            SolicitudID: codigoSel
+        };
+
+        $('#progress').show();
+
+        $.ajax({
+            url: "/Convocatoria/Registrar",
+            type: "POST",
+            data: JSON.stringify({ 'convoca': someData }),
+            dataType: "json",
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert("Registrado Correctamente");
+                    var url = "/Convocatoria/Index";
+                    $('#progress').hide();
+                    window.location.href = url;
+                } else {
+                    $('#progress').hide();
+                    alert("Ha ocurrido un error al registrar");
+                }
+            },
+            error: function () {
+                $('#progress').hide();
+                alert("Ha ocurrido un error al registrar");
+            }
+        });
+    }
+
+    $(function () {
+        $("#fechaIni").datepicker({ format: 'dd/mm/yyyy' });
+        $("#fechaFin").datepicker({ format: 'dd/mm/yyyy' });
+
+        $("#fechaIni").datepicker().on("changeDate", function (selected) {
+            var maxValue = $("#fechaFin").val();
+            var from = maxValue.split("/");
+            var endDate = new Date(from[2], from[1] - 1, from[0]);
+
+            if (Date.parse(selected.date) > Date.parse(endDate)) {
+                alert("La fecha seleccionada debe ser menor a la fecha de fin.");
+                $('#fechaIni').val("");
+                $('#fechaIni').datepicker('setDate', null);
+            }
+        });
+        $("#fechaFin").datepicker().on("changeDate", function (selected) {
+            var maxValue = $("#fechaIni").val();
+            var from = maxValue.split("/");
+            var endDate = new Date(from[2], from[1] - 1, from[0]);
+
+            if (Date.parse(selected.date) < Date.parse(endDate)) {
+                alert("La fecha seleccionada debe ser mayor a la fecha de inicio.");
+                $('#fechaFin').val("");
+                $('#fechaFin').datepicker('setDate', null);
+            }
+        });
+
+    });
+
+    function ConfirmCancel() {
+        var x = confirm("¿Está seguro que desea cancelar el registro de convocatoria?");
+        if (x)
+            location.href = '@Url.Action("Index", "Convocatoria")';
+        else
+            return false;
+    }
+
+</script>

@@ -173,7 +173,7 @@ namespace SPV.DA
 		
 public List<ColaboradorBE> List()
         {
-            querySQL = "SELECT PK_CODIGOCOLABORADOR AS CODIGO, APELLIDOPATERNO, APELLIDOMATERNO, NOMBRE, DNI, FECHANACIMIENTO, SEXO, DIRECCION, TELEFONO, CORREO, CURRICULUMVITAE, ESTADOCIVIL, CANTIDADHIJOS, SEGURO, CODIGOESSALUD, FECHACESE, ANTECEDENTEPOLICIAL FROM RRHH.TB_COLABORADOR A";
+            querySQL = "SPS_COLABORADORES";
             
             try
             {
@@ -187,7 +187,7 @@ public List<ColaboradorBE> List()
                     {
                         comando.Connection = conexion;
                         comando.CommandText = querySQL;
-                        comando.CommandType = System.Data.CommandType.Text;
+                        comando.CommandType = System.Data.CommandType.StoredProcedure;
 
                         conexion.Open();
 

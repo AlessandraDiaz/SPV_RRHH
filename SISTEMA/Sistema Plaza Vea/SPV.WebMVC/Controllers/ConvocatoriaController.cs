@@ -15,13 +15,21 @@ namespace SPV.WebMVC.Controllers
     public class ConvocatoriaController : Controller
     {
         // GET: Convocatoria
-        public ActionResult Index(string txtCodigoBusqueda, string txtNombreBusqueda, string dpFechaInicio, string dpFechaFin, int? cboTipoConvocatoria, int? cboTipoSolicitud, int pageSize = 10, int page = 1, string sort = "Nombre", string sortdir = "ASC")
+        public ActionResult Index(string txtCodigoBusqueda, string txtNombreBusqueda, string dpFechaInicio, string dpFechaFin, int? cboTipoConvocatoria, int? cboCargo, int pageSize = 10, int page = 1, string sort = "Nombre", string sortdir = "ASC")
         {
-            var tiposConvocatoria = new ParametroBL().ListarXCodAgrupador(Convert.ToInt32(ConfigurationManager.AppSettings.Get("CodigoTipoConvocatoria")));
-            ViewBag.TiposConvocatoria = new SelectList(tiposConvocatoria, "CodigoParametro", "Descripcion");
+            ParametroBE param1 = new ParametroBE();
+            string codigoTipoConvo = ConfigurationManager.AppSettings["CodigoTipoConvocatoria"].ToString();
+            param1.CodigoAgrupador = Convert.ToInt32(codigoTipoConvo);
 
-            var tiposSolicitud = new ParametroBL().ListarXCodAgrupador(Convert.ToInt32(ConfigurationManager.AppSettings.Get("CodigoTipoSolicitud")));
-            ViewBag.TiposSolicitud = new SelectList(tiposSolicitud, "CodigoParametro", "Descripcion");
+            var tiposConvocatoria = new ParametroBL().Listar(param1);
+            ViewBag.TiposConvocatoria = new SelectList(tiposConvocatoria, "Codigo", "Descripcion");
+
+            CargoBE oCargo = new CargoBE();
+            oCargo.ID = 0;
+            oCargo.Descripcion = string.Empty;
+
+            var cargo = new CargoBL().ListaCargo(oCargo);
+            ViewBag.Cargos = new SelectList(cargo, "ID", "Descripcion");
 
             var records = new ListaPaginada<Convocatoria2BE>();
             ViewBag.id = txtCodigoBusqueda;
@@ -29,7 +37,7 @@ namespace SPV.WebMVC.Controllers
             ViewBag.sFechaInicio = dpFechaInicio;
             ViewBag.sFechafin = dpFechaFin;
             ViewBag.codTipoConvocatoria = cboTipoConvocatoria;
-            ViewBag.codTipoSolicitud = cboTipoSolicitud;
+            ViewBag.codCargo = cboCargo;
 
 
             DateTime? fechaInicio = null;
@@ -41,7 +49,7 @@ namespace SPV.WebMVC.Controllers
             if (!string.IsNullOrEmpty(dpFechaFin))
                 fechaFin = DateTime.ParseExact(dpFechaFin, ConfigurationManager.AppSettings.Get("FormatoFecha2"), CultureInfo.InvariantCulture);
 
-            List<Convocatoria2BE> lista = new Convocatoria2BL().Search(txtCodigoBusqueda, txtNombreBusqueda, cboTipoConvocatoria, fechaInicio, fechaFin, cboTipoSolicitud);
+            List<Convocatoria2BE> lista = new Convocatoria2BL().Search(txtCodigoBusqueda, txtNombreBusqueda, cboTipoConvocatoria, fechaInicio, fechaFin, cboCargo);
 
             records.Content = lista
              .OrderBy(sort + " " + sortdir)
@@ -59,46 +67,77 @@ namespace SPV.WebMVC.Controllers
         }
 
         // GET: Convocatoria/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Detalle(int id)
         {
             var convocatoria = new Convocatoria2BL().Get(id);
-            var solicitud = new SolicitudPersonalBL().GetSolicitudByID(convocatoria.CodSolicitud);
+            var solicitud = new SolicitudPersonalBL().GetSolicitudByID(convocatoria.Solicitud.CodigoSol);
 
             return PartialView(solicitud);
         }
 
-        // GET: Convocatoria/Create
-        public ActionResult Create()
+        // GET: Convocatoria/Registrar
+        public ActionResult Registrar()
         {
-            var tiposConvocatoria = new ParametroBL().ListarXCodAgrupador(Convert.ToInt32(ConfigurationManager.AppSettings.Get("CodigoTipoConvocatoria")));
-            ViewBag.TiposConvocatoria = new SelectList(tiposConvocatoria, "CodigoParametro", "Descripcion");
+            Convocatoria2BE convocatoria = new Convocatoria2BE();
+            CargoBE param = new CargoBE();
+            param.ID = 0;
+            param.Descripcion = "";
 
-            var solicitudes = new SolicitudPersonalBL().Listar(0, string.Empty, 0, string.Empty, string.Empty, 1,0,0,0);
-            ViewBag.TiposSolicitud = new SelectList(solicitudes, "CodigoSol", "CodigoInterno");
+            ParametroBE param1 = new ParametroBE();
+            string codigoTipoSolicitud = ConfigurationManager.AppSettings["CodigoTipoSolicitud"].ToString();
+            param1.CodigoAgrupador = Convert.ToInt32(codigoTipoSolicitud);
 
-            return View();
+            ParametroBE param2 = new ParametroBE();
+            string codigoMotivoFiltro = ConfigurationManager.AppSettings["CodigoMotivoFiltro"].ToString();
+            param2.CodigoAgrupador = Convert.ToInt32(codigoMotivoFiltro);
+
+            var listaCargos = new CargoBL().ListaCargo(param).ToList();
+            ViewBag.Cargos = new SelectList(listaCargos, "ID", "Descripcion");
+
+            var listaTipoSol = new ParametroBL().Listar(param1).ToList();
+            ViewBag.TipoSolicitud = new SelectList(listaTipoSol, "Codigo", "Descripcion");
+
+            var listaMotivos = new ParametroBL().Listar(param2).ToList();
+            ViewBag.Motivos = new SelectList(listaMotivos, "Codigo", "Descripcion");
+
+            var listaSolicitudes = new SolicitudPersonalBL().Listar(8,String.Empty, 0 , String.Empty, String.Empty,2,0,0,0).ToList();
+
+
+            string sort = "CodigoSol";
+            int pageSize = 10;
+            int page = 1;
+            string sortdir = "DESC";
+
+            ListaPaginada<SolicitudPersonalBE> lista = new ListaPaginada<SolicitudPersonalBE>();
+            lista.Content = listaSolicitudes.OrderBy(sort + " " + sortdir)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToList();
+
+            lista.TotalRecords = listaSolicitudes.Count();
+            lista.CurrentPage = page;
+            lista.PageSize = pageSize;
+            convocatoria.ListaSolicitud = lista;
+
+            return View("Registrar", convocatoria);
         }
 
         // POST: Convocatoria/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Registrar(Convocatoria2BE convoca)
         {
             try
             {
-                // TODO: Add insert logic here
-                string nombre = Request.Form.Get("Nombre");
-                DateTime fechaInicio = DateTime.ParseExact(Request.Form.Get("FechaInicio"), ConfigurationManager.AppSettings.Get("FormatoFecha"), CultureInfo.InvariantCulture);
-                DateTime fechaFin = DateTime.ParseExact(Request.Form.Get("FechaFin"), ConfigurationManager.AppSettings.Get("FormatoFecha"), CultureInfo.InvariantCulture);
-
-                int codTipoConvocatoria = Convert.ToInt32(Request.Form.Get("cboTipoConvocatoria"));
-                int codSolicitud = Convert.ToInt32(Request.Form.Get("cboSolicitud"));
+                DateTime fechaInicio = DateTime.ParseExact(convoca.GetStringFechaInicio, ConfigurationManager.AppSettings.Get("FormatoFecha2"), CultureInfo.InvariantCulture);
+                DateTime fechaFin = DateTime.ParseExact(convoca.GetStringFechaFin, ConfigurationManager.AppSettings.Get("FormatoFecha2"), CultureInfo.InvariantCulture);
 
                 var entidad = new Convocatoria2BE();
-                entidad.Nombre = nombre;
+                entidad.Nombre = convoca.Nombre;
                 entidad.FechaInicio = fechaInicio;
                 entidad.FechaFin = fechaFin;
-                entidad.CodTipoConvocatoria = codTipoConvocatoria;
-                entidad.CodSolicitud = codSolicitud;
+                SolicitudPersonalBE SOL = new SolicitudPersonalBE();
+                SOL.CodigoSol = convoca.SolicitudID;
+                entidad.Solicitud = SOL;
 
                 new Convocatoria2BL().Insert(entidad);
 
@@ -112,12 +151,14 @@ namespace SPV.WebMVC.Controllers
                 string mailFrom = ConfigurationManager.AppSettings.Get("MailEmisor");
                 string passwordMailEmisor = ConfigurationManager.AppSettings.Get("PasswordMailEmisor");
                 StringBuilder buffer = new StringBuilder();
-                buffer.Append("Estimado <b>{0} {1}, {2}</b>");
-                buffer.Append("Es grato saludarlo e informarle que ha iniciado una nueva convocatoria <br />");
-                buffer.Append("Saludos cordiales. <br/><br/>");
-                buffer.Append("<i>Nota: Por favor no responda este correo.<i>");
-                
-                if (entidad.CodTipoConvocatoria == Convert.ToInt32(ConfigurationManager.AppSettings.Get("IdTipoConvocatoriaInterno")))
+                buffer.Append("Estimado <b>{0} {1}, {2} </b> ");
+                buffer.Append(" Es grato saludarlo e informarle que ha iniciado una nueva convocatoria <br />");
+                buffer.Append(" Saludos cordiales. <br/><br/>");
+                buffer.Append("<i> Nota: Por favor no responda este correo. <i>");
+
+                var solicitudAsignada = new SolicitudPersonalBL().GetSolicitudByID(convoca.SolicitudID);
+
+                if (solicitudAsignada.TipoConvocatoria.Codigo == Convert.ToInt32(ConfigurationManager.AppSettings.Get("IdTipoConvocatoriaInterno")))
                 {
                     foreach (var colaborador in colaboradores)
                     {
@@ -126,13 +167,13 @@ namespace SPV.WebMVC.Controllers
                             MailHelper.SendMail(mailFrom, passwordMailEmisor, colaborador.Correo, subject, string.Format(buffer.ToString(), colaborador.ApellidoPaterno, colaborador.ApellidoMaterno, colaborador.Nombres), true, System.Net.Mail.MailPriority.Normal);
                     }
                 }
-                else if (entidad.CodTipoConvocatoria == Convert.ToInt32(ConfigurationManager.AppSettings.Get("IdTipoConvocatoriaExterno")))
+                else if (solicitudAsignada.TipoConvocatoria.Codigo == Convert.ToInt32(ConfigurationManager.AppSettings.Get("IdTipoConvocatoriaExterno")))
                 {
                     var contactoExterno = colaboradores.FirstOrDefault(t => t.ID == Convert.ToInt32(ConfigurationManager.AppSettings.Get("IdColaboradorExterno")));
                     MailHelper.SendMail(mailFrom, passwordMailEmisor, contactoExterno.Correo, subject, string.Format(buffer.ToString(), contactoExterno.ApellidoPaterno, contactoExterno.ApellidoMaterno, contactoExterno.Nombres), true, System.Net.Mail.MailPriority.Normal);
                 }
 
-                return RedirectToAction("Index");
+                return Json(new { status = "Success" });
             }
             catch (Exception ex)
             {
@@ -140,6 +181,84 @@ namespace SPV.WebMVC.Controllers
             }
         }
 
+        // POST: Convocatoria/Buscar
+        [HttpPost]
+        public ActionResult _Registrar(FormCollection collection,int pageSize = 10, int page = 1, string sort = "CodigoSol", string sortdir = "ASC")
+        {
+            Convocatoria2BE convocatoria = new Convocatoria2BE();
+
+            int cboCargo;
+            int cboTipoSolicitud;
+            int cboMotivo;
+
+            if (String.IsNullOrEmpty(Request.Form.Get("cboCargo")))
+            {
+                cboCargo = 0;
+            }
+            else
+            {
+                cboCargo = Convert.ToInt32(Request.Form.Get("cboCargo"));
+            }
+
+
+            if (String.IsNullOrEmpty(Request.Form.Get("cboTipoSolicitud")))
+            {
+                cboTipoSolicitud = 0;
+            }
+            else
+            {
+                cboTipoSolicitud = Convert.ToInt32(Request.Form.Get("cboTipoSolicitud"));
+            }
+
+            if (String.IsNullOrEmpty(Request.Form.Get("cboMotivo")))
+            {
+                cboMotivo = 0;
+            }
+            else
+            {
+                cboMotivo = Convert.ToInt32(Request.Form.Get("cboMotivo"));
+            }
+
+            CargoBE param = new CargoBE();
+            param.ID = 0;
+            param.Descripcion = "";
+
+            ParametroBE param1 = new ParametroBE();
+            string codigoTipoSolicitud = ConfigurationManager.AppSettings["CodigoTipoSolicitud"].ToString();
+            param1.CodigoAgrupador = Convert.ToInt32(codigoTipoSolicitud);
+
+            ParametroBE param2 = new ParametroBE();
+            string codigoMotivoFiltro = ConfigurationManager.AppSettings["CodigoMotivoFiltro"].ToString();
+            param2.CodigoAgrupador = Convert.ToInt32(codigoMotivoFiltro);
+
+            var listaCargos = new CargoBL().ListaCargo(param).ToList();
+            ViewBag.Cargos = new SelectList(listaCargos, "ID", "Descripcion", cboCargo);
+
+            var listaTipoSol = new ParametroBL().Listar(param1).ToList();
+            ViewBag.TipoSolicitud = new SelectList(listaTipoSol, "Codigo", "Descripcion", cboTipoSolicitud);
+
+            var listaMotivos = new ParametroBL().Listar(param2).ToList();
+            ViewBag.Motivos = new SelectList(listaMotivos, "Codigo", "Descripcion", cboMotivo);
+
+            var listaSolicitudes = new SolicitudPersonalBL().Listar(8, String.Empty, cboCargo, String.Empty, String.Empty, 2, 0, cboTipoSolicitud, cboMotivo).ToList();
+
+            //ViewBag.nombre = "testaaaa";
+            //ViewBag.FIni = "01/01/2016";
+            //ViewBag.FFin = "01/01/2016";
+
+            ListaPaginada<SolicitudPersonalBE> lista = new ListaPaginada<SolicitudPersonalBE>();
+            lista.Content = listaSolicitudes.OrderBy(sort + " " + sortdir)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToList();
+
+            lista.TotalRecords = listaSolicitudes.Count();
+            lista.CurrentPage = page;
+            lista.PageSize = pageSize;
+            convocatoria.ListaSolicitud = lista;
+
+            return PartialView("Registrar", convocatoria);
+        }
 
     }
 }

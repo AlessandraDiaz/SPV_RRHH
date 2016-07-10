@@ -24,13 +24,13 @@ namespace SPV.DA
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@DESCRIPCION", cargo.Descripcion);
-                    cmd.Parameters.AddWithValue("@CODIGO", cargo.CodigoCargo);
+                    cmd.Parameters.AddWithValue("@CODIGO", cargo.ID);
                     cmd.Connection.Open();
                     MySqlDataReader rd = cmd.ExecuteReader();
                     while (rd.Read())
                     {
                         CargoBE item = new CargoBE();
-                        item.CodigoCargo = (Int32)rd[0];
+                        item.ID = (Int32)rd[0];
                         item.Descripcion = rd[1].ToString() != "" ? (String)rd[1] : "";
                         item.Funciones = rd[2].ToString() != "" ? (String)rd[2] : "";
                         item.Requisitos = rd[3].ToString() != "" ? (String)rd[3] : "";

@@ -241,8 +241,9 @@
     <Content Include="Views\Solicitud\Aprobar.cshtml" />
     <Content Include="Views\Solicitud\Rechazar.cshtml" />
     <Content Include="Views\Convocatoria\Index.cshtml" />
-    <Content Include="Views\Convocatoria\Create.cshtml" />
-    <Content Include="Views\Convocatoria\Details.cshtml" />
+    <Content Include="Views\Convocatoria\Registrar.cshtml" />
+    <Content Include="Views\Convocatoria\Detalle.cshtml" />
+    <Content Include="Views\Convocatoria\_Registrar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

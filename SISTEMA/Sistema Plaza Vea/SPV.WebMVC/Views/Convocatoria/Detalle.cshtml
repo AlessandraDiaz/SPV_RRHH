@@ -32,7 +32,7 @@
         <div class="form-group">
             @Html.LabelFor(m => Model.FechaSol, new { @class = "control-label col-sm-3" })
             <div class="col-sm-9">
-                @Html.TextBoxFor(m => m.FechaSol, new { @class = "form-control required", @disabled = "disabled" })
+                @Html.TextBoxFor(m => m.FechaSol, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = "disabled" })
             </div>
         </div>
 
@@ -46,7 +46,7 @@
         <div class="form-group">
             @Html.LabelFor(m => Model.FechaPresentacion, new { @class = "control-label col-sm-3" })
             <div class="col-sm-9">
-                @Html.TextBoxFor(m => m.FechaPresentacion, new { @class = "form-control required", @disabled = "disabled" })
+                @Html.TextBoxFor(m => m.FechaPresentacion, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = "disabled" })
             </div>
         </div>
 
