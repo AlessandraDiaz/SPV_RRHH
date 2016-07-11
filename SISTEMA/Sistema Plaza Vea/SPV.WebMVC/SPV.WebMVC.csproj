@@ -125,7 +125,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ConvocatoriaController.cs" />
+    <Compile Include="Controllers\ExamenController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PostulanteController.cs" />
     <Compile Include="Controllers\SolicitudController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="FachadaSesion.cs" />
@@ -139,6 +141,28 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\datepicker.css" />
+    <Content Include="Content\image\Examen\img101.jpg" />
+    <Content Include="Content\image\Examen\img22.jpg" />
+    <Content Include="Content\image\Examen\img41.jpg" />
+    <Content Include="Content\image\Examen\img62.jpg" />
+    <Content Include="Content\image\Examen\img72.jpg" />
+    <Content Include="Content\image\Examen\img81.jpg" />
+    <Content Include="Content\image\Examen\img91.jpg" />
+    <Content Include="Content\image\Fotos\32154879.jpg" />
+    <Content Include="Content\image\Fotos\40254156.jpg" />
+    <Content Include="Content\image\Fotos\40521561.jpg" />
+    <Content Include="Content\image\Fotos\41524875.jpg" />
+    <Content Include="Content\image\Fotos\41980569.jpg" />
+    <Content Include="Content\image\Fotos\42515461.jpg" />
+    <Content Include="Content\image\Fotos\43079891.jpg" />
+    <Content Include="Content\image\Fotos\43215151.jpg" />
+    <Content Include="Content\image\Fotos\43215894.jpg" />
+    <Content Include="Content\image\Fotos\43247460.jpg" />
+    <Content Include="Content\image\Fotos\44274841.jpg" />
+    <Content Include="Content\image\Fotos\44518597.jpg" />
+    <Content Include="Content\image\Fotos\45372560.jpg" />
+    <Content Include="Content\image\Fotos\45737562.jpg" />
+    <Content Include="Content\image\Fotos\45984829.jpg" />
     <Content Include="Content\image\PlazaVea.png" />
     <Content Include="Content\image\Wait.gif" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -244,10 +268,12 @@
     <Content Include="Views\Convocatoria\Registrar.cshtml" />
     <Content Include="Views\Convocatoria\Detalle.cshtml" />
     <Content Include="Views\Convocatoria\_Registrar.cshtml" />
+    <Content Include="Views\Examen\Examen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Postulante\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

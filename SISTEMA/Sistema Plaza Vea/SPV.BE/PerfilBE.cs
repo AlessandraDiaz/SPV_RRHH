@@ -66,6 +66,8 @@ namespace SPV.BE
         public string DescripcionPerfil { get; set; }
         [Display(Name = "Estado")]
         public int EstadoPerfil { get; set; }
+        [Display(Name = "Exámen")]
+        public ExamenBE Examen { get; set; }
 
         #endregion
 

@@ -36,6 +36,11 @@ namespace SPV.DA
                         PerfilBE perfil = new PerfilBE();
                         perfil.CodPerfil = (Int32)rd[2];
                         perfil.Perfil = rd[3].ToString();
+
+                        ExamenBE examen = new ExamenBE();
+                        examen.ID = (Int32)rd[8];
+                        perfil.Examen = examen;
+
                         usuarioLogeado.Perfil = perfil;
 
                         AreaTiendaBE area = new AreaTiendaBE();
@@ -47,6 +52,7 @@ namespace SPV.DA
                         tienda.CodTienda = (Int32)rd[6];
                         tienda.NombreTienda = rd[7].ToString();
                         usuarioLogeado.Local = tienda;
+
                     }
                     rd.Close();
                 }

@@ -8,30 +8,10 @@ namespace SPV.BL
 {
     public class ExamenPreguntaBL
     {
-        private ExamenPreguntaDA oExamenPregunta = new ExamenPreguntaDA();
-
-        public List<ExamenPreguntaBE> BuscarListaPregunta(String p_CodigoExamen){
-            return oExamenPregunta.BuscarListarPregunta(p_CodigoExamen);
+        public List<ExamenPreguntaBE> Listar(int codigoExamen)
+        {
+            return new ExamenPreguntaDA().Listar(codigoExamen);
         }
 
-        public String GenerarCodigoPregunta(String p_CodigoExamen){
-            return oExamenPregunta.GenerarCodigoPregunta(p_CodigoExamen);
-        }
-
-        public Boolean AgregarPregunta(String p_CodigoExamen, ExamenPreguntaBE p_ExamenPregunta){
-            return oExamenPregunta.AgregarPregunta(p_CodigoExamen, p_ExamenPregunta);
-        }
-
-        public Boolean ActualizarPregunta(String p_CodigoExamen, ExamenPreguntaBE p_ExamenPregunta){
-            return oExamenPregunta.ActualizarPregunta(p_CodigoExamen, p_ExamenPregunta);
-        }
-
-        public Boolean EliminarPregunta(String p_CodigoExamen, String p_CodigoPregunta){
-            return oExamenPregunta.EliminarPregunta(p_CodigoExamen, p_CodigoPregunta);
-        }
-
-        public ExamenPreguntaBE BuscarPregunta(String p_CodigoExamen, String p_CodigoPregunta){
-            return oExamenPregunta.BuscarPregunta(p_CodigoExamen, p_CodigoPregunta);
-        }
     }
 }

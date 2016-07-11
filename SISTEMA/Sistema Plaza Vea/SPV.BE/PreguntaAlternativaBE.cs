@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SPV.BE
 {
@@ -41,7 +43,21 @@ namespace SPV.BE
         }
         #endregion
 
+        #region "PropiedadesMySQL"
+
+        [Display(Name = "ID")]
+        [Key]
+        public int ID { get; set; }
+        public string NombreOpcionEx { get; set; }
+        public int CorrectoEx { get; set; }
+        public int EstadoEx { get; set; }
+        public ExamenPreguntaBE Pregunta { get; set; }
+        #endregion  
+
         #region "Constructor"
+
+        public PreguntaAlternativaBE() { }
+
         public PreguntaAlternativaBE(Int16 p_CodigoAlternativa, String p_Alternativa, Int16 p_EsCorrecta, Int16 p_Puntaje, String p_Estado) {
             this.codigoAlternativa = p_CodigoAlternativa;
             this.alternativa = p_Alternativa;

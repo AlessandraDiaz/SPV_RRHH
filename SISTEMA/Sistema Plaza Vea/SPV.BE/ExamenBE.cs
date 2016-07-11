@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace SPV.BE
 {
@@ -62,7 +61,23 @@ namespace SPV.BE
 
         #endregion
 
+        #region "PropiedadesMySQL"
+
+        [Display(Name = "ID")]
+        [Key]
+        public int ID { get; set; }
+        [Display(Name = "Nombre")]
+        public string NombreEx { get; set; }
+        [Display(Name = "Descripción")]
+        public string DescripcionEx { get; set; }
+        [Display(Name = "Estado")]
+        public int EstadoEx { get; set; }
+        public List<ExamenPreguntaBE> ListaPreguntas { get; set; }
+        #endregion  
+
         #region "Constructor"
+        public ExamenBE() { }
+
         public ExamenBE(Int16 p_Codigo, String p_Perfil, String p_TipoExamen, String p_Nombre, String p_Descripcion, String p_Estado) {
             this.codigo = p_Codigo;
             this.perfil = p_Perfil;
