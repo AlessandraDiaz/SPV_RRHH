@@ -51,6 +51,7 @@
     <Compile Include="ColaboradorDA.cs" />
     <Compile Include="Convocatoria2DA.cs" />
     <Compile Include="ConvocatoriaDA.cs" />
+    <Compile Include="CurriculumVitaeDA.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DataBaseDA.cs" />
     <Compile Include="DataBaseHelper.cs" />

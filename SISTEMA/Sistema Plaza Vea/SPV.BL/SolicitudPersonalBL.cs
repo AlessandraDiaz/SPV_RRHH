@@ -15,6 +15,12 @@ namespace SPV.BL
             return new SolicitudPersonalDA().Listar(tipoFiltro,desc, codigo,fechaini,fechafin,estado, usuario, local,area);
         }
 
+        public List<SolicitudPersonalBE> ListarSolicitudesConvocatoria(int tipoFiltro, string desc, int codigo, string fechaini,
+                                           string fechafin, int estado, int usuario, int local, int area)
+        {
+            return new SolicitudPersonalDA().ListarSolicitudesConvocatoria(tipoFiltro, desc, codigo, fechaini, fechafin, estado, usuario, local, area);
+        }
+
         public SolicitudPersonalBE GetSolicitudByID(int Id)
         {
             return new SolicitudPersonalDA().GetSolicitudByID(Id);

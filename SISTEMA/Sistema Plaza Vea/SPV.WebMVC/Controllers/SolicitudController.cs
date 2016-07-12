@@ -260,7 +260,7 @@ namespace SPV.WebMVC.Controllers
                 TiendaBE olocal = new TiendaBE() { CodTienda = FachadaSesion.Usuario.Local.CodTienda };
                 oParamUser.Perfil = oPerfil;
                 oParamUser.Local = olocal;
-                oParam.usuario = oParamUser;
+                oParam.Usuario = oParamUser;
 
                 var listColaboradores = oColaboradorBL.ListarColaboradores(oParam);
 
@@ -516,10 +516,10 @@ namespace SPV.WebMVC.Controllers
                 TiendaBE olocal = new TiendaBE() { CodTienda = 0 };
                 oParamUser.Perfil = oPerfil;
                 oParamUser.Local = olocal;
-                oParam.usuario = oParamUser;
+                oParam.Usuario = oParamUser;
 
                 List<ColaboradorBE> colaboradores = oColaboradorBL.ListarColaboradores(oParam);
-                var usuarioCrea = colaboradores.FirstOrDefault(t => t.usuario.CodigoUsuario == solicitudPorActualizar.CodigoUsuario);
+                var usuarioCrea = colaboradores.FirstOrDefault(t => t.Usuario.CodigoUsuario == solicitudPorActualizar.CodigoUsuario);
 
                 // Configurar envio de correo
                 string subject = string.Format("{0}: {1} - {2}", ConfigurationManager.AppSettings.Get("AsuntoMailEnvioSolicitud"), solicitudPorActualizar.CodigoInterno, DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss"));
@@ -579,10 +579,10 @@ namespace SPV.WebMVC.Controllers
                 TiendaBE olocal = new TiendaBE() { CodTienda = 0 };
                 oParamUser.Perfil = oPerfil;
                 oParamUser.Local = olocal;
-                oParam.usuario = oParamUser;
+                oParam.Usuario = oParamUser;
 
                 List<ColaboradorBE> colaboradores = oColaboradorBL.ListarColaboradores(oParam);
-                var usuarioCrea = colaboradores.FirstOrDefault(t => t.usuario.CodigoUsuario == solicitudPorActualizar.CodigoUsuario);
+                var usuarioCrea = colaboradores.FirstOrDefault(t => t.Usuario.CodigoUsuario == solicitudPorActualizar.CodigoUsuario);
 
                 // Configurar envio de correo
                 string subject = string.Format("{0}: {1} - {2}", ConfigurationManager.AppSettings.Get("AsuntoMailEnvioSolicitud"), solicitudPorActualizar.CodigoInterno, DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss"));

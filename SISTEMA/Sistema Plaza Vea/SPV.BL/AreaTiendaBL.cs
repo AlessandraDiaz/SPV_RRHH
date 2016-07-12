@@ -9,13 +9,6 @@ namespace SPV.BL
 {
     public class AreaTiendaBL
     {
-        private AreaTiendaDA oAreaTiendaDA = new AreaTiendaDA();
-
-        public Int32 ObtenerCapacidadLibre(String p_Usuario)
-        {
-            return oAreaTiendaDA.obtenerCapacidadLibre(p_Usuario);
-        }
-
 
     }
 }

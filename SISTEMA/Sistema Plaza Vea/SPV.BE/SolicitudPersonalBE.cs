@@ -151,6 +151,9 @@ namespace SPV.BE
         public int LocalUsuario { get; set; }
 
         public int CodigoUsuario { get; set; }
+
+        public Convocatoria2BE Convocatoria { get; set; }
+
         #endregion
 
         #region "Constructor"

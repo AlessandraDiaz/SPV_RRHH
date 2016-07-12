@@ -3,15 +3,126 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Linq.Dynamic;
+using SPV.BE;
+using SPV.BL;
+using System.Configuration;
+using System.Text;
+using SPV.WebMVC.Helper;
 
 namespace SPV.WebMVC.Controllers
 {
     public class PostulanteController : Controller
     {
-        // GET: Postulante
-        public ActionResult Index()
+
+        private SolicitudPersonalBL solicitudBL = new SolicitudPersonalBL();
+        private ParametroBL parametroBL = new ParametroBL();
+        private CargoBL cargoBL = new CargoBL();
+
+        // GET: Postulante/Index
+        public ActionResult Index(int cboTipoFiltro = 0, string desc = null, int cboFiltro = 0, string fechaIni = null, string fechaFin = null, int cboEstado = 0,
+                                    int page = 1, int pageSize = 10, string sort = "CodigoSol", string sortdir = "DESC")
         {
-            return View();
+            var records = new ListaPaginada<SolicitudPersonalBE>();
+            ViewBag.TipoFiltro = cboTipoFiltro;
+            ViewBag.desc = desc;
+            ViewBag.cboTipo = cboFiltro;
+            ViewBag.cboEstado = cboEstado;
+            ViewBag.FIni = fechaIni;
+            ViewBag.FFin = fechaFin;
+
+            FachadaSesion.TipoFiltro = cboTipoFiltro;
+
+            desc = (desc == null ? "" : desc);
+            fechaIni = (fechaIni == null ? "" : fechaIni);
+            fechaFin = (fechaFin == null ? "" : fechaFin);
+
+            int usuarioID = FachadaSesion.Usuario.CodigoUsuario;
+            //administrador o Gerente RRHH
+            if (FachadaSesion.Usuario.Perfil.CodPerfil == 1 || FachadaSesion.Usuario.Perfil.CodPerfil == 4)
+            {
+                usuarioID = 0;
+            }
+            var local = FachadaSesion.Usuario.Local.CodTienda;
+            var area = FachadaSesion.Usuario.Area.CodArea;
+
+            List<SolicitudPersonalBE> listadoSolicitud = solicitudBL.ListarSolicitudesConvocatoria(cboTipoFiltro, desc, cboFiltro, fechaIni, fechaFin, cboEstado, usuarioID, local, area);
+
+            records.Content = listadoSolicitud
+                        .OrderBy(sort + " " + sortdir)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+
+            // Count
+            records.TotalRecords = listadoSolicitud.Count();
+
+            records.CurrentPage = page;
+            records.PageSize = pageSize;
+
+            return View(records);
+        }
+
+        // GET: Postulante/Seleccion
+        public ActionResult Seleccion(int Id)
+        {
+            Convocatoria2BE convocatoria = new Convocatoria2BE();
+            var listaColaborador = new ColaboradorBL().ListaPostulanteByConvocatoria(Id).ToList();
+
+            string sort = "ID";
+            int pageSize = 10;
+            int page = 1;
+            string sortdir = "DESC";
+
+            ListaPaginada<ColaboradorBE> lista = new ListaPaginada<ColaboradorBE>();
+            lista.Content = listaColaborador.OrderBy(sort + " " + sortdir)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToList();
+
+            lista.TotalRecords = listaColaborador.Count();
+            lista.CurrentPage = page;
+            lista.PageSize = pageSize;
+            convocatoria.ListaColaborador = lista;
+
+            return View("Seleccion", convocatoria);
+
+        }
+
+        public JsonResult ListaTipoSolicitud()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoTipoSolicitud = ConfigurationManager.AppSettings["CodigoTipoSolicitud"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoTipoSolicitud);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaTipoFiltro()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoTipoFiltro = ConfigurationManager.AppSettings["CodigoTipoFiltro"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoTipoFiltro);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaMotivoFiltro()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoMotivoFiltro = ConfigurationManager.AppSettings["CodigoMotivoFiltro"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoMotivoFiltro);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaEstadoFiltro()
+        {
+            ParametroBE param = new ParametroBE();
+            string codigoEstadoFiltro = ConfigurationManager.AppSettings["CodigoEstadoSolFiltro"].ToString();
+            param.CodigoAgrupador = Convert.ToInt32(codigoEstadoFiltro);
+            return Json(parametroBL.Listar(param).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ListaCargoFiltro()
+        {
+            CargoBE param = new CargoBE();
+            param.ID = 0;
+            param.Descripcion = "";
+            return Json(cargoBL.ListaCargo(param).ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

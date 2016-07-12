@@ -7,7 +7,7 @@ namespace SPV.BE
     {
         [Key]
         [Display (Name = "ID")]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [Display(Name = "Código")]
         public string CodigoInterno { get; set; }
@@ -43,6 +43,11 @@ namespace SPV.BE
         [Required]
         public ParametroBE Estado { get; set; }
 
+        [Display(Name = "Fase")]
+        [Required]
+        public ParametroBE Fase { get; set; }
         public int SolicitudID { get; set; }
+
+        public ListaPaginada<ColaboradorBE> ListaColaborador { get; set; }
     }
 }

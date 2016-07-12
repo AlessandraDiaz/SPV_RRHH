@@ -317,7 +317,7 @@ END //;
 DELIMITER ;
 
 CALL rrhh.SPS_SOLICITUD(8,'', 0, '','', 2, 0,2,0);
-select * from tb_usuarios
+
 /*OK -- MODIFICADO -- 02/07/16 */
 DELIMITER //
 CREATE PROCEDURE rrhh.SPS_SOLICITUDBYID
@@ -771,6 +771,10 @@ BEGIN
 END //;
 DELIMITER ;
 
+
+DROP PROCEDURE RRHH.SPS_GET_CONVOCATORIA;
+DROP PROCEDURE RRHH.SPS_SEARCH_CONVOCATORIA;
+
 DELIMITER //
 CREATE PROCEDURE RRHH.SPS_GET_CONVOCATORIA
 (
@@ -791,15 +795,20 @@ BEGIN
         C.Cantidad,
 		A.FECHACREACION,
 		A.CODIGOESTADO,
-		D.DESCRIPCION ESTADO
+		D.DESCRIPCION ESTADO,
+		A.FASE,
+        F.Descripcion AS FASE_DES
 	FROM RRHH.TB_CONVOCATORIA A
 	INNER JOIN RRHH.TB_SOLICITUDPERSONAL C ON A.CODIGOSOLICITUD = C.PK_CODIGOSOLICITUD
     INNER JOIN RRHH.TB_PARAMETROS B ON C.TipoConvocatoria = B.CODIGO  AND B.CODIGOAGRUPADOR = 3
 	INNER JOIN RRHH.TB_PARAMETROS D ON A.CODIGOESTADO = D.CODIGO AND D.CODIGOAGRUPADOR = 8
+    INNER JOIN RRHH.tb_parametros F ON A.FASE = F.CODIGO AND F.CODIGOAGRUPADOR = 12
     INNER JOIN TB_CARGO G ON C.FK_CodigoCargo = G.PK_CARGO
     WHERE A.PK_CODIGOCONVOCATORIA = P_ID;
 END //;
 DELIMITER ;
+
+CALL SPS_GET_CONVOCATORIA(1);
 
 DELIMITER //
 CREATE PROCEDURE RRHH.SPS_SEARCH_CONVOCATORIA
@@ -826,12 +835,15 @@ BEGIN
 							C.Cantidad,
 							A.FECHACREACION,
 							A.CODIGOESTADO,
-							D.DESCRIPCION ESTADO
+							D.DESCRIPCION ESTADO,
+                            A.FASE,
+							F.Descripcion AS FASE_DES
                             ';
     SET @SQLSTMFROMWHERE = ' FROM RRHH.TB_CONVOCATORIA A
 								INNER JOIN RRHH.TB_SOLICITUDPERSONAL C ON A.CODIGOSOLICITUD = C.PK_CODIGOSOLICITUD
                                 INNER JOIN RRHH.TB_PARAMETROS B ON C.TipoConvocatoria = B.CODIGO  AND B.CODIGOAGRUPADOR = 3
 								INNER JOIN RRHH.TB_PARAMETROS D ON A.CODIGOESTADO = D.CODIGO AND D.CODIGOAGRUPADOR = 8
+                                INNER JOIN RRHH.tb_parametros F ON A.FASE = F.CODIGO AND F.CODIGOAGRUPADOR = 12
 								INNER JOIN TB_CARGO G ON C.FK_CodigoCargo = G.PK_CARGO
 							WHERE 1 = 1';
                                 
@@ -967,6 +979,178 @@ DELIMITER ;
 
 CALL SPS_EXAMENOPCIONES(13);
 
+DELIMITER //
+CREATE PROCEDURE rrhh.SPS_POSTULANTES_BY_CONVOCATORIA
+(IN CODIGO INT)
+BEGIN
+	
+	SELECT
+		A.PK_CODIGOCOLABORADOR AS CODIGO,
+		A.APELLIDOPATERNO,
+		A.APELLIDOMATERNO,
+		A.NOMBRE,
+		A.DNI,
+		A.FECHANACIMIENTO,
+		A.SEXO,
+		A.DIRECCION,
+		A.TELEFONO,
+		A.CORREO,
+		A.ESTADOCIVIL,
+		A.CANTIDADHIJOS,
+		A.SEGURO,
+		A.CODIGOESSALUD,
+		A.FECHACESE,
+		A.ANTECEDENTEPOLICIAL,
+        A.FK_CODIGOCV,
+        A.RindioExamen,
+        A.PuntajeFinal
+	FROM
+		RRHH.TB_COLABORADOR A 
+	WHERE A.TIPOCOLABORADOR = 2 -- SOLO POSTULANTES
+    AND A.ESTADO_POSTULANTE_CONVOCATORIA = 1 -- SOLO APTOS
+    AND A.FK_CODIGOCONVOCATORIA = CODIGO;
+    
+END //;
+
+DELIMITER ;
+
+CALL SPS_POSTULANTES_BY_CONVOCATORIA(0);
+
+DELIMITER //
+CREATE PROCEDURE rrhh.SPS_CV_BY_POSTULANTE
+(IN CODIGO INT)
+BEGIN
+	
+	SELECT  A.PK_CodigoCV, 
+			A.Profesion, 
+			A.nivelAcademico, 
+			A.centroEstudio, 
+			A.anioEgreso, 
+			A.trabajo1, 
+			A.periodo1, 
+			A.funciones1, 
+			A.trabajo2, 
+			A.periodo2, 
+			A.funciones2, 
+			A.trabajo3, 
+			A.periodo3, 
+			A.funciones3
+	FROM tb_curriculumvitae A 
+	WHERE A.PK_CODIGOCV = CODIGO;
+    
+END //;
+
+DELIMITER ;
+
+CALL SPS_CV_BY_POSTULANTE(3);
+
+DELIMITER //
+CREATE PROCEDURE rrhh.SPU_POSTULANTES_APTOS
+(IN CODIGO		 		INT,
+ IN ESTADO_ACEPTACION 	INT
+)
+BEGIN
+	
+	UPDATE tb_colaborador A
+    SET A.ESTADO_ACEPTACION = ESTADO_ACEPTACION
+    WHERE A.PK_CODIGOCOLABORADOR = CODIGO;
+    
+END //;
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE rrhh.SPU_CONVOCATORIA
+(IN CODIGO		 		INT,
+ IN ESTADO			 	INT,
+ IN FASE				INT
+)
+BEGIN
+	
+	UPDATE rrhh.tb_convocatoria B
+    SET B.FASE = FASE,
+		B.ESTADO = ESTADO
+    WHERE B.PK_CODIGOCONVOCATORIA = CODIGO;
+    
+END //;
+
+DELIMITER ;
+
+/*OK -- NUEVO -- 11/07/16 */
+DELIMITER //
+CREATE PROCEDURE rrhh.SPS_SOLICITUD_CONVOCATORIA
+(IN TIPOFILTRO  INT,	
+ IN DESCRIPCION VARCHAR(50),
+ IN CODIGO  	INT,
+ IN FECHA_INI	VARCHAR(10),
+ IN FECHA_FIN	VARCHAR(10),
+ IN ESTADO 		INT,
+ IN USUARIO		INT,
+ IN CODLOCAL	INT,
+ IN CODAREA		INT
+)
+BEGIN
+
+	DECLARE QUERY_STM VARCHAR(10000);
+    
+    SET @QUERY_STM := '';
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' SELECT 	A.PK_CodigoSolicitud,A.CodigoInterno,A.TipoConvocatoria,');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' tc.Descripcion as TipoConvocatoriaDes, A.TipoSolicitud,');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' ts.Descripcion as TipoSolicitudDes,A.Motivo, M.Descripcion as MotivoDes,');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' A.FechaSolicitud, A.FechaPresentacion, A.FechaEnvio, A.CodigoCampana,');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' C.Descripcion as Campana, c.FechaInicio, c.FechaFin,');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' A.FK_CodigoCargo, cg.Descripcion, cg.Funciones,cg.Requisitos,');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' cg.SueldoMin, cg.SueldoMax, A.Sueldo, A.Moneda, MN.Descripcion as MonedaDes,');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' A.Cantidad, A.Comentarios, A.Estado, E.Descripcion as EstadoDes, A.FK_CodigoUsuario,');
+	SET @QUERY_STM = CONCAT(@QUERY_STM,' CT.PK_CODIGOCONVOCATORIA, CT.CODIGOESTADO, ECT.DESCRIPCION');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' FROM tb_solicitudpersonal A ');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_parametros tc on a.TipoConvocatoria = tc.codigo and tc.codigoAgrupador = 3 and tc.estado = 1');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_parametros ts on a.TipoSolicitud = ts.codigo and ts.codigoAgrupador = 1 and ts.estado = 1');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_parametros M on a.Motivo = M.codigo and M.codigoAgrupador = 4 and M.estado = 1');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_parametros E on a.Estado = E.codigo and E.codigoAgrupador = 2 and E.estado = 1');
+	SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_parametros MN on a.Moneda = MN.codigo and MN.codigoAgrupador = 5 and MN.estado = 1');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_cargo CG on a.FK_CodigoCargo = cg.pk_cargo and cg.estado = 1');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_usuario U on a.FK_CodigoUsuario = U.PK_CodigoUsuario');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_convocatoria CT on A.PK_CodigoSolicitud = CT.CodigoSolicitud');
+	SET @QUERY_STM = CONCAT(@QUERY_STM,' INNER JOIN tb_parametros ECT on CT.CODIGOESTADO = ECT.CODIGO AND ECT.CODIGOAGRUPADOR = 8');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' LEFT JOIN tb_campana C ON A.CodigoCampana = C.PK_CODIGOcAMPANA and c.estado = 1');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' WHERE 1 = 1 AND CT.CODIGOESTADO IN (2,3) ');
+    
+    IF TIPOFILTRO = 1 THEN 
+		SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((''', DESCRIPCION, ''' = '''' ) OR (A.CodigoInterno LIKE concat(''%'',''', DESCRIPCION,''',''%'')))');
+    ELSEIF TIPOFILTRO = 2 THEN
+		SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((', CODIGO, '= 0) OR (A.TipoSolicitud =', CODIGO, '))');
+	ELSEIF TIPOFILTRO = 3 THEN
+		SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((', CODIGO, '= 0) OR (A.Motivo =', CODIGO, '))');
+	ELSEIF TIPOFILTRO = 4 THEN
+		SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((', CODIGO, '= 0) OR (A.FK_CodigoCargo =', CODIGO, '))');
+    ELSEIF TIPOFILTRO = 5 THEN
+		SET @QUERY_STM = CONCAT(@QUERY_STM,' AND (CAST(A.FechaSolicitud AS DATE) BETWEEN ''', FECHA_INI, ''' AND ''', FECHA_FIN , ''')');
+	ELSEIF TIPOFILTRO = 6 THEN
+		SET @QUERY_STM = CONCAT(@QUERY_STM,' AND (CAST(A.FechaPresentacion AS DATE) BETWEEN ''', FECHA_INI, ''' AND ''', FECHA_FIN , ''')');
+	ELSEIF TIPOFILTRO = 7 THEN
+		SET @QUERY_STM = CONCAT(@QUERY_STM,' AND (CAST(A.FechaEnvio AS DATE) BETWEEN ''', FECHA_INI, ''' AND ''', FECHA_FIN , ''')');
+    END IF;
+    
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((', ESTADO, '= 0) OR (A.Estado =', ESTADO, '))');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((', USUARIO, '= 0) OR (A.FK_CodigoUsuario =', USUARIO, '))');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((', CODLOCAL, '= 0) OR (U.FK_CodigoLocal =', CODLOCAL, '))');
+    SET @QUERY_STM = CONCAT(@QUERY_STM,' AND ((', CODAREA, '= 0) OR (U.FK_CodigoArea =', CODAREA, '))');
+    
+    PREPARE smpt FROM @QUERY_STM;
+    
+	-- ejecutamos el Statement
+	EXECUTE smpt;
+    
+	-- liberamos la memoria
+	DEALLOCATE PREPARE smpt;
+    
+END //;
+
+DELIMITER ;
+
+CALL rrhh.SPS_SOLICITUD_CONVOCATORIA(0,'', 0, '','', 0, 0,0,0);
+
 select * from rrhh.tb_colaborador;
 SELECT * FROM rrhh.tb_perfil;
 SELECT * FROM rrhh.tb_local;
@@ -976,9 +1160,14 @@ select * from rrhh.TB_CONVOCATORIA;
 
 SELECT * FROM RRHH.tb_usuario;
 SELECT * FROM RRHH.tb_colaborador;
-select * from tb_solicitudpersonal;
+select * from tb_solicitudpersonal where Estado = 2;
 
 select * FROM RRHH.TB_PARAMETROS;
 select * FROM RRHH.TB_CAMPANA;
 select * FROM RRHH.tb_cargo;
 select * FROM RRHH.tb_local;
+
+
+
+
+

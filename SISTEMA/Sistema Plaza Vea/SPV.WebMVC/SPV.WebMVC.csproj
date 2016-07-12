@@ -269,11 +269,13 @@
     <Content Include="Views\Convocatoria\Detalle.cshtml" />
     <Content Include="Views\Convocatoria\_Registrar.cshtml" />
     <Content Include="Views\Examen\Examen.cshtml" />
+    <Content Include="Views\Postulante\Index.cshtml" />
+    <Content Include="Views\Postulante\Seleccion.cshtml" />
+    <Content Include="Views\Postulante\_Postulantes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Postulante\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

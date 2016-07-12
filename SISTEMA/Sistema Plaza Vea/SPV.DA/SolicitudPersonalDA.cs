@@ -128,6 +128,129 @@ namespace SPV.DA
             return lista;
         }
 
+        public List<SolicitudPersonalBE> ListarSolicitudesConvocatoria(int tipoFiltro, string desc, int codigo, string fechaini,
+                                            string fechafin, int estado, int usuario, int local, int area)
+        {
+            dbRRHH = new DataBaseDA();
+            List<SolicitudPersonalBE> lista = new List<SolicitudPersonalBE>();
+            try
+            {
+                qSQL = "SPS_SOLICITUD_CONVOCATORIA";
+
+                if (fechaini != null && fechaini != "")
+                    fechaini = Convert.ToDateTime(fechaini).ToString("yyyy-MM-dd");
+
+                if (fechafin != null && fechafin != "")
+                    fechafin = Convert.ToDateTime(fechafin).ToString("yyyy-MM-dd");
+
+                using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@TIPOFILTRO", tipoFiltro);
+                    cmd.Parameters.AddWithValue("@DESCRIPCION", desc);
+                    cmd.Parameters.AddWithValue("@CODIGO", codigo);
+                    cmd.Parameters.AddWithValue("@FECHA_INI", fechaini);
+                    cmd.Parameters.AddWithValue("@FECHA_FIN", fechafin);
+                    cmd.Parameters.AddWithValue("@ESTADO", estado);
+                    cmd.Parameters.AddWithValue("@USUARIO", usuario);
+                    cmd.Parameters.AddWithValue("@CODLOCAL", local);
+                    cmd.Parameters.AddWithValue("@CODAREA", area);
+                    cmd.Connection.Open();
+                    MySqlDataReader rd = cmd.ExecuteReader();
+                    while (rd.Read())
+                    {
+                        SolicitudPersonalBE item = new SolicitudPersonalBE();
+                        item.CodigoSol = (Int32)rd[0];
+                        item.CodigoInterno = rd[1].ToString();
+
+                        ParametroBE tipoConvocatoria = new ParametroBE();
+                        tipoConvocatoria.Codigo = (Int32)rd[2];
+                        tipoConvocatoria.Descripcion = rd[3].ToString();
+                        item.TipoConvocatoria = tipoConvocatoria;
+
+                        ParametroBE tipoSolicitud = new ParametroBE();
+                        tipoSolicitud.Codigo = (Int32)rd[4];
+                        tipoSolicitud.Descripcion = rd[5].ToString();
+                        item.TipoSolicitudSol = tipoSolicitud;
+
+                        ParametroBE motivo = new ParametroBE();
+                        motivo.Codigo = (Int32)rd[6];
+                        motivo.Descripcion = rd[7].ToString();
+                        item.Motivo = motivo;
+
+                        item.FechaSol = Convert.ToDateTime(rd[8]);
+                        item.FechaPresentacion = Convert.ToDateTime(rd[9]);
+
+                        if (rd[10].ToString() != "")
+                        {
+                            item.FechaEnvio = Convert.ToDateTime(rd[10]);
+                        }
+
+                        CampanaBE campana = new CampanaBE();
+                        campana.ID = rd[11].ToString() != "" ? (Int32)rd[11] : 0;
+                        campana.Descripcion = rd[12].ToString() != "" ? (string)rd[12] : "";
+
+                        if (rd[13].ToString() != "")
+                        {
+                            campana.FechaInicio = Convert.ToDateTime(rd[13]);
+                            campana.FechaInicio = Convert.ToDateTime(rd[14]);
+                        }
+                        item.Campana = campana;
+
+                        CargoBE cargo = new CargoBE();
+                        cargo.ID = (Int32)rd[15];
+                        cargo.Descripcion = rd[16].ToString();
+                        cargo.Funciones = rd[17].ToString();
+                        cargo.Requisitos = rd[18].ToString();
+                        cargo.SueldoMin = (decimal)rd[19];
+                        cargo.SueldoMax = (decimal)rd[20];
+
+                        item.Cargo = cargo;
+
+                        item.SueldoSolicitud = (decimal)rd[21];
+
+                        ParametroBE moneda = new ParametroBE();
+                        moneda.Codigo = (Int32)rd[22];
+                        moneda.Descripcion = rd[23].ToString();
+                        item.MonedaSolicitud = moneda;
+
+                        item.Cantidad = (Int32)rd[24];
+                        item.Comentarios = rd[25].ToString() != "" ? (string)rd[25] : "";
+
+                        ParametroBE estadoSolicitud = new ParametroBE();
+                        estadoSolicitud.Codigo = (Int32)rd[26];
+                        estadoSolicitud.Descripcion = rd[27].ToString();
+                        item.EstadoSol = estadoSolicitud;
+                        item.CodigoUsuario = (Int32)rd[28];
+
+                        Convocatoria2BE convocatoria = new Convocatoria2BE();
+                        convocatoria.ID = rd[29].ToString() != "" ? (Int32)rd[29] : 0;
+
+                        ParametroBE estadoConvocatoria = new ParametroBE();
+                        estadoConvocatoria.Codigo = rd[30].ToString() != "" ? (Int32)rd[30] : 0;
+                        estadoConvocatoria.Descripcion = rd[31].ToString() != "" ? (string)rd[31] : "";
+
+                        convocatoria.Estado = estadoConvocatoria;
+
+                        item.Convocatoria = convocatoria;
+                        lista.Add(item);
+                    }
+
+                    if (rd != null && rd.IsClosed == false) rd.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbRRHH = null;
+            }
+
+            return lista;
+        }
+
         public SolicitudPersonalBE GetSolicitudByID(int Id)
         {
             dbRRHH = new DataBaseDA();

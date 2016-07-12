@@ -348,7 +348,10 @@
                 $option.val(row.Codigo);
                 $option.html(row.Descripcion);
                 $('#cboMoneda').append($option);
-            })
+            });
+            $("#cboMoneda option").filter(function () {
+                return $(this).val() == "1";
+            }).prop('selected', true);
         })
         .fail(function (data) {
             console.log('error');

@@ -49,3 +49,11 @@ C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.B
 C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.csprojResolveAssemblyReference.cache
 C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
 C:\UPC\Repositorio_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.dll
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.DA.pdb
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\bin\Debug\MySql.Data.dll
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.dll
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\bin\Debug\SPV.BE.pdb
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.csprojResolveAssemblyReference.cache
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.dll
+C:\UPC\REPO_ALE\SPV_RRHH\SISTEMA\Sistema Plaza Vea\SPV.DA\obj\Debug\SPV.DA.pdb

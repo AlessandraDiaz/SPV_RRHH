@@ -12,110 +12,8 @@ namespace SPV.DA
 {
     public class ColaboradorDA
     {
-        private String querySQL;
-        private DataBaseDA cn = new DataBaseDA();
-
         private String qSQL;
         DataBaseDA dbRRHH;
-
-        //Obtener Codigo Colaborador por codigo usuario
-        public Int32 ObtenerCodigoCargoColaborador(String p_CodigoUsuario)
-        {
-            Int32 codigo;
-            querySQL = "SELECT COL.NCARGOCOD FROM GRH_COLABORADOR COL " +
-                        "INNER JOIN general.mae_usuario USU ON COL.NCOLABORADORCOD = USU.NCOLABORADORCOD " +
-                        "WHERE USU.no_login = @CUSUARIOCOD";
-            SqlCommand cmd = new SqlCommand(querySQL, cn.getConecction());
-            cmd.Parameters.AddWithValue("@CUSUARIOCOD", p_CodigoUsuario);
-            try
-            {
-                cmd.Connection.Open();
-                codigo = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-            }
-            catch (Exception)
-            {
-                codigo = 0;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                querySQL = String.Empty;
-            }
-            return codigo;
-        }
-
-        public Int32 ObtenerCodigoColaborador(String p_CodigoUsuario)
-        {
-            Int32 codigo;
-            querySQL = "SELECT NCOLABORADORCOD FROM general.mae_usuario " +
-                        "WHERE no_login = @CUSUARIOCOD";
-            SqlCommand cmd = new SqlCommand(querySQL, cn.getConecction());
-            cmd.Parameters.AddWithValue("@CUSUARIOCOD", p_CodigoUsuario);
-            try
-            {
-                cmd.Connection.Open();
-                codigo = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-            }
-            catch (Exception)
-            {
-                codigo = 0;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                querySQL = String.Empty;
-            }
-            return codigo;
-        }
-
-        public Int32 ObtenerContratoColaborador(String p_CodigoUsuario)
-        {
-            Int32 codigo;
-            querySQL = "SELECT NCONTRATOCOD FROM general.mae_usuario " +
-                        "WHERE no_login = @CUSUARIOCOD";
-            SqlCommand cmd = new SqlCommand(querySQL, cn.getConecction());
-            cmd.Parameters.AddWithValue("@CUSUARIOCOD", p_CodigoUsuario);
-            try
-            {
-                cmd.Connection.Open();
-                codigo = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-            }
-            catch (Exception)
-            {
-                codigo = 0;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                querySQL = String.Empty;
-            }
-            return codigo;
-        }
-
-        public Int32 ObtenerCodigoAreaColaborador(String p_CodigoUsuario)
-        {
-            Int32 codigo;
-            querySQL = "SELECT COL.NAREATIENDACOD FROM GRH_COLABORADOR COL " +
-                        "INNER JOIN general.mae_usuario USU ON COL.NCOLABORADORCOD = USU.NCOLABORADORCOD " +
-                        "WHERE USU.no_login = @CUSUARIOCOD";
-            SqlCommand cmd = new SqlCommand(querySQL, cn.getConecction());
-            cmd.Parameters.AddWithValue("@CUSUARIOCOD", p_CodigoUsuario);
-            try
-            {
-                cmd.Connection.Open();
-                codigo = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-            }
-            catch (Exception)
-            {
-                codigo = 0;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                querySQL = String.Empty;
-            }
-            return codigo;
-        }
 
         public List<ColaboradorBE> ListarColaboradores(ColaboradorBE colaborador)
         {
@@ -127,8 +25,8 @@ namespace SPV.DA
                 using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@PERFIL", colaborador.usuario.Perfil.CodPerfil);
-                    cmd.Parameters.AddWithValue("@TIENDA", colaborador.usuario.Local.CodTienda);
+                    cmd.Parameters.AddWithValue("@PERFIL", colaborador.Usuario.Perfil.CodPerfil);
+                    cmd.Parameters.AddWithValue("@TIENDA", colaborador.Usuario.Local.CodTienda);
                     cmd.Connection.Open();
                     MySqlDataReader rd = cmd.ExecuteReader();
                     while (rd.Read())
@@ -150,7 +48,7 @@ namespace SPV.DA
                         usuario.Perfil = perfil;
                         usuario.Area = area;
                         usuario.Local = local;
-                        item.usuario = usuario;
+                        item.Usuario = usuario;
 
                         lista.Add(item);
                     }
@@ -170,10 +68,9 @@ namespace SPV.DA
             return lista;
         }
 
-		
-public List<ColaboradorBE> List()
+        public List<ColaboradorBE> List()
         {
-            querySQL = "SPS_COLABORADORES";
+            qSQL = "SPS_COLABORADORES";
             
             try
             {
@@ -186,7 +83,7 @@ public List<ColaboradorBE> List()
                     using (var comando = conexion.CreateCommand())
                     {
                         comando.Connection = conexion;
-                        comando.CommandText = querySQL;
+                        comando.CommandText = qSQL;
                         comando.CommandType = System.Data.CommandType.StoredProcedure;
 
                         conexion.Open();
@@ -222,5 +119,89 @@ public List<ColaboradorBE> List()
                 throw ex;
             }
         }
+
+        public List<ColaboradorBE> ListaPostulanteByConvocatoria(int codigo)
+        {
+            dbRRHH = new DataBaseDA();
+            List<ColaboradorBE> lista = new List<ColaboradorBE>();
+            try
+            {
+                qSQL = "SPS_POSTULANTES_BY_CONVOCATORIA";
+                using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CODIGO", codigo);
+                    cmd.Connection.Open();
+                    MySqlDataReader rd = cmd.ExecuteReader();
+                    while (rd.Read())
+                    {
+                        ColaboradorBE item = new ColaboradorBE();
+                        item.ID = (Int32)rd[0];
+                        item.ApellidoPaterno = rd[1].ToString() != "" ? (String)rd[1] : "";
+                        item.ApellidoMaterno = rd[2].ToString() != "" ? (String)rd[2] : "";
+                        item.Nombres = rd[3].ToString() != "" ? (String)rd[3] : "";
+                        item.DNI = rd[4].ToString() != "" ? (String)rd[4] : "";
+                        item.FechaNacimiento = Convert.ToDateTime(rd[5]);
+                        item.Sexo = rd[6].ToString() != "" ? (String)rd[6] : "";
+                        item.Direccion = rd[7].ToString() != "" ? (String)rd[7] : "";
+                        item.Telefono = rd[8].ToString() != "" ? (String)rd[8] : "";
+                        item.Correo = rd[9].ToString() != "" ? (String)rd[9] : "";
+                        item.EstadoCivil = rd[10].ToString() != "" ? (String)rd[10] : "";
+                        item.CantidadHijos = (Int32)rd[11];
+                        item.Seguro = rd[12].ToString() != "" ? (String)rd[12] : "";
+                        item.CodigoEssalud = rd[13].ToString() != "" ? (String)rd[13] : "";
+                        item.FechaCese = Convert.ToDateTime(rd[14]);
+                        item.Antecedente = rd[15].ToString() != "" ? (String)rd[15] : "";
+
+                        CurriculumVitaeBE cv = new CurriculumVitaeBE();
+                        cv.ID = Convert.ToInt32(rd[16]);
+
+                        item.CurriculumVitaeDetalle = cv;
+                        item.RindioExamen = Convert.ToInt32(rd[17]);
+                        item.PuntajeExamen = rd[18].ToString() != "" ? (Int32)rd[18] : 0;
+
+                        lista.Add(item);
+                    }
+
+                    if (rd != null && rd.IsClosed == false) rd.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbRRHH = null;
+            }
+
+            return lista;
+        }
+
+        public void UpdatePostulantes(ColaboradorBE postulante)
+        {
+            dbRRHH = new DataBaseDA();
+            try
+            {
+                qSQL = "SPU_POSTULANTES_APTOS";
+                using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CODIGO", postulante.ID);
+                    cmd.Parameters.AddWithValue("@ESTADO_ACEPTACION", postulante.EstadoAceptacion);
+                    cmd.Connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbRRHH = null;
+            }
+        }
+
     }
 }

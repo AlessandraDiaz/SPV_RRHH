@@ -53,6 +53,7 @@
     <Compile Include="Convocatoria2BE.cs" />
     <Compile Include="ConvocatoriaBE.cs" />
     <Compile Include="ConvocatoriaPostulanteBE.cs" />
+    <Compile Include="CurriculumVitaeBE.cs" />
     <Compile Include="DetalleRequerimientoCompraBE.cs" />
     <Compile Include="Enumerador.cs" />
     <Compile Include="ExamenBE.cs" />

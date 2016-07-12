@@ -42,5 +42,10 @@ namespace SPV.BL
                 throw ex;
             }
         }
+
+        public Convocatoria2BE UpdateEstadoConvocatoria(Convocatoria2BE convocatoria)
+        {
+            return new Convocatoria2DA().UpdateEstadoConvocatoria(convocatoria);
+        }
     }
 }

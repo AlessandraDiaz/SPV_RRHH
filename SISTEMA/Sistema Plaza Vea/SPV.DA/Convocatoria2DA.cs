@@ -9,6 +9,9 @@ namespace SPV.DA
 {
     public class Convocatoria2DA
     {
+        private String qSQL;
+        DataBaseDA dbRRHH;
+
         public void Insert(Convocatoria2BE entidad)
         {
             try
@@ -59,7 +62,7 @@ namespace SPV.DA
 
                         conexion.Open();
 
-                        entidad.Id = (int)comando.ExecuteScalar();
+                        entidad.ID = (int)comando.ExecuteScalar();
                     }
                 }
             }
@@ -100,7 +103,7 @@ namespace SPV.DA
                             {
                                 entidad = new Convocatoria2BE();
 
-                                entidad.Id = Convert.ToInt32(lector["ID"]);
+                                entidad.ID = Convert.ToInt32(lector["ID"]);
                                 entidad.CodigoInterno = lector["CodigoInterno"].ToString();
                                 entidad.Nombre = Convert.ToString(lector["NOMBRE"]);
                                 entidad.FechaInicio = Convert.ToDateTime(lector["FECHAINICIO"]);
@@ -246,7 +249,7 @@ namespace SPV.DA
                             {
                                 entidad = new Convocatoria2BE();
 
-                                entidad.Id = Convert.ToInt32(lector["ID"]);
+                                entidad.ID = Convert.ToInt32(lector["ID"]);
                                 entidad.CodigoInterno = lector["CodigoInterno"].ToString();
                                 entidad.Nombre = Convert.ToString(lector["NOMBRE"]);
                                 entidad.FechaInicio = Convert.ToDateTime(lector["FECHAINICIO"]);
@@ -287,5 +290,37 @@ namespace SPV.DA
                 throw ex;
             }
         }
+
+        public Convocatoria2BE UpdateEstadoConvocatoria(Convocatoria2BE convocatoria)
+        {
+            dbRRHH = new DataBaseDA();
+            Convocatoria2BE convocatoriaActualizada = null;
+            try
+            {
+                qSQL = "SPU_CONVOCATORIA";
+                using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CODIGO", convocatoria.ID);
+                    cmd.Parameters.AddWithValue("@ESTADO", convocatoria.Estado.Codigo);
+                    cmd.Parameters.AddWithValue("@FASE", convocatoria.Fase.Codigo);
+                    cmd.Connection.Open();
+                    cmd.ExecuteNonQuery();
+
+                    convocatoriaActualizada = Get(convocatoria.ID);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbRRHH = null;
+            }
+
+            return convocatoriaActualizada;
+        }
+
     }
 }
