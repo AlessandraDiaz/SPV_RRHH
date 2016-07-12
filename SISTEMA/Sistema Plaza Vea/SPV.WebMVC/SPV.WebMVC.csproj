@@ -229,6 +229,7 @@
     <Content Include="Scripts\jsViews\Convocatoria\Create.js" />
     <Content Include="Scripts\jsViews\Convocatoria\Index.js" />
     <Content Include="Scripts\jsViews\Convocatoria\UtilJS.js" />
+    <Content Include="Scripts\jsViews\Postulante\postulante.js" />
     <Content Include="Scripts\jsViews\Solicitud\solicitud.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
@@ -272,6 +273,9 @@
     <Content Include="Views\Postulante\Index.cshtml" />
     <Content Include="Views\Postulante\Seleccion.cshtml" />
     <Content Include="Views\Postulante\_Postulantes.cshtml" />
+    <Content Include="Views\Postulante\VerCV.cshtml" />
+    <Content Include="Views\Postulante\Detalle.cshtml" />
+    <Content Include="Views\Postulante\_PostulantesOK.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

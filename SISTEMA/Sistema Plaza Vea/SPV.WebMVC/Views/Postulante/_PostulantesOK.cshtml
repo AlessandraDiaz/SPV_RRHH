@@ -16,7 +16,7 @@
                     tableStyle: "table table-bordered table-hover",
                     mode: WebGridPagerModes.All,
                     columns: grid.Columns(
-                      grid.Column(format: @<text><input id="IdColaborador" class="chkWg" name="IdColaborador" type="checkbox" value="@item.ID" /></text>, style: "col-xs-1 col-md-1"),
+                      grid.Column("EstadoAceptacion.Descripcion", "ESTADO POSTULANTE", style: "col-xs-4 col-md-2"),
                       grid.Column("DNI", "DNI", style: "col-xs-1 col-md-1"),
                       grid.Column("ApellidoPaterno", "Ape. Paterno", style: "col-xs-1 col-md-2"),
                       grid.Column("ApellidoMaterno", "Ape. Materno", style: "col-xs-1 col-md-2"),
@@ -43,5 +43,4 @@
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/jsViews/Postulante/postulante.js")
-
 }

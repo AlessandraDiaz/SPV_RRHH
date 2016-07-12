@@ -50,9 +50,10 @@ namespace SPV.BE
         [Display(Name = "Foto")]
         public string Foto { get; set; }
         public int EstadoPostulanteConvocatoria { get; set; }
-        public int EstadoAceptacion { get; set; }
+        public ParametroBE EstadoAceptacion { get; set; }
         public Convocatoria2BE Convocatoria { get; set; }
         public int RindioExamen { get; set; }
+        [Display(Name = "Puntaje")]
         public int PuntajeExamen { get; set; }
         public CurriculumVitaeBE CurriculumVitaeDetalle { get; set; }
         #endregion

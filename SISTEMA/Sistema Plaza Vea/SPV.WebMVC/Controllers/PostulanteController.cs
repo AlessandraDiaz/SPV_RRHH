@@ -18,6 +18,8 @@ namespace SPV.WebMVC.Controllers
         private SolicitudPersonalBL solicitudBL = new SolicitudPersonalBL();
         private ParametroBL parametroBL = new ParametroBL();
         private CargoBL cargoBL = new CargoBL();
+        private Convocatoria2BL convocatoriaBL = new Convocatoria2BL();
+        private ColaboradorBL colaboradorBL = new ColaboradorBL();
 
         // GET: Postulante/Index
         public ActionResult Index(int cboTipoFiltro = 0, string desc = null, int cboFiltro = 0, string fechaIni = null, string fechaFin = null, int cboEstado = 0,
@@ -66,8 +68,8 @@ namespace SPV.WebMVC.Controllers
         // GET: Postulante/Seleccion
         public ActionResult Seleccion(int Id)
         {
-            Convocatoria2BE convocatoria = new Convocatoria2BE();
-            var listaColaborador = new ColaboradorBL().ListaPostulanteByConvocatoria(Id).ToList();
+            Convocatoria2BE convocatoria = convocatoriaBL.Get(Id);
+            var listaColaborador = colaboradorBL.ListaPostulanteByConvocatoria(Id).ToList();
 
             string sort = "ID";
             int pageSize = 10;
@@ -87,6 +89,86 @@ namespace SPV.WebMVC.Controllers
 
             return View("Seleccion", convocatoria);
 
+        }
+
+        // POST: Postulante/Seleccion/1
+        [HttpPost]
+        public ActionResult Seleccion(string id, string seleccionados)
+        {
+            try
+            {
+                var colaboradoresList = seleccionados.Split(',');
+                int codigoConvocatoria = Convert.ToInt32(id);
+                var listaColaborador = colaboradorBL.ListaPostulanteByConvocatoria(codigoConvocatoria).ToList();
+                var estadoAprobado = ConfigurationManager.AppSettings["PostulanteAceptado"];
+                var estadoRechazado = ConfigurationManager.AppSettings["PostulanteRechazado"];
+
+                foreach (var colabora in listaColaborador)
+                {
+                    var results = Array.Find(colaboradoresList, s => s.Equals(colabora.ID.ToString()));
+
+                    if (results == null) // no fue seleccionado
+                    {
+                        ParametroBE paramEstado = new ParametroBE() { Codigo = Convert.ToInt32(estadoRechazado) };
+                        colabora.EstadoAceptacion = paramEstado;
+                        colaboradorBL.UpdatePostulantes(colabora);
+                    }
+                    else //Si fue Seleccionado
+                    {
+                        ParametroBE paramEstado = new ParametroBE() { Codigo = Convert.ToInt32(estadoAprobado) };
+                        colabora.EstadoAceptacion = paramEstado;
+                        colaboradorBL.UpdatePostulantes(colabora);
+                    }
+                }
+
+                Convocatoria2BE convoca = convocatoriaBL.Get(codigoConvocatoria);
+                ParametroBE param = new ParametroBE() { Codigo = 3 }; // ESTADO DE CONVOCATORIA FINALIZADA
+                convoca.Estado = param;
+
+                convocatoriaBL.UpdateEstadoConvocatoria(convoca);
+
+                return Json(new { status = "Success" });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        public ActionResult Detalle(int id)
+        {
+            Convocatoria2BE convocatoria = convocatoriaBL.Get(id);
+            var listaColaborador = colaboradorBL.ListaPostulanteByConvocatoria(id).ToList();
+
+            string sort = "ID";
+            int pageSize = 10;
+            int page = 1;
+            string sortdir = "DESC";
+
+            ListaPaginada<ColaboradorBE> lista = new ListaPaginada<ColaboradorBE>();
+            lista.Content = listaColaborador.OrderBy(sort + " " + sortdir)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToList();
+
+            lista.TotalRecords = listaColaborador.Count();
+            lista.CurrentPage = page;
+            lista.PageSize = pageSize;
+            convocatoria.ListaColaborador = lista;
+
+            return View("Detalle", convocatoria);
+        }
+
+        // GET: /Postulante/VerCV/1
+        public ActionResult VerCV(int id = 0)
+        {
+            ColaboradorBE cv = colaboradorBL.GetColaboradorByID(id);
+            if (cv == null)
+            {
+                return HttpNotFound();
+            }
+
+            return PartialView("VerCV", cv);
         }
 
         public JsonResult ListaTipoSolicitud()

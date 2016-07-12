@@ -1,0 +1,112 @@
+﻿@model SPV.BE.Convocatoria2BE
+
+@{
+    ViewBag.Title = "Detalle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Gestión de Postulantes</h2>
+
+<div class="form-horizontal">
+
+    <div>
+        <fieldset>
+            <legend></legend>
+            @Html.HiddenFor(m => m.ID)
+            <div class="form-group row">
+                @Html.LabelFor(model => model.CodigoInterno, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.CodigoInterno, new { htmlAttributes = new { id = "txtCodigo", @class = "form-control", @style = "width:100px;", @disabled = true } })
+                    @Html.ValidationMessageFor(model => model.CodigoInterno, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { id = "txtNombre", @class = "form-control", @style = "width:4    00px;", @disabled = true } })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.FechaInicio, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-1 input-group date">
+                    @Html.TextBoxFor(m => m.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = true, @style = "width:120px;" })
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+                @Html.LabelFor(model => model.FechaFin, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-1 input-group date">
+                    @Html.TextBoxFor(m => m.FechaFin, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = true, @style = "width:120px;" })
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Solicitud.Cantidad, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Solicitud.Cantidad, new { htmlAttributes = new { id = "txtCantidad", @class = "form-control", @style = "width:100px;", @disabled = true } })
+                    @Html.ValidationMessageFor(model => model.Solicitud.Cantidad, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Fase, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.Fase.Descripcion, new { htmlAttributes = new { id = "txtFase", @class = "form-control", @style = "width:400px;", @disabled = true } })
+                </div>
+                <p>
+                    <span>
+                        <font color="#428bca">NO INICIADA(0)</font><b>--></b>
+                        <font color="#428bca">EVALUACIÓN PSICOLOGICA(1)</font><b>--></b>
+                        <font color="#428bca">EXAMEN PSICOTÉCNICO(2)</font><b>--></b>
+                        <font color="#428bca">ENTREVISTA PERSONAL(3)</font><b>--></b>
+                        <font color="#428bca">FINALIZADO(4)</font>
+                    </span>
+                </p>
+            </div>
+        </fieldset>
+        <br />
+        <div>
+            @Html.Partial("_PostulantesOK", Model.ListaColaborador)
+        </div>
+    </div>
+
+    <div style="padding-right: 70px;">
+        <div style="float:right;">
+
+            <div style="float:left;padding-left:10px;">
+                <button class="btn btn-danger" type="button" onclick="ConfirmCancel();">
+                    <span class="glyphicon glyphicon-floppy-remove"> Cancelar</span>
+                </button>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+</div>
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jsViews/Postulante/postulante.js")
+
+    <script type="text/javascript">
+
+    function ConfirmCancel() {
+        location.href = '@Url.Action("Index", "Postulante")';
+        return false;
+    }
+
+    </script>
+
+}

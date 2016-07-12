@@ -1,0 +1,149 @@
+﻿@model SPV.BE.ColaboradorBE
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 class="modal-title">Curriculum Vitae</h3>
+</div>
+
+<div class="modal-body">
+    <div class="form-horizontal">
+        <div class="row">
+            @Html.LabelFor(m => Model.ApellidoPaterno, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-5">
+                @Html.TextBoxFor(m => m.ApellidoPaterno, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+
+            <div style="position:absolute;padding-left:350px;">
+                <img src="@Url.Content("~/Content/image/Fotos/" + Model.Foto.ToString())" alt="IMAGES" />
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.ApellidoMaterno, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-5">
+                @Html.TextBoxFor(m => m.ApellidoMaterno, new { @class = "form-control required", @disabled = "disabled"})
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.Nombres, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-5">
+                @Html.TextBoxFor(m => m.Nombres, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.DNI, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-5">
+                @Html.TextBoxFor(m => m.DNI, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.Direccion, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-5">
+                @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.Correo, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-5">
+                @Html.TextBoxFor(m => m.Correo, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Profesion, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Profesion, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.NivelAcademico, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.NivelAcademico, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.CentroDeEstudios, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-5 col-md-4">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.CentroDeEstudios, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Anio, new { @class = "control-label col-sm-2 col-md-2" })
+            <div class="col-sm-2 col-md-3">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Anio, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Trabajo1, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Trabajo1, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Periodo1, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-8 col-md-9">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Periodo1, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Funciones1, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Funciones1, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Trabajo2, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Trabajo2, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Periodo2, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-8 col-md-9">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Periodo2, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Funciones2, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Funciones2, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Trabajo3, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Trabajo3, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Periodo3, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-8 col-md-9">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Periodo3, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => Model.CurriculumVitaeDetalle.Funciones3, new { @class = "control-label col-sm-3 col-md-2" })
+            <div class="col-sm-7 col-md-7">
+                @Html.TextBoxFor(m => m.CurriculumVitaeDetalle.Funciones3, new { @class = "form-control required", @disabled = "disabled" })
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+</div>

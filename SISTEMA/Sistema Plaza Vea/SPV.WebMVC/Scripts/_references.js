@@ -14,6 +14,7 @@
 /// <reference path="jsviews/convocatoria/create.js" />
 /// <reference path="jsviews/convocatoria/index.js" />
 /// <reference path="jsviews/convocatoria/utiljs.js" />
+/// <reference path="jsviews/postulante/postulante.js" />
 /// <reference path="jsviews/solicitud/solicitud.js" />
 /// <reference path="knockout-2.2.0.js" />
 /// <reference path="modernizr-2.6.2.js" />

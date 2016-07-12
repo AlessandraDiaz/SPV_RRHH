@@ -160,6 +160,11 @@ namespace SPV.DA
                         item.RindioExamen = Convert.ToInt32(rd[17]);
                         item.PuntajeExamen = rd[18].ToString() != "" ? (Int32)rd[18] : 0;
 
+                        ParametroBE estadoAceptacion = new ParametroBE();
+                        estadoAceptacion.Codigo = rd[19].ToString() != "" ? (Int32)rd[19] : 0;
+                        estadoAceptacion.Descripcion = rd[20].ToString() != "" ? (String)rd[20] : "";
+                        item.EstadoAceptacion = estadoAceptacion;
+
                         lista.Add(item);
                     }
 
@@ -188,7 +193,7 @@ namespace SPV.DA
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@CODIGO", postulante.ID);
-                    cmd.Parameters.AddWithValue("@ESTADO_ACEPTACION", postulante.EstadoAceptacion);
+                    cmd.Parameters.AddWithValue("@ESTADO_ACEPTACION", postulante.EstadoAceptacion.Codigo);
                     cmd.Connection.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -202,6 +207,67 @@ namespace SPV.DA
                 dbRRHH = null;
             }
         }
+
+        public ColaboradorBE GetColaboradorByID(int codigo)
+        {
+            dbRRHH = new DataBaseDA();
+            ColaboradorBE item = null;
+            try
+            {
+                qSQL = "SPS_COLABORADORBYID";
+                using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CODIGO", codigo);
+                    cmd.Connection.Open();
+                    MySqlDataReader rd = cmd.ExecuteReader();
+                    int pCodCV = 0;
+                    while (rd.Read())
+                    {
+                        item = new ColaboradorBE();
+                        item.ID = (Int32)rd[0];
+                        item.ApellidoPaterno = rd[1].ToString() != "" ? (String)rd[1] : "";
+                        item.ApellidoMaterno = rd[2].ToString() != "" ? (String)rd[2] : "";
+                        item.Nombres = rd[3].ToString() != "" ? (String)rd[3] : "";
+                        item.DNI = rd[4].ToString() != "" ? (String)rd[4] : "";
+                        item.FechaNacimiento = Convert.ToDateTime(rd[5]);
+                        item.Sexo = rd[6].ToString() != "" ? (String)rd[6] : "";
+                        item.Direccion = rd[7].ToString() != "" ? (String)rd[7] : "";
+                        item.Telefono = rd[8].ToString() != "" ? (String)rd[8] : "";
+                        item.Correo = rd[9].ToString() != "" ? (String)rd[9] : "";
+                        item.EstadoCivil = rd[10].ToString() != "" ? (String)rd[10] : "";
+                        item.CantidadHijos = (Int32)rd[11];
+                        item.Seguro = rd[12].ToString() != "" ? (String)rd[12] : "";
+                        item.CodigoEssalud = rd[13].ToString() != "" ? (String)rd[13] : "";
+                        item.FechaCese = Convert.ToDateTime(rd[14]);
+                        item.Antecedente = rd[15].ToString() != "" ? (String)rd[15] : "";
+                        pCodCV = Convert.ToInt32(rd[16]);
+                        CurriculumVitaeBE cv = new CurriculumVitaeDA().ObtenerCVByPostulante(pCodCV);
+                        if (cv == null)
+                        {
+                            cv = new CurriculumVitaeBE() { ID = pCodCV };
+                        }
+                        item.CurriculumVitaeDetalle = cv;
+                        item.RindioExamen = Convert.ToInt32(rd[17]);
+                        item.PuntajeExamen = rd[18].ToString() != "" ? (Int32)rd[18] : 0;
+                        item.Foto = rd[19].ToString() != "" ? rd[19].ToString() : "";
+                    }
+
+                    if (rd != null && rd.IsClosed == false) rd.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbRRHH = null;
+            }
+
+            return item;
+        }
+
 
     }
 }

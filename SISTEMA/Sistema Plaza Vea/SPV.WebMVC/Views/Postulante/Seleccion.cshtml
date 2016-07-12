@@ -12,33 +12,32 @@
     <div>
         <fieldset>
             <legend></legend>
-
             @Html.HiddenFor(m => m.ID)
             <div class="form-group row">
                 @Html.LabelFor(model => model.CodigoInterno, htmlAttributes: new { @class = "control-label col-md-1" })
-                <div class="col-md-3">
-                    @Html.EditorFor(model => model.CodigoInterno, new { htmlAttributes = new { id = "TxtCodigo", @class = "form-control", @style = "width:100px;" } })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.CodigoInterno, new { htmlAttributes = new { id = "txtCodigo", @class = "form-control", @style = "width:100px;" , @disabled = true } })
                     @Html.ValidationMessageFor(model => model.CodigoInterno, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group row">
                 @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-1" })
-                <div class="col-md-3">
-                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { id = "txtNombre", @class = "form-control", @style = "width:400px;" } })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { id = "txtNombre", @class = "form-control", @style = "width:4    00px;", @disabled = true } })
                     @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group row">
                 @Html.LabelFor(model => model.FechaInicio, htmlAttributes: new { @class = "control-label col-md-1" })
                 <div class="col-md-1 input-group date">
-                    <input class='form-control date-picker' id="fechaIni" name="fechaIni" value="@ViewBag.FIni" placeholder="Inicio" style="padding-left:5px;width:120px;" />
+                    @Html.TextBoxFor(m => m.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = true, @style = "width:120px;" })
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
                     </div>
                 </div>
                 @Html.LabelFor(model => model.FechaFin, htmlAttributes: new { @class = "control-label col-md-1" })
                 <div class="col-md-1 input-group date">
-                    <input class='form-control date-picker' id="fechaFin" name="fechaFin" value="@ViewBag.FFin" placeholder="Fin" style="padding-left:5px;width:120px;" />
+                    @Html.TextBoxFor(m => m.FechaFin, "{0:dd/MM/yyyy}", new { @class = "form-control required", @disabled = true, @style = "width:120px;" })
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
                     </div>
@@ -46,16 +45,25 @@
             </div>
             <div class="form-group row">
                 @Html.LabelFor(model => model.Solicitud.Cantidad, htmlAttributes: new { @class = "control-label col-md-1" })
-                <div class="col-md-3">
-                    @Html.EditorFor(model => model.Solicitud.Cantidad, new { htmlAttributes = new { id = "txtCantidad", @class = "form-control", @style = "width:90px;" } })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Solicitud.Cantidad, new { htmlAttributes = new { id = "txtCantidad", @class = "form-control", @style = "width:100px;", @disabled = true } })
                     @Html.ValidationMessageFor(model => model.Solicitud.Cantidad, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group row">
                 @Html.LabelFor(model => model.Fase, htmlAttributes: new { @class = "control-label col-md-1" })
-                <div class="col-md-3">
-                    @Html.EditorFor(model => model.Fase.Descripcion, new { htmlAttributes = new { id = "txtCantidad", @class = "form-control", @style = "width:90px;" } })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.Fase.Descripcion, new { htmlAttributes = new { id = "txtFase", @class = "form-control", @style = "width:400px;" , @disabled = true } })
                 </div>
+                <p>
+                    <span>
+                        <font color="#428bca">NO INICIADA(0)</font><b>--></b> 
+                        <font color="#428bca">EVALUACIÓN PSICOLOGICA(1)</font><b>--></b>
+                        <font color="#428bca">EXAMEN PSICOTÉCNICO(2)</font><b>--></b>
+                        <font color="#428bca">ENTREVISTA PERSONAL(3)</font><b>--></b>
+                        <font color="#428bca">FINALIZADO(4)</font>
+                    </span>
+                </p>
             </div>
         </fieldset>
         <br />
@@ -89,52 +97,122 @@
 
 </div>
 
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jsViews/Postulante/postulante.js")
+
 <script type="text/javascript">
 
+    var dataList;
+
+    $(document).ready(function () {
+
+        $('input.chkWg').on('change', function () {
+            var result = "";
+            var valoresAnt = $('#hddCodigo').val();
+            var codigo = $(this).val();
+
+            if (valoresAnt == "") {
+                dataList = [];
+            } else {
+                dataList = $('#hddCodigo').val().split(",");
+            }
+
+            if (this.checked == true) {
+                dataList.push(codigo);
+            } else {
+                var removeItemIndex = dataList.indexOf(codigo);
+                if (removeItemIndex != -1) dataList.splice(removeItemIndex, 1);
+            }
+
+            for (i = 0; i < dataList.length; i++) {
+                if (dataList.length == 1) {
+                    result = dataList[i];
+                } else {
+                    if (i == 0) {
+                        result = dataList[i];
+                    } else {
+                        result = result + ',' + dataList[i];
+                    }
+                }
+            }
+
+            $('#hddCodigo').val(result);
+        });
+    });
+
+
     function Grabar() {
-
-        var ID = $('#txtID').val();
-        var codigoSel = $('#hddCodigo').val();
-
-        if (codigoSel == "") {
-            alert("Seleccione solicitud.");
-            return;
+        var ID = $('#ID').val();
+        var valores = $('#hddCodigo').val();
+        var codigoSelList;
+        
+        if (valores == "") {
+            codigoSelList = [];
+        } else {
+            codigoSelList = $('#hddCodigo').val().split(",");
         }
 
-        $('#progress').show();
+        if (codigoSelList.length == 0) {
+            alert("Seleccione al menos un postulante apto.");
+            return;
+        } else {
+            var vacantes = $('#txtCantidad').val();
 
-        $.ajax({
-            url: "/Postulante/Seleccion",
-            type: "POST",
-            data: JSON.stringify({ 'ID': ID, 'Seleccionados' : codigoSel }),
-            dataType: "json",
-            traditional: true,
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert("Registrado Correctamente");
-                    var url = "/Postulante/Index";
-                    $('#progress').hide();
-                    window.location.href = url;
-                } else {
+            if (codigoSelList.length > vacantes) {
+                alert("La cantidad de postulantes seleccionados no debe superar a la cantidad de vacantes.");
+                return;
+            }
+        }
+
+        var x = confirm("¿Está seguro que desea grabar?");
+        if (x)
+        {
+            var codigoSel = $('#hddCodigo').val();
+            $('#progress').show();
+
+            $.ajax({
+                url: "/Postulante/Seleccion",
+                type: "POST",
+                data: JSON.stringify({ 'id': ID, 'seleccionados' : codigoSel }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert("Registrado Correctamente");
+                        var url = "/Postulante/Index";
+                        $('#progress').hide();
+                        window.location.href = url;
+                    } else {
+                        $('#progress').hide();
+                        alert("Ha ocurrido un error al registrar");
+                    }
+                },
+                error: function () {
                     $('#progress').hide();
                     alert("Ha ocurrido un error al registrar");
                 }
-            },
-            error: function () {
-                $('#progress').hide();
-                alert("Ha ocurrido un error al registrar");
-            }
-        });
+            });
+        }
+        else
+        {
+            return;
+        }
+            
     }
 
-    $(function () {
-        $("#fechaIni").datepicker({ format: 'dd/mm/yyyy' });
-        $("#fechaFin").datepicker({ format: 'dd/mm/yyyy' });
-    });
-
     function ConfirmCancel() {
-        var x = confirm("¿Está seguro que desea cancelar el registro de postulantes?");
+        var x = confirm("¿Está seguro que desea cancelar el registro?");
         if (x)
             location.href = '@Url.Action("Index", "Postulante")';
         else
@@ -142,3 +220,5 @@
     }
 
 </script>
+
+}

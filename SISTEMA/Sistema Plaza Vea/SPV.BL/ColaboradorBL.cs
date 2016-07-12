@@ -28,12 +28,16 @@ namespace SPV.BL
 
         public List<ColaboradorBE> ListaPostulanteByConvocatoria(int codigo)
         {
-            return new ColaboradorBL().ListaPostulanteByConvocatoria(codigo);
+            return new ColaboradorDA().ListaPostulanteByConvocatoria(codigo);
+        }
+        public void UpdatePostulantes(ColaboradorBE postulante)
+        {
+            new ColaboradorDA().UpdatePostulantes(postulante);
         }
 
-        public Convocatoria2BE UpdateEstadoConvocatoria(Convocatoria2BE convocatoria)
+        public ColaboradorBE GetColaboradorByID(int codigo)
         {
-            return new Convocatoria2DA().UpdateEstadoConvocatoria(convocatoria);
+            return new ColaboradorDA().GetColaboradorByID(codigo);
         }
     }
 }

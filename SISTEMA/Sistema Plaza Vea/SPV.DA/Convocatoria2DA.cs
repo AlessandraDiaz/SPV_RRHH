@@ -129,6 +129,11 @@ namespace SPV.DA
                                 pEstado.Descripcion = Convert.ToString(lector["ESTADO"]);
                                 entidad.Estado = pEstado;
 
+                                ParametroBE pFase = new ParametroBE();
+                                pFase.Codigo = Convert.ToInt32(lector["FASE"]);
+                                pFase.Descripcion = Convert.ToString(lector["FASE_DES"]);
+                                entidad.Fase = pFase;
+
                                 entidad.Solicitud = oSol;
 
 

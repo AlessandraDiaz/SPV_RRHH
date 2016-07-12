@@ -84,9 +84,9 @@
                       grid.Column(header: "Acciones", canSort: false, style: "action",
                         format: @<text>
                         @Html.Raw("<a href='/Postulante/Detalle/" + item.Convocatoria.ID + "' id='" + item.Convocatoria.ID + "' title='Ver Detalle'> <span class='glyphicon glyphicon-search'> Detalle </span> </a>")
-                        @if (item.EstadoSol.Codigo == 4)
+                        @if (item.Convocatoria.Estado.Codigo == 3)
                         {
-                            <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible selccionar postulantes. Convocatoria finalizada.')" title='Seleccionar Postulantes'> <span class='glyphicon glyphicon-check'>  </span> </a>
+                            <a href='#' id='" + item.CodigoSol + "' onClick="alert('No es posible seleccionar postulantes. Convocatoria finalizada.')" title='Seleccionar Postulantes'> <span class='glyphicon glyphicon-check'> Selección </span> </a>
                         }
                         else
                         {
