@@ -1,0 +1,99 @@
+﻿@model IEnumerable<SPV.BE.ExamenPreguntaBE>
+
+@{
+    ViewBag.Title = "Examen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var contador = 1;
+}
+
+<h2>Examen Psicotécnico</h2>
+
+@using (Html.BeginForm("Examen", "Examen", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <div>
+            @foreach (var item in Model)
+            {
+                if (item.ID == 1 || item.ID == 5 || item.ID == 8 || item.ID == 10 || item.ID == 12)
+                {
+                    @:<fieldset>
+                        @:<legend><label>@Html.DisplayFor(model => item.TipoPreguntaEx.Descripcion)</label></legend>
+
+                        <div class="form-group row">
+                            <label class="text-left col-xs-12 col-sm-6 col-md-10">@contador.ToString() : @Html.DisplayFor(model => item.PreguntaEx)</label>
+                        </div>
+                        if (item.TipoControlEx == 1)
+                        {
+                            <div class="form-group row" style="padding-left:20px;">
+                                @if (item.ImagenEx != "")
+                                {
+                                    <img src="@Url.Content("~/Content/image/Examen/" + item.ImagenEx)" alt="IMAGES" />
+                                }
+
+                                @foreach (var respuesta in item.listaOpciones)
+                                {
+                                    <div>
+                                        @Html.RadioButton(respuesta.Pregunta.ID.ToString(), respuesta.ID)
+                                        <label for="@respuesta.ID">@respuesta.NombreOpcionEx</label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group row">
+                                <div>
+                                    @Html.TextArea("Desc" + item.ID, null, new { @class = "form-control", @rows = 5 , @cols = 20 })
+                                </div>
+                            </div>
+                        }
+                }
+                else
+                {
+                    <div class="form-group row">
+                        <label class="text-left col-xs-12 col-sm-6 col-md-10">@contador.ToString() : @Html.DisplayFor(model => item.PreguntaEx)</label>
+                    </div>
+                    if (item.TipoControlEx == 1)
+                    {
+                        <div class="form-group row" style="padding-left:20px;">
+                            @if (item.ImagenEx != "")
+                            {
+                                <img src="@Url.Content("~/Content/image/Examen/" + item.ImagenEx)" alt="IMAGES" />
+                            }
+
+                            @foreach (var respuesta in item.listaOpciones)
+                            {
+                                <div>
+                                    @Html.RadioButton(respuesta.Pregunta.ID.ToString(), respuesta.ID)
+                                    <label for="@respuesta.ID">@respuesta.NombreOpcionEx</label>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group row">
+                            @Html.TextArea("Desc"+ item.ID, null, new { @class = "form-control", @rows = 7, @cols = 10 })
+                        </div>
+                    }
+
+                    if (item.ID == 4 || item.ID == 7 || item.ID == 9 || item.ID == 11 || item.ID == 13)
+                    {
+                     @:</fieldset>
+                    }
+                }
+                contador++;
+            }
+        </div>
+
+    </div>
+}
+
+<style type="text/css">
+    textarea {
+        width: 400px !important;
+    }
+</style>
