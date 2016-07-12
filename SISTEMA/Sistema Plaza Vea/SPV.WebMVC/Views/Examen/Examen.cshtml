@@ -14,7 +14,12 @@
 
     <div class="form-horizontal">
 
-        <div>
+        <div id="Instrucciones">
+
+        </div>
+        <br />
+        <br />
+        <div id="Examen">
             @foreach (var item in Model)
             {
                 if (item.ID == 1 || item.ID == 5 || item.ID == 8 || item.ID == 10 || item.ID == 12)
@@ -97,3 +102,38 @@
         width: 400px !important;
     }
 </style>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.lwtCountdown-1.0.js")
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#countdown_dashboard').countDown({
+            targetDate: {
+                'day':      0,
+                'month':    0,
+                'year':     0,
+                'hour':     0,
+                'min':      30,
+                'sec':      0
+            },
+            omitWeeks: true,
+            onComplete: function() {
+                $.ajax({
+                    type: "POST",
+                    url: "file.php",
+                    /*data: dataString,*/
+                    success: function(data) {
+                        //$('#countdown_dashboard').remove();
+                        $('#countdown_dashboard').html(data);
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+
+}
