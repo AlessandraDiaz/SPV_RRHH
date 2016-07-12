@@ -5,19 +5,6 @@ namespace SPV.BE
 {
     public class SolicitudPerfilBE
     {
-        //Patron Composite
-        #region "Atributos"
-        private Int32 cantidadSolicitada;
-        #endregion
-
-        #region "Propiedades"
-        public Int32 CantidadSolicitada
-        {
-            get { return cantidadSolicitada; }
-            set { cantidadSolicitada = value; }
-        }
-        #endregion
-
         #region "PropiedadesMySQL"
         [Display(Name = "ID")]
         [Key]
@@ -40,16 +27,6 @@ namespace SPV.BE
         public decimal Sueldo { get; set; }
         [Display(Name = "Estado")]
         public int EstadoItem { get; set; }
-        #endregion
-
-        #region "Constructor"
-        public SolicitudPerfilBE()
-        {
-        }
-
-        public SolicitudPerfilBE(Int32 p_CantidadSolicitada) {
-            this.cantidadSolicitada = p_CantidadSolicitada;
-        }
         #endregion
     }
 }

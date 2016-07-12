@@ -9,30 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPV.BL", "SPV.BL\SPV.BL.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPV.DA", "SPV.DA\SPV.DA.csproj", "{D303164C-FF08-4259-9D22-7A9A0BDA5505}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPV.WebEvents", "SPV.WebEvents\SPV.WebEvents.csproj", "{D0D6E992-4947-4AC8-8E3F-BBED9C3AEEA6}"
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SPV.WebApp", "http://localhost:2859", "{80C813B8-BE41-4B03-8AD4-7179A98837AE}"
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "true"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{acc4c0ab-a95a-4715-bf89-b6fcff5209a3}|SPV.BE.dll;{f27bb598-47e6-4530-806f-e7a89a6d912f}|SPV.BL.dll;{D303164C-FF08-4259-9D22-7A9A0BDA5505}|SPV.DA.dll;{d0d6e992-4947-4ac8-8e3f-bbed9c3aeea6}|SPV.WebEvents.dll;"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_2859"
-		Debug.AspNetCompiler.PhysicalPath = "SPV.WebApp\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_2859\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_2859"
-		Release.AspNetCompiler.PhysicalPath = "SPV.WebApp\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_2859\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "SPV.WebApp\"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPV.WebMVC", "SPV.WebMVC\SPV.WebMVC.csproj", "{C0C31E6C-650A-490A-B001-2CDD27ED0D90}"
 EndProject
 Global
@@ -53,13 +29,6 @@ Global
 		{D303164C-FF08-4259-9D22-7A9A0BDA5505}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D303164C-FF08-4259-9D22-7A9A0BDA5505}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D303164C-FF08-4259-9D22-7A9A0BDA5505}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0D6E992-4947-4AC8-8E3F-BBED9C3AEEA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0D6E992-4947-4AC8-8E3F-BBED9C3AEEA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0D6E992-4947-4AC8-8E3F-BBED9C3AEEA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0D6E992-4947-4AC8-8E3F-BBED9C3AEEA6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80C813B8-BE41-4B03-8AD4-7179A98837AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80C813B8-BE41-4B03-8AD4-7179A98837AE}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{80C813B8-BE41-4B03-8AD4-7179A98837AE}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{C0C31E6C-650A-490A-B001-2CDD27ED0D90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C0C31E6C-650A-490A-B001-2CDD27ED0D90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0C31E6C-650A-490A-B001-2CDD27ED0D90}.Release|Any CPU.ActiveCfg = Release|Any CPU

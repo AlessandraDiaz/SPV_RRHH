@@ -51,6 +51,7 @@
     <Compile Include="ParametroBL.cs" />
     <Compile Include="PerfilBL.cs" />
     <Compile Include="PerfilRequisitoBL.cs" />
+    <Compile Include="PostulanteRespuestaBL.cs" />
     <Compile Include="PreguntaAlternativaBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankingPostulanteBL.cs" />

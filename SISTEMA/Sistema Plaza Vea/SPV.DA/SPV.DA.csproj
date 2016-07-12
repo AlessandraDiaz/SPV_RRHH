@@ -60,6 +60,7 @@
     <Compile Include="ParametroDA.cs" />
     <Compile Include="PerfilDA.cs" />
     <Compile Include="PerfilRequisitoDA.cs" />
+    <Compile Include="PostulanteRespuestaDA.cs" />
     <Compile Include="PreguntaAlternativaDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankingPostulanteDA.cs" />

@@ -53,6 +53,7 @@ namespace SPV.DA
                         tienda.NombreTienda = rd[7].ToString();
                         usuarioLogeado.Local = tienda;
 
+                        usuarioLogeado.RindioExamen = (Int32)rd[8];
                     }
                     rd.Close();
                 }

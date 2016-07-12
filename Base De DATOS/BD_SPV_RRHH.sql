@@ -222,7 +222,8 @@ BEGIN
          d.descripcion,
          A.FK_CodigoLocal,
          C.nombreLocal,
-         B.fk_CodigoExamen
+         B.fk_CodigoExamen,
+         (select RindioExamen from tb_colaborador where FK_CodigoUsuario = A.PK_CodigoUsuario) as RindioExamen
   FROM RRHH.tb_usuario A 
 			inner join rrhh.tb_perfil b on a.FK_CodigoPerfil = b.PK_CodigoPerfil
             INNER JOIN RRHH.tb_local C ON A.FK_CodigoLocal = C.PK_CodigoLocal
@@ -1184,12 +1185,101 @@ DELIMITER ;
 
 CALL rrhh.SPS_COLABORADORBYID(1);
 
+DELIMITER //
+CREATE PROCEDURE rrhh.SPS_RESULTRESUMENBYPOSTULANTE
+(IN CODIGO_POSTULANTE INT)
+BEGIN
+	
+	select A.tiempo,
+		   (select count(1) from tb_preguntaexamen WHERE FK_CodigoExamen = fk_examen) as TOTAL_PREGUNTAS,
+			SUM(A.correcto) AS CORRECTO,
+		   (SELECT COUNT(1) FROM tb_respuestaexamen WHERE FK_USUARIO = CODIGO_POSTULANTE AND CORRECTO = 0) AS INCORRECTO,
+		   ((select COUNT(1) FROM tb_preguntaexamen WHERE FK_CodigoExamen = fk_examen) - 
+				(SELECT COUNT(1) FROM tb_respuestaexamen WHERE FK_USUARIO = CODIGO_POSTULANTE)) AS NO_RESPONDIDAS,
+			(select SUM(Puntaje) from tb_preguntaexamen WHERE FK_CodigoExamen = fk_examen) AS PUNTAJE_TOTAL,
+			SUM(A.puntajeobtenido) AS PUNTAJE_OBTENIDO
+	from RRHH.tb_respuestaexamen A
+	WHERE A.FK_USUARIO = CODIGO_POSTULANTE
+	group by a.tiempo;
+    
+END //;
+
+DELIMITER ;
+
+CALL SPS_RESULTRESUMENBYPOSTULANTE(10);
+
+DELIMITER //
+CREATE PROCEDURE rrhh.SPS_RESPUESTAS
+(IN CODIGO_POSTULANTE INT)
+BEGIN
+	
+    SELECT A.PK_codigorespuesta,
+		A.fk_usuario,
+        A.fk_examen,
+        A.fk_preguntaexamen,
+        A.fk_preguntaopcion,
+        A.Respuesta,
+        A.correcto,
+        A.puntajeobtenido,
+        A.tiempo
+	FROM tb_respuestaexamen A
+	WHERE A.FK_USUARIO = CODIGO_POSTULANTE;
+    
+END //;
+
+DELIMITER ;
+
+CALL SPS_RESPUESTAS(10);
+
+
+DELIMITER //
+CREATE PROCEDURE rrhh.SPI_RESPUESTAS
+(
+IN COD_USUARIO INT,
+IN COD_EXAMEN INT,
+IN COD_PREGUNTA INT,
+IN COD_OPCION INT,
+IN RESPUESTA VARCHAR(100),
+IN CORRECTO INT,
+IN PUNTAJE INT,
+IN TIEMPO VARCHAR(50)
+)
+BEGIN
+	
+    INSERT INTO tb_respuestaexamen
+		(fk_usuario,
+		fk_examen,
+		fk_preguntaexamen,
+		fk_preguntaopcion,
+		Respuesta,
+		correcto,
+		puntajeobtenido,
+		tiempo)
+	VALUES
+		(COD_USUARIO,
+		COD_EXAMEN,
+		COD_PREGUNTA,
+		COD_OPCION,
+		RESPUESTA,
+		CORRECTO,
+		PUNTAJE,
+		TIEMPO);
+        
+END //;
+
+DELIMITER ;
+
+
+
 select * from rrhh.tb_colaborador;
 SELECT * FROM rrhh.tb_perfil;
 SELECT * FROM rrhh.tb_local;
 SELECT * FROM rrhh.tb_area;
 select * from rrhh.TB_Parametros;
 select * from rrhh.TB_CONVOCATORIA;
+
+
+select * from rrhh.tb_respuestaexamen;
 
 SELECT * FROM RRHH.tb_usuario;
 SELECT * FROM RRHH.tb_colaborador;

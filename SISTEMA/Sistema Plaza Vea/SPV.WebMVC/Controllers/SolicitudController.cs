@@ -307,7 +307,7 @@ namespace SPV.WebMVC.Controllers
             List<CargoBE> listCargos = FachadaSesion.Cargos;
             CargoBE cargo;
             var query = (from c in listCargos
-                         where c.CodigoCargo == id
+                         where c.ID == id
                          select c).FirstOrDefault();
 
             if (query == null)
@@ -399,7 +399,7 @@ namespace SPV.WebMVC.Controllers
         public JsonResult ListaCargo()
         {
             CargoBE param = new CargoBE();
-            param.CodigoCargo = 0;
+            param.ID = 0;
             param.Descripcion = "";
 
             List<CargoBE> lista = cargoBL.ListaCargo(param).ToList();
@@ -412,7 +412,7 @@ namespace SPV.WebMVC.Controllers
             List<CargoBE> lista = FachadaSesion.Cargos;
 
             var cargo = (from c in lista
-                           where c.CodigoCargo == Convert.ToInt32(ID)
+                           where c.ID == Convert.ToInt32(ID)
                            select c).FirstOrDefault();
 
             return Json(cargo, JsonRequestBehavior.AllowGet);

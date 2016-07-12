@@ -15,11 +15,27 @@
     <div class="form-horizontal">
 
         <div id="Instrucciones">
-
+            <h4>Instrucciones: </h4>
+            <p>
+                El siguiente exámen psicotécnico consta de 12 preguntas. Tiene un total de 30 minutos para resolver el exámen.
+                Presione el boton <b>COMENZAR</b>, para inicar la evaluación. 
+                Al terminar presione el boton <b>ENVIAR</b> para guardar sus respuestas.
+            </p>
+            <div style="padding-right: 70px;">
+                <div style="float:right;">
+                    <div style="float:left;padding-left:10px;">
+                        <button class="btn btn-warning" type="button" onclick="Iniciar();">
+                            <span class="glyphicon glyphicon-play-circle"> Comenzar</span>
+                        </button>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
         </div>
         <br />
         <br />
-        <div id="Examen">
+        <div id="Examen" style="display:none;">
             @foreach (var item in Model)
             {
                 if (item.ID == 1 || item.ID == 5 || item.ID == 8 || item.ID == 10 || item.ID == 12)
@@ -92,8 +108,17 @@
                 }
                 contador++;
             }
-        </div>
 
+            <div style="padding-right: 70px;">
+                <div style="float:right;">
+                    <div style="float:left;">
+                        <input type="submit" value="Enviar" class="btn btn-primary" id="btnGrabar" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
     </div>
 }
 
@@ -134,6 +159,12 @@
         });
 
     });
+
+    function Iniciar()
+    {
+        $("#Examen").show();
+    }
+
 </script>
 
 }

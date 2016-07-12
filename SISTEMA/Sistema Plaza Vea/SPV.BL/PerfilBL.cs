@@ -9,15 +9,9 @@ namespace SPV.BL
 {
     public class PerfilBL
     {
-        private PerfilDA oPerfilDA = new PerfilDA();
-
         public List<PerfilBE> ListaPerfil(PerfilBE perfil)
         {
-            return oPerfilDA.ListarPerfil(perfil);
-        }
-
-        public PerfilBE BuscarPerfil(Int32 p_CodigoPerfil) {
-            return oPerfilDA.BuscarPefil(p_CodigoPerfil);
+            return new PerfilDA().ListarPerfil(perfil);
         }
     }
 }
