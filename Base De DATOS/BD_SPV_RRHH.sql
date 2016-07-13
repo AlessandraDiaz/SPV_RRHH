@@ -223,7 +223,8 @@ BEGIN
          A.FK_CodigoLocal,
          C.nombreLocal,
          B.fk_CodigoExamen,
-         (select RindioExamen from tb_colaborador where FK_CodigoUsuario = A.PK_CodigoUsuario) as RindioExamen
+         (select RindioExamen from tb_colaborador where FK_CodigoUsuario = A.PK_CodigoUsuario) as RindioExamen,
+         b.Descripcion
   FROM RRHH.tb_usuario A 
 			inner join rrhh.tb_perfil b on a.FK_CodigoPerfil = b.PK_CodigoPerfil
             INNER JOIN RRHH.tb_local C ON A.FK_CodigoLocal = C.PK_CodigoLocal
@@ -1151,7 +1152,9 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE rrhh.SPS_COLABORADORBYID
-(IN CODIGO INT)
+(IN CODIGO INT,
+IN CODUSUARIO INT
+)
 BEGIN
 	
 	SELECT
@@ -1177,13 +1180,14 @@ BEGIN
         a.foto
 	FROM
 		RRHH.TB_COLABORADOR A 
-	WHERE A.PK_CODIGOCOLABORADOR = CODIGO;
+	WHERE ((CODIGO = 0) OR (A.PK_CODIGOCOLABORADOR = CODIGO))
+    AND ((CODUSUARIO = 0) OR (A.FK_CODIGOUSUARIO = CODUSUARIO));
     
 END //;
 
 DELIMITER ;
 
-CALL rrhh.SPS_COLABORADORBYID(1);
+CALL rrhh.SPS_COLABORADORBYID(0,1);
 
 DELIMITER //
 CREATE PROCEDURE rrhh.SPS_RESULTRESUMENBYPOSTULANTE
