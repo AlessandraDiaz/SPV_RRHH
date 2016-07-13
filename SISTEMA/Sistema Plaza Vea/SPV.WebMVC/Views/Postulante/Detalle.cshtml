@@ -5,13 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Gestión de Postulantes</h2>
+<h2>Gestionar Postulantes</h2>
 
 <div class="form-horizontal">
 
     <div>
         <fieldset>
-            <legend></legend>
+            <legend>Datos de la convocatoria</legend>
             @Html.HiddenFor(m => m.ID)
             <div class="form-group row">
                 @Html.LabelFor(model => model.CodigoInterno, htmlAttributes: new { @class = "control-label col-md-1" })
@@ -68,7 +68,10 @@
         </fieldset>
         <br />
         <div>
-            @Html.Partial("_PostulantesOK", Model.ListaColaborador)
+            <fieldset>
+                <legend>Datos del postulante</legend>
+                @Html.Partial("_PostulantesOK", Model.ListaColaborador)
+            </fieldset>
         </div>
     </div>
 

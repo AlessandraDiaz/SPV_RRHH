@@ -2,6 +2,7 @@
 /// <reference path="bootstrap.js" />
 /// <reference path="bootstrap-datepicker.js" />
 /// <reference path="dateformat.min.js" />
+/// <reference path="jquery.lwtcountdown-1.0.js" />
 /// <reference path="jquery.unobtrusive-ajax.min.js" />
 /// <reference path="jquery.validate.date.js" />
 /// <reference path="jquery.validate.js" />

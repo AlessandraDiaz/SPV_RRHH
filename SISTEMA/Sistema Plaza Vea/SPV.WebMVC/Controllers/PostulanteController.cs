@@ -162,7 +162,7 @@ namespace SPV.WebMVC.Controllers
         // GET: /Postulante/VerCV/1
         public ActionResult VerCV(int id = 0)
         {
-            ColaboradorBE cv = colaboradorBL.GetColaboradorByID(id);
+            ColaboradorBE cv = colaboradorBL.GetColaboradorByID(id,0);
             if (cv == null)
             {
                 return HttpNotFound();

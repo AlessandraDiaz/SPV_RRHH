@@ -8,163 +8,361 @@
 
 <h2>Examen Psicotécnico</h2>
 
-@using (Html.BeginForm("Examen", "Examen", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-
-        <div id="Instrucciones">
-            <h4>Instrucciones: </h4>
-            <p>
-                El siguiente exámen psicotécnico consta de 12 preguntas. Tiene un total de 30 minutos para resolver el exámen.
-                Presione el boton <b>COMENZAR</b>, para inicar la evaluación. 
-                Al terminar presione el boton <b>ENVIAR</b> para guardar sus respuestas.
-            </p>
-            <div style="padding-right: 70px;">
-                <div style="float:right;">
-                    <div style="float:left;padding-left:10px;">
-                        <button class="btn btn-warning" type="button" onclick="Iniciar();">
-                            <span class="glyphicon glyphicon-play-circle"> Comenzar</span>
-                        </button>
-                    </div>
-                    <div style="clear:both;"></div>
+<div class="form-horizontal">
+    <div id="Instrucciones">
+        <h4>Instrucciones: </h4>
+        <p>
+            El siguiente exámen psicotécnico consta de 13 preguntas. Tiene un total de 30 minutos para resolver el exámen.
+            Presione el boton <b>COMENZAR</b>, para inicar la evaluación.
+            Al terminar presione el boton <b>FINALIZAR EXÁMEN</b> para guardar sus respuestas.
+        </p>
+        <div style="padding-right: 70px;">
+            <div style="float:right;">
+                <div style="float:left;padding-left:10px;">
+                    <button class="btn btn-warning" type="button" onclick="Iniciar();">
+                        <span class="glyphicon glyphicon-play-circle"> Comenzar</span>
+                    </button>
                 </div>
                 <div style="clear:both;"></div>
             </div>
+            <div style="clear:both;"></div>
         </div>
+    </div>
+    <br />
+    <br />
+    <div id="Examen" style="display:block;">
+        <input type="hidden" id="hddCodigoUsuario" value="@FachadaSesion.Usuario.CodigoUsuario">
+        <input type="hidden" id="hddCodigoExamen" value="@FachadaSesion.Usuario.Perfil.Examen.ID">
+        <input type="hidden" id="hddAuto" value="0">
+        <fieldset>
+            <legend>Datos del Postulante</legend>
+            <div class="row">
+                <label class="control-label col-md-3"><b>Apellidos y Nombres :</b></label>
+                <div class="col-md-3">
+                    <label>@String.Concat(FachadaSesion.Colaborador.ApellidoPaterno," ", FachadaSesion.Colaborador.ApellidoMaterno, ", ", FachadaSesion.Colaborador.Nombres)
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-3"><b>DNI :</b></label>
+                <div class="col-md-3">
+                    <label>@FachadaSesion.Colaborador.DNI</label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-3"><b>Cargo a que postula :</b></label>
+                <div class="col-md-3">
+                    <label>@FachadaSesion.Usuario.Perfil.DescripcionPerfil</label>
+                </div>
+            </div>
+        </fieldset>
         <br />
-        <br />
-        <div id="Examen" style="display:none;">
-            @foreach (var item in Model)
+        <fieldset>
+            <legend>Tiempo Restante :</legend>
+            <div class="example_pane">
+                <div id="countdown_dashboard">
+                    <div class="dash hours_dash">
+                        <span class="dash_title">Horas</span>
+                        <div class="digit">0</div>
+                        <div class="digit">0</div>
+                    </div>
+
+                    <div class="dash minutes_dash">
+                        <span class="dash_title">Minutos</span>
+                        <div class="digit">0</div>
+                        <div class="digit">0</div>
+                    </div>
+
+                    <div class="dash seconds_dash">
+                        <span class="dash_title">Segundos</span>
+                        <div class="digit">0</div>
+                        <div class="digit">0</div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <h3><B>Preguntas</B></h3>
+        @foreach (var item in Model)
             {
                 if (item.ID == 1 || item.ID == 5 || item.ID == 8 || item.ID == 10 || item.ID == 12)
                 {
-                    @:<fieldset>
-                        @:<legend><label>@Html.DisplayFor(model => item.TipoPreguntaEx.Descripcion)</label></legend>
-
+                @:<fieldset>
+                    @:<legend><label>@Html.DisplayFor(model => item.TipoPreguntaEx.Descripcion)</label></legend>
                         <div class="form-group row">
                             <label class="text-left col-xs-12 col-sm-6 col-md-10">@contador.ToString() : @Html.DisplayFor(model => item.PreguntaEx)</label>
                         </div>
-                        if (item.TipoControlEx == 1)
+                if (item.TipoControlEx == 1)
+                {
+                    <div class="form-group row" style="padding-left:20px;">
+                        @if (item.ImagenEx != "")
                         {
-                            <div class="form-group row" style="padding-left:20px;">
-                                @if (item.ImagenEx != "")
-                                {
-                                    <img src="@Url.Content("~/Content/image/Examen/" + item.ImagenEx)" alt="IMAGES" />
-                                }
+                            <img src="@Url.Content("~/Content/image/Examen/" + item.ImagenEx)" alt="IMAGES" />
+                        }
 
-                                @foreach (var respuesta in item.listaOpciones)
-                                {
-                                    <div>
-                                        @Html.RadioButton(respuesta.Pregunta.ID.ToString(), respuesta.ID)
-                                        <label for="@respuesta.ID">@respuesta.NombreOpcionEx</label>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else
+                        @foreach (var respuesta in item.listaOpciones)
                         {
-                            <div class="form-group row">
-                                <div>
-                                    @Html.TextArea("Desc" + item.ID, null, new { @class = "form-control", @rows = 5 , @cols = 20 })
-                                </div>
+                            <div>
+                                @Html.RadioButton(respuesta.Pregunta.ID.ToString(), respuesta.ID)
+                                <label for="@respuesta.ID">@respuesta.NombreOpcionEx</label>
                             </div>
                         }
+                    </div>
                 }
                 else
                 {
                     <div class="form-group row">
-                        <label class="text-left col-xs-12 col-sm-6 col-md-10">@contador.ToString() : @Html.DisplayFor(model => item.PreguntaEx)</label>
+                        <div>
+                            @Html.TextArea("Desc" + item.ID, null, new { @class = "form-control", @rows = 5, @cols = 20 })
+                        </div>
                     </div>
-                    if (item.TipoControlEx == 1)
-                    {
-                        <div class="form-group row" style="padding-left:20px;">
-                            @if (item.ImagenEx != "")
-                            {
-                                <img src="@Url.Content("~/Content/image/Examen/" + item.ImagenEx)" alt="IMAGES" />
-                            }
-
-                            @foreach (var respuesta in item.listaOpciones)
-                            {
-                                <div>
-                                    @Html.RadioButton(respuesta.Pregunta.ID.ToString(), respuesta.ID)
-                                    <label for="@respuesta.ID">@respuesta.NombreOpcionEx</label>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="form-group row">
-                            @Html.TextArea("Desc"+ item.ID, null, new { @class = "form-control", @rows = 7, @cols = 10 })
-                        </div>
-                    }
-
-                    if (item.ID == 4 || item.ID == 7 || item.ID == 9 || item.ID == 11 || item.ID == 13)
-                    {
-                     @:</fieldset>
-                    }
                 }
-                contador++;
             }
+            else
+            {
+                <div class="form-group row">
+                    <label class="text-left col-xs-12 col-sm-6 col-md-10">@contador.ToString() : @Html.DisplayFor(model => item.PreguntaEx)</label>
+                </div>
+                if (item.TipoControlEx == 1)
+                {
+                    <div class="form-group row" style="padding-left:20px;">
+                        @if (item.ImagenEx != "")
+                        {
+                            <img src="@Url.Content("~/Content/image/Examen/" + item.ImagenEx)" alt="IMAGES" />
+                        }
 
-            <div style="padding-right: 70px;">
-                <div style="float:right;">
-                    <div style="float:left;">
-                        <input type="submit" value="Enviar" class="btn btn-primary" id="btnGrabar" />
+                        @foreach (var respuesta in item.listaOpciones)
+                        {
+                            <div>
+                                @Html.RadioButton(respuesta.Pregunta.ID.ToString(), respuesta.ID)
+                                <label for="@respuesta.ID">@respuesta.NombreOpcionEx</label>
+                            </div>
+                        }
                     </div>
-                    <div style="clear:both;"></div>
+                }
+                else
+                {
+                    <div class="form-group row" style="padding-left:20px;">
+                        @Html.TextArea("Desc" + item.ID, null, new { @class = "form-control", @rows = 7, @cols = 10 })
+                    </div>
+                }
+
+                if (item.ID == 4 || item.ID == 7 || item.ID == 9 || item.ID == 11 || item.ID == 13)
+                {
+                    @:</fieldset>
+                }
+            }
+            contador++;
+        }
+
+        <div style="padding-right: 70px;">
+            <div style="float:right;">
+                <div style="float:left;">
+                    <span id="progress" class="text-center" style="display: none;">
+                        <img src="~/Content/image/Wait.gif" alt="wiat" />
+                        Espere por favor..
+                    </span>
+                </div>
+                <div style="float:left;">
+                    <input type="submit" value="Finalizar Exámen" class="btn btn-primary" id="btnGrabar" onclick="Grabar();"/>
                 </div>
                 <div style="clear:both;"></div>
             </div>
+            <div style="clear:both;"></div>
         </div>
     </div>
-}
+</div>
+
 
 <style type="text/css">
     textarea {
-        width: 400px !important;
+        max-width: 600px !important;
     }
 </style>
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/jquery.lwtCountdown-1.0.js")
 
-<script language="javascript" type="text/javascript">
+    <script language="javascript" type="text/javascript">
 
-    $(document).ready(function () {
+        $(document).ready(function () {
+            $('#countdown_dashboard').countDown({
+                targetOffset: {
+                    'day': 0,
+                    'month': 0,
+                    'year': 0,
+                    'hour': 0,
+                    'min': 0,
+                    'sec': 0
+                },
+                omitWeeks: true,
+                onComplete: function () {
+                    var auto = $("#hddAuto").val();
+                    if (auto == '1') {
+                        GrabarAutomatico();
+                    }
+                }
+            });
 
-        $('#countdown_dashboard').countDown({
-            targetDate: {
-                'day':      0,
-                'month':    0,
-                'year':     0,
-                'hour':     0,
-                'min':      30,
-                'sec':      0
-            },
-            omitWeeks: true,
-            onComplete: function() {
+        });
+
+        function Iniciar() {
+            $("#hddAuto").val('1');
+            $('#countdown_dashboard').stopCountDown();
+            $('#countdown_dashboard').setCountDown({
+                targetOffset: {
+                    'day': 0,
+                    'month': 0,
+                    'year': 0,
+                    'hour': 0,
+                    'min': 0,
+                    'sec': 30
+                }
+            });
+            $('#countdown_dashboard').startCountDown();
+            $("#Examen").show();
+        }
+
+        function Grabar() {
+
+            var cant = 0;
+            var p1 = $('input[name="1"]:checked').val();
+            var p2 = $('input[name="2"]:checked').val();
+            var p3 = $('input[name="3"]:checked').val();
+            var p4 = $('input[name="4"]:checked').val();
+            var p5 = $('input[name="5"]:checked').val();
+            var p6 = $('input[name="6"]:checked').val();
+            var p7 = $('input[name="7"]:checked').val();
+            var p8 = $('input[name="8"]:checked').val();
+            var p9 = $('input[name="9"]:checked').val();
+            var p10 = $('input[name="10"]:checked').val();
+            var p11 = $('input[name="11"]:checked').val();
+            var p12 = $('input[name="12"]:checked').val();
+            var p13 = $('#Desc13').val();
+
+            var IdUsuario = $('#hddCodigoUsuario').val();
+            var IdExamen = $('#hddCodigoExamen').val();  
+
+            var minutos = $('#hddCodigoExamen').val();
+            var segundos = $('#hddCodigoExamen').val();
+            var tiempo = "10:15";
+
+            if (p1 == null) { p1 = 'NR'; } else { cant++; }
+            if (p2 == null) { p2 = 'NR'; } else { cant++; }
+            if (p3 == null) { p3 = 'NR'; } else { cant++; }
+            if (p4 == null) { p4 = 'NR'; } else { cant++; }
+            if (p5 == null) { p5 = 'NR'; } else { cant++; }
+            if (p6 == null) { p6 = 'NR'; } else { cant++; }
+            if (p7 == null) { p7 = 'NR'; } else { cant++; }
+            if (p8 == null) { p8 = 'NR'; } else { cant++; }
+            if (p9 == null) { p9 = 'NR'; } else { cant++; }
+            if (p10 == null) { p10 = 'NR'; } else { cant++; }
+            if (p11 == null) { p11 = 'NR'; } else { cant++; }
+            if (p12 == null) { p12 = 'NR'; } else { cant++; }
+            if (p13 == "") { p13 = 'NR'; } else { cant++; }
+
+            var rpta = p1 + ',' + p2 + ',' + p3 + ',' + p4 + ',' + p5 + ',' + p6 + ',' + p7 + ',' + p8 + ',' + p9 + ',' + p10 + ',' + p11 + ',' + p12 + ',' + p13;
+
+            var x = confirm("Ha respondido " + cant.toString() + " de 13 preguntas ¿Está seguro que desea continuar?");
+            if (x) {
+                var codigoSel = $('#hddCodigo').val();
+                $('#progress').show();
+
                 $.ajax({
+                    url: "/Examen/Examen",
                     type: "POST",
-                    url: "file.php",
-                    /*data: dataString,*/
-                    success: function(data) {
-                        //$('#countdown_dashboard').remove();
-                        $('#countdown_dashboard').html(data);
+                    data: JSON.stringify({ 'IdUsuario': IdUsuario, 'IdExamen': IdExamen, 'rpta': rpta, 'time': tiempo }),
+                    dataType: "json",
+                    traditional: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        if (data.status == "Success") {
+                            alert("Registrado Correctamente");
+                            //var url = "/Examen/Resultados";
+                            $('#progress').hide();
+                            //window.location.href = url;
+                        } else {
+                            $('#progress').hide();
+                            alert("Ha ocurrido un error al registrar");
+                        }
+                    },
+                    error: function () {
+                        $('#progress').hide();
+                        alert("Ha ocurrido un error al registrar");
                     }
                 });
             }
-        });
+            else {
+                return;
+            }
 
-    });
+        }
 
-    function Iniciar()
-    {
-        $("#Examen").show();
-    }
+        function GrabarAutomatico() {
 
-</script>
+            var cant = 0;
+            var p1 = $('input[name="1"]:checked').val();
+            var p2 = $('input[name="2"]:checked').val();
+            var p3 = $('input[name="3"]:checked').val();
+            var p4 = $('input[name="4"]:checked').val();
+            var p5 = $('input[name="5"]:checked').val();
+            var p6 = $('input[name="6"]:checked').val();
+            var p7 = $('input[name="7"]:checked').val();
+            var p8 = $('input[name="8"]:checked').val();
+            var p9 = $('input[name="9"]:checked').val();
+            var p10 = $('input[name="10"]:checked').val();
+            var p11 = $('input[name="11"]:checked').val();
+            var p12 = $('input[name="12"]:checked').val();
+            var p13 = $('#Desc13').val();
 
+            var IdUsuario = $('#hddCodigoUsuario').val();
+            var IdExamen = $('#hddCodigoExamen').val();
+            var tiempo = "Tiempo";
+
+            if (p1 == null) { p1 = 'NR'; } else { cant++; }
+            if (p2 == null) { p2 = 'NR'; } else { cant++; }
+            if (p3 == null) { p3 = 'NR'; } else { cant++; }
+            if (p4 == null) { p4 = 'NR'; } else { cant++; }
+            if (p5 == null) { p5 = 'NR'; } else { cant++; }
+            if (p6 == null) { p6 = 'NR'; } else { cant++; }
+            if (p7 == null) { p7 = 'NR'; } else { cant++; }
+            if (p8 == null) { p8 = 'NR'; } else { cant++; }
+            if (p9 == null) { p9 = 'NR'; } else { cant++; }
+            if (p10 == null) { p10 = 'NR'; } else { cant++; }
+            if (p11 == null) { p11 = 'NR'; } else { cant++; }
+            if (p12 == null) { p12 = 'NR'; } else { cant++; }
+            if (p13 == "") { p13 = 'NR'; } else { cant++; }
+
+            var rpta = p1 + ',' + p2 + ',' + p3 + ',' + p4 + ',' + p5 + ',' + p6 + ',' + p7 + ',' + p8 + ',' + p9 + ',' + p10 + ',' + p11 + ',' + p12 + ',' + p13;
+
+   
+            var codigoSel = $('#hddCodigo').val();
+            $('#progress').show();
+
+            $.ajax({
+                url: "/Examen/Examen",
+                type: "POST",
+                data: JSON.stringify({ 'IdUsuario': IdUsuario, 'IdExamen': IdExamen, 'rpta': rpta, 'time': tiempo }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert("Registrado Correctamente");
+                        //var url = "/Examen/Resultados";
+                        $('#progress').hide();
+                        //window.location.href = url;
+                    } else {
+                        $('#progress').hide();
+                        alert("Ha ocurrido un error al registrar");
+                    }
+                },
+                error: function () {
+                    $('#progress').hide();
+                    alert("Ha ocurrido un error al registrar");
+                }
+            });
+
+        }
+
+    </script>
 }

@@ -16,7 +16,7 @@ namespace SPV.BL
 
         public PostulanteRespuestaBE GetResumenRespuestaByPostulante(int Id)
         {
-            return new PostulanteRespuestaDA().GetResumenRespuestaByPostulante(id);
+            return new PostulanteRespuestaDA().GetResumenRespuestaByPostulante(Id);
         }
 
         public Int32 RegistrarRespuesta(PostulanteRespuestaBE respuesta)

@@ -21,7 +21,18 @@ namespace SPV.WebMVC.Controllers
         {
             List<ExamenPreguntaBE> listaPreguntas = new List<ExamenPreguntaBE>();
             listaPreguntas = preguntasBL.Listar(FachadaSesion.Usuario.Perfil.Examen.ID);
+            ColaboradorBE colaborador = new ColaboradorBL().GetColaboradorByID(0, FachadaSesion.Usuario.CodigoUsuario);
+            FachadaSesion.Colaborador = colaborador;
             return View("Examen", listaPreguntas);
+        }
+
+        // POST: Examen/Examen
+        [HttpPost]
+        public ActionResult Examen(string IdUsuario, string IdExamen, string rpta, string time)
+        {
+            
+
+            return Json(new { status = "Success" });
         }
 
     }

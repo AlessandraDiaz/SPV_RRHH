@@ -208,7 +208,7 @@ namespace SPV.DA
             }
         }
 
-        public ColaboradorBE GetColaboradorByID(int codigo)
+        public ColaboradorBE GetColaboradorByID(int codigo, int codigoUsuario)
         {
             dbRRHH = new DataBaseDA();
             ColaboradorBE item = null;
@@ -219,6 +219,7 @@ namespace SPV.DA
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@CODIGO", codigo);
+                    cmd.Parameters.AddWithValue("@CODUSUARIO", codigoUsuario);
                     cmd.Connection.Open();
                     MySqlDataReader rd = cmd.ExecuteReader();
                     int pCodCV = 0;
