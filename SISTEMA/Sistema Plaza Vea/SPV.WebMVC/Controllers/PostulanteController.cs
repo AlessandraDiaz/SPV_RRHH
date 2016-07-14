@@ -20,6 +20,7 @@ namespace SPV.WebMVC.Controllers
         private CargoBL cargoBL = new CargoBL();
         private Convocatoria2BL convocatoriaBL = new Convocatoria2BL();
         private ColaboradorBL colaboradorBL = new ColaboradorBL();
+        PostulanteRespuestaBL respuestasBL = new PostulanteRespuestaBL();
 
         // GET: Postulante/Index
         public ActionResult Index(int cboTipoFiltro = 0, string desc = null, int cboFiltro = 0, string fechaIni = null, string fechaFin = null, int cboEstado = 0,
@@ -171,6 +172,16 @@ namespace SPV.WebMVC.Controllers
             return PartialView("VerCV", cv);
         }
 
+        // GET: /Postulante/VerCV/1
+        public ActionResult VerExamen(int id = 0)
+        {
+            ColaboradorBE colaborador = new ColaboradorBL().GetColaboradorByID(0, id);
+            FachadaSesion.Colaborador2 = colaborador;
+
+            PostulanteRespuestaBE respuestasResumen = respuestasBL.GetResumenRespuestaByPostulante(id);
+            return PartialView("VerExamen", respuestasResumen);
+        }
+        
         public JsonResult ListaTipoSolicitud()
         {
             ParametroBE param = new ParametroBE();

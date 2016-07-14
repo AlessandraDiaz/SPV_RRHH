@@ -142,7 +142,9 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\datepicker.css" />
     <Content Include="Content\example_start_stop.css" />
+    <Content Include="Content\image\check.png" />
     <Content Include="Content\image\dashboard_bg.png" />
+    <Content Include="Content\image\Error.png" />
     <Content Include="Content\image\Examen\img101.jpg" />
     <Content Include="Content\image\Examen\img22.jpg" />
     <Content Include="Content\image\Examen\img41.jpg" />
@@ -167,6 +169,7 @@
     <Content Include="Content\image\Fotos\45984829.jpg" />
     <Content Include="Content\image\PlazaVea.png" />
     <Content Include="Content\image\Wait.gif" />
+    <Content Include="Content\image\warning.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -280,6 +283,7 @@
     <Content Include="Views\Postulante\Detalle.cshtml" />
     <Content Include="Views\Postulante\_PostulantesOK.cshtml" />
     <Content Include="Views\Examen\Resultados.cshtml" />
+    <Content Include="Views\Postulante\VerExamen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

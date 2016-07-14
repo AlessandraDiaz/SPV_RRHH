@@ -29,6 +29,16 @@ namespace SPV.WebMVC
             set { Asignar("colaborador", value); }
         }
 
+        public static ColaboradorBE Colaborador2
+        {
+            get
+            {
+                return Obtener<ColaboradorBE>("colaborador2");
+            }
+            set { Asignar("colaborador2", value); }
+        }
+
+
         public static SolicitudPersonalBE SolicitudFS
         {
             get

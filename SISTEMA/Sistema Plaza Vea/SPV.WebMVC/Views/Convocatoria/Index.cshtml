@@ -61,7 +61,7 @@
             </fieldset>
             <div class="row">
                 <div class="pull-left col-lg-1">
-                    <button class="btn btn-success" type="button" onclick="location.href='@Url.Action("Registrar", "Convocatoria")'">
+                    <button class="btn btn-default" type="button" onclick="location.href='@Url.Action("Registrar", "Convocatoria")'">
                         <span class="glyphicon glyphicon-plus">Crear Convocatoria</span>
                     </button>
                 </div>
@@ -94,7 +94,7 @@
                       grid.Column("Estado.Descripcion", "Estado", style: "col-xs-1"),
                       grid.Column(header: "Acciones", canSort: false, style: "action",
                         format: @<text>
-                        @Html.Raw("<a data-modal='' href='/Convocatoria/Detalle/" + item.Solicitud.CodigoSol + "' id='" + item.Solicitud.CodigoSol + "' title='Ver Detalle'> <span class='glyphicon glyphicon-search'> Ver Detalle </span> </a>")
+                        @Html.Raw("<a data-modal='' href='/Convocatoria/Detalle/" + item.Solicitud.CodigoSol + "' id='" + item.Solicitud.CodigoSol + "' title='Ver Detalle'> <span class='glyphicon glyphicon-search'></span> </a>")
                         </text>)
             ));
             }

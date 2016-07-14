@@ -24,9 +24,17 @@
                       grid.Column("PuntajeExamen", "Puntaje", style: "col-xs-1 col-md-1"),
                       grid.Column(header: "Acciones", canSort: false, style: "action",
                         format: @<text>
-                        @Html.Raw("<a data-modal='' href='/Postulante/VerCV/" + item.ID + "' id='" + item.ID + "' title='Ver CV'> <span class='glyphicon glyphicon-search'> Ver CV </span> </a>")
+                        @Html.Raw("<a data-modal='' href='/Postulante/VerCV/" + item.ID + "' id='" + item.ID + "' title='Ver CV'> <span class='glyphicon glyphicon-search'>Ver CV </span> </a>")
+                        @if (item.RindioExamen == 0)
+                        {
+                            <a href='#' id='" + item. + "' onClick="alert('El postulante no ha rendido exámen.')" title='Ver Exámen'> <span class='glyphicon glyphicon-file'>Ver Exámen </span> </a>
+                        }
+                        else
+                        {
+                            @Html.Raw("<a data-modal='' href='/Postulante/VerExamen/" + item.Usuario.CodigoUsuario + "' id='" + item.Usuario.CodigoUsuario + "' title='Ver Exámen'> <span class='glyphicon glyphicon-file'>Ver Examen </span> </a>")
+                        }
                         </text>)
-                      ));
+            ));
         }
     </div>
 </div>

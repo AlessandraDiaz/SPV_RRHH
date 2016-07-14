@@ -16,23 +16,29 @@
         <fieldset>
             <legend>Resumen</legend>
             <div class="row">
-                <label class="control-label col-md-2"><b>Apellidos y Nombres :</b></label>
+                @Html.LabelFor(model => model.Tiempo, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-3">
-                    <label>
+                    @Html.DisplayFor(model => model.Tiempo)
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2"><b>Apellidos y Nombres</b></label>
+                <div class="col-md-3">
+                    <label style="font-weight:normal">
                         @String.Concat(FachadaSesion.Colaborador.ApellidoPaterno, " ", FachadaSesion.Colaborador.ApellidoMaterno, ", ", FachadaSesion.Colaborador.Nombres)
                     </label>
                 </div>
             </div>
             <div class="row">
-                <label class="control-label col-md-2"><b>DNI :</b></label>
+                <label class="control-label col-md-2"><b>DNI</b></label>
                 <div class="col-md-3">
-                    <label>@FachadaSesion.Colaborador.DNI</label>
+                    <label style="font-weight:normal">@FachadaSesion.Colaborador.DNI</label>
                 </div>
             </div>
             <div class="row">
-                <label class="control-label col-md-2"><b>Cargo a que postula :</b></label>
+                <label class="control-label col-md-2"><b>Cargo a que postula</b></label>
                 <div class="col-md-3">
-                    <label>@FachadaSesion.Usuario.Perfil.DescripcionPerfil</label>
+                    <label style="font-weight:normal">@FachadaSesion.Usuario.Perfil.DescripcionPerfil</label>
                 </div>
             </div>
             <div class="row">
@@ -56,7 +62,7 @@
             <div class="row">
                 @Html.LabelFor(model => model.PuntajeObtenido, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-3">
-                    @Html.DisplayFor(model => model.PuntajeObtenido) de @Html.DisplayFor(model => model.PuntajeTotal) 
+                    @Html.DisplayFor(model => model.PuntajeObtenido) de @Html.DisplayFor(model => model.PuntajeTotal) puntos
                 </div>
             </div>
         </fieldset>
@@ -75,7 +81,7 @@
                 {
                     if (item.CodigoPregunta == -1)
                     {
-                        <label class="text-left col-xs-5 col-sm-2 col-md-3">Incorrecto</label>
+                        <label class="text-left col-xs-5 col-sm-2 col-md-3">No Respondida</label>
                     }
                     else
                     {
@@ -87,15 +93,18 @@
 
                 @if (item.Correcto == 1)
                 {
-                    <img alt="Correcto" src="~/Content/image/Wait.gif" />
+                    <img alt="Correcto" src="~/Content/image/check.png" />
                 }
                 else if (item.Correcto == 0)
                 {
-                    <img alt="Incorrecto" src="~/Content/image/Wait.gif" />
-                }
-                else
-                {
-                    <img alt="No Respondido" src="~/Content/image/Wait.gif" />
+                    if (item.CodigoPregunta == -1)
+                    {
+                        <img alt="Incorrecto" src="~/Content/image/warning.png" />
+                    }
+                    else
+                    {
+                        <img alt="No Respondido" src="~/Content/image/Error.png" />
+                    }
                 }
             </div>
 

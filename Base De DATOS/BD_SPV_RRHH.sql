@@ -235,7 +235,7 @@ END //;
 
 DELIMITER ;
 
-CALL  SP_LOGIN('ALEX', '123');
+CALL  SP_LOGIN('ccc', '123');
 
 /*OK -- MODIFICADO -- 02/07/16 */
 DELIMITER //
@@ -382,13 +382,14 @@ BEGIN
            A.Valor,
            A.Estado
     FROM RRHH.tb_parametros A
-    WHERE A.CodigoAgrupador = COD_AGRUPADOR;
+    WHERE A.CodigoAgrupador = COD_AGRUPADOR 
+    AND A.ESTADO = 1;
     
 END //;
 
 DELIMITER ;
 
-CALL rrhh.SPS_PARAMETRO(1)
+CALL rrhh.SPS_PARAMETRO(5)
 
 /*OK -- MODIFICADO -- 02/07/16 */
 DELIMITER //
@@ -766,8 +767,13 @@ BEGIN
     SET P_ID = LAST_INSERT_ID();
     
 	UPDATE rrhh.tb_convocatoria a
-    set CodigoInterno = concat('CONCA', LPAD(P_ID, 3, '0'))
+    set CodigoInterno = concat('CONCA', LPAD(P_ID, 3, '0')),
+		FASE = 2
     where a.pk_CodigoConvocatoria = P_ID;
+    
+    UPDATE RRHH.tb_colaborador C
+    SET FK_CodigoConvocatoria = P_ID
+    WHERE C.PK_CODIGOCOLABORADOR IN (10,12,15,16);
     
     SELECT P_ID;
 END //;
@@ -862,7 +868,7 @@ BEGIN
 	END IF;
     
     IF P_FECHA_FIN IS NOT NULL THEN
-		SET @SQLSTMFROMWHERE = CONCAT(@SQLSTMFROMWHERE, ' AND DATE_FORMAT(A.FECHAFIN, "%Y-%m-%d") >= DATE_FORMAT("', P_FECHA_FIN, '", "%Y-%m-%d")');
+		SET @SQLSTMFROMWHERE = CONCAT(@SQLSTMFROMWHERE, ' AND DATE_FORMAT(A.FECHAFIN, "%Y-%m-%d") <= DATE_FORMAT("', P_FECHA_FIN, '", "%Y-%m-%d")');
 	END IF;
     
     IF P_CODIGO_CARGO IS NOT NULL THEN
@@ -877,7 +883,7 @@ BEGIN
 END //;
 DELIMITER ;
 
-call SPS_SEARCH_CONVOCATORIA(NULL,NULL, 2, NULL, NULL, null);
+call SPS_SEARCH_CONVOCATORIA(NULL,NULL, NULL, NULL, NULL, null);
 
 DELIMITER //
 CREATE PROCEDURE rrhh.SPS_PARAMETROXCODAGRUPADOR
@@ -1003,7 +1009,8 @@ BEGIN
         A.RindioExamen,
         A.PuntajeFinal,
 		A.estado_aceptacion,
-        B.DESCRIPCION
+        B.DESCRIPCION,
+        A.FK_CodigoUsuario
 	FROM
 		RRHH.TB_COLABORADOR A 
                 INNER JOIN RRHH.TB_PARAMETROS B ON A.estado_aceptacion = B.CODIGO AND B.CODIGOAGRUPADOR = 13

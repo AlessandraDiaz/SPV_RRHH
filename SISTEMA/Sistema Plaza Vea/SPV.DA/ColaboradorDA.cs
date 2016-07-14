@@ -165,6 +165,10 @@ namespace SPV.DA
                         estadoAceptacion.Descripcion = rd[20].ToString() != "" ? (String)rd[20] : "";
                         item.EstadoAceptacion = estadoAceptacion;
 
+                        UsuarioBE usuario = new UsuarioBE();
+                        usuario.CodigoUsuario = rd[21].ToString() != "" ? (Int32)rd[21] : 0;
+                        item.Usuario = usuario;
+
                         lista.Add(item);
                     }
 
