@@ -12,7 +12,7 @@
     <div id="Instrucciones">
         <h4>Instrucciones: </h4>
         <p>
-            El siguiente exámen psicotécnico consta de 13 preguntas. Tiene un total de 30 minutos para resolver el exámen.
+            El siguiente exámen psicotécnico consta de 13 preguntas. Tiene un total de 5 minutos para resolver el exámen.
             Presione el boton <b>COMENZAR</b>, para inicar la evaluación.
             Al terminar presione el boton <b>FINALIZAR EXÁMEN</b> para guardar sus respuestas.
         </p>
@@ -169,6 +169,13 @@
             </div>
             <div style="clear:both;"></div>
         </div>
+
+        <div id="timer">
+            <input id="minutes" type="hidden">
+            <input id="seconds" type="hidden">
+            <input id="result" type="hidden">
+        </div>
+
     </div>
 </div>
 
@@ -214,11 +221,12 @@
                     'month': 0,
                     'year': 0,
                     'hour': 0,
-                    'min': 30,
+                    'min': 5,
                     'sec': 0
                 }
             });
             $('#countdown_dashboard').startCountDown();
+            countUp();
             $("#Examen").show();
         }
 
@@ -244,7 +252,7 @@
 
             var minutos = $('#hddCodigoExamen').val();
             var segundos = $('#hddCodigoExamen').val();
-            var tiempo = "00:10:15";
+            var tiempo = "00:" + $('#result').val();
 
             if (p1 == null) { p1 = 'NR'; } else { cant++; }
             if (p2 == null) { p2 = 'NR'; } else { cant++; }
@@ -298,7 +306,6 @@
         }
 
         function GrabarAutomatico() {
-
             var cant = 0;
             var p1 = $('input[name="1"]:checked').val();
             var p2 = $('input[name="2"]:checked').val();
@@ -316,7 +323,10 @@
 
             var IdUsuario = $('#hddCodigoUsuario').val();
             var IdExamen = $('#hddCodigoExamen').val();
-            var tiempo = "Tiempo";
+
+            var minutos = $('#hddCodigoExamen').val();
+            var segundos = $('#hddCodigoExamen').val();
+            var tiempo = "00:" + $('#result').val();
 
             if (p1 == null) { p1 = 'NR'; } else { cant++; }
             if (p2 == null) { p2 = 'NR'; } else { cant++; }
@@ -334,7 +344,6 @@
 
             var rpta = p1 + ',' + p2 + ',' + p3 + ',' + p4 + ',' + p5 + ',' + p6 + ',' + p7 + ',' + p8 + ',' + p9 + ',' + p10 + ',' + p11 + ',' + p12 + ',' + p13;
 
-   
             var codigoSel = $('#hddCodigo').val();
             $('#progress').show();
 
@@ -348,9 +357,9 @@
                 success: function (data) {
                     if (data.status == "Success") {
                         alert("Registrado Correctamente");
-                        //var url = "/Examen/Resultados";
+                        var url = "/Examen/Resultados";
                         $('#progress').hide();
-                        //window.location.href = url;
+                        window.location.href = url;
                     } else {
                         $('#progress').hide();
                         alert("Ha ocurrido un error al registrar");
@@ -361,8 +370,43 @@
                     alert("Ha ocurrido un error al registrar");
                 }
             });
-
         }
+
+
+        var minutos = 0;
+        var segundos = minutos * 60;
+        function countUp() {
+            setTimeout('Increment()', 1000);
+        }
+        function Increment() {
+            if (document.getElementById) {
+                hddminutes = document.getElementById("minutes");
+                hddseconds = document.getElementById("seconds");
+                hddresult = document.getElementById("result");
+                if (hddseconds < 59) {
+                    hddseconds.value = segundos;
+                } else {
+                    hddminutes.value = getminutes();
+                    hddseconds.value = getseconds();
+                    hddresult.value = pad(hddminutes.value.toString(), 2) + ':' + pad(hddseconds.value.toString(), 2);
+                }
+                segundos++;
+                setTimeout('Increment()', 1000);
+            }
+        }
+        function getminutes() {
+            minutos = Math.floor(segundos / 60);
+            return minutos;
+        }
+        function getseconds() {
+            return segundos - Math.round(minutos * 60);
+        }
+
+        function pad(str, max) {
+            str = str.toString();
+            return str.length < max ? pad("0" + str, max) : str;
+        }
+
 
     </script>
 }
