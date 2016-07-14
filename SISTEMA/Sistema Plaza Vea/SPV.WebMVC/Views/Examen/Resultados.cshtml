@@ -1,0 +1,126 @@
+﻿@model SPV.BE.PostulanteRespuestaBE
+
+@{
+    ViewBag.Title = "Resultados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var contador = 1;
+}
+
+<h2>Resultados</h2>
+
+<div class="form-horizontal">
+    <div>
+        <input type="hidden" id="hddCodigoUsuario" value="@FachadaSesion.Usuario.CodigoUsuario">
+        <input type="hidden" id="hddCodigoExamen" value="@FachadaSesion.Usuario.Perfil.Examen.ID">
+        <input type="hidden" id="hddAuto" value="0">
+        <fieldset>
+            <legend>Resumen</legend>
+            <div class="row">
+                <label class="control-label col-md-2"><b>Apellidos y Nombres :</b></label>
+                <div class="col-md-3">
+                    <label>
+                        @String.Concat(FachadaSesion.Colaborador.ApellidoPaterno, " ", FachadaSesion.Colaborador.ApellidoMaterno, ", ", FachadaSesion.Colaborador.Nombres)
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2"><b>DNI :</b></label>
+                <div class="col-md-3">
+                    <label>@FachadaSesion.Colaborador.DNI</label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2"><b>Cargo a que postula :</b></label>
+                <div class="col-md-3">
+                    <label>@FachadaSesion.Usuario.Perfil.DescripcionPerfil</label>
+                </div>
+            </div>
+            <div class="row">
+                @Html.LabelFor(model => model.CantidadCorrecto, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DisplayFor(model => model.CantidadCorrecto)
+                </div>
+            </div>
+            <div class="row">
+                @Html.LabelFor(model => model.CantidadIncorrecto, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DisplayFor(model => model.CantidadIncorrecto)
+                </div>
+            </div>
+            <div class="row">
+                @Html.LabelFor(model => model.CantidadNoRespondidas, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DisplayFor(model => model.CantidadNoRespondidas)
+                </div>
+            </div>
+            <div class="row">
+                @Html.LabelFor(model => model.PuntajeObtenido, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DisplayFor(model => model.PuntajeObtenido) de @Html.DisplayFor(model => model.PuntajeTotal) 
+                </div>
+            </div>
+        </fieldset>
+    <br />
+    <fieldset>
+        <legend>Detalle de respuestas</legend>
+        @foreach (var item in Model.ListaPreguntas)
+        {
+            <div class="form-group row">
+                <label class="text-left col-xs-12 col-sm-6 col-md-7">@contador.ToString() : @Html.DisplayFor(model => item.DescripcionPregunta)</label>
+                @if (item.Correcto == 1)
+                {
+                    <label class="text-left col-xs-5 col-sm-2 col-md-3">Correcto</label>
+                }
+                else if (item.Correcto == 0)
+                {
+                    if (item.CodigoPregunta == -1)
+                    {
+                        <label class="text-left col-xs-5 col-sm-2 col-md-3">Incorrecto</label>
+                    }
+                    else
+                    {
+                        <label class="text-left col-xs-5 col-sm-2 col-md-3">Incorrecto</label>
+                    }
+                }
+
+                <label class="text-left col-xs-1 col-sm-1 col-md-1">@Html.DisplayFor(model => item.PuntajeObtenido) Pts</label>
+
+                @if (item.Correcto == 1)
+                {
+                    <img alt="Correcto" src="~/Content/image/Wait.gif" />
+                }
+                else if (item.Correcto == 0)
+                {
+                    <img alt="Incorrecto" src="~/Content/image/Wait.gif" />
+                }
+                else
+                {
+                    <img alt="No Respondido" src="~/Content/image/Wait.gif" />
+                }
+            </div>
+
+            contador++;
+        }
+    </fieldset>
+    <div style="padding-right: 70px;">
+        <div style="float:right;">
+            <div style="float:left;padding-left:10px;">
+                <button class="btn btn-danger" type="button" onclick="ConfirmCancel();">
+                    <span class="glyphicon glyphicon-log-out"> Salir</span>
+                </button>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+
+    function ConfirmCancel() {
+        location.href = '@Url.Action("Index", "Home")';
+        return false;
+    }
+
+</script>

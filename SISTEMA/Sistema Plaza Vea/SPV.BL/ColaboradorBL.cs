@@ -39,5 +39,10 @@ namespace SPV.BL
         {
             return new ColaboradorDA().GetColaboradorByID(codigo, codigoUsuario);
         }
+
+        public void UpdatePostulanteExamen(ColaboradorBE postulante)
+        {
+            new ColaboradorDA().UpdatePostulanteExamen(postulante);
+        }
     }
 }

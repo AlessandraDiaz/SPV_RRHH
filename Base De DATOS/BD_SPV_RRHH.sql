@@ -975,7 +975,7 @@ END //;
 
 DELIMITER ;
 
-CALL SPS_EXAMENOPCIONES(13);
+CALL SPS_EXAMENOPCIONES(1);
 
 DELIMITER //
 CREATE PROCEDURE rrhh.SPS_POSTULANTES_BY_CONVOCATORIA
@@ -1196,12 +1196,11 @@ BEGIN
 	
 	select A.tiempo,
 		   (select count(1) from tb_preguntaexamen WHERE FK_CodigoExamen = fk_examen) as TOTAL_PREGUNTAS,
-			SUM(A.correcto) AS CORRECTO,
-		   (SELECT COUNT(1) FROM tb_respuestaexamen WHERE FK_USUARIO = CODIGO_POSTULANTE AND CORRECTO = 0) AS INCORRECTO,
-		   ((select COUNT(1) FROM tb_preguntaexamen WHERE FK_CodigoExamen = fk_examen) - 
-				(SELECT COUNT(1) FROM tb_respuestaexamen WHERE FK_USUARIO = CODIGO_POSTULANTE)) AS NO_RESPONDIDAS,
-			(select SUM(Puntaje) from tb_preguntaexamen WHERE FK_CodigoExamen = fk_examen) AS PUNTAJE_TOTAL,
-			SUM(A.puntajeobtenido) AS PUNTAJE_OBTENIDO
+		   (SELECT COUNT(1) FROM tb_respuestaexamen WHERE FK_USUARIO = CODIGO_POSTULANTE AND CORRECTO = 1) AS CORRECTO,
+		   (SELECT COUNT(1) FROM tb_respuestaexamen WHERE FK_USUARIO = CODIGO_POSTULANTE AND CORRECTO = 0 and fk_preguntaopcion <> -1) AS INCORRECTO,
+		   (SELECT COUNT(1) FROM tb_respuestaexamen WHERE FK_USUARIO = CODIGO_POSTULANTE and fk_preguntaopcion = -1) AS NO_RESPONDIDAS,
+		   (select SUM(Puntaje) from tb_preguntaexamen WHERE FK_CodigoExamen = fk_examen) AS PUNTAJE_TOTAL,
+		   SUM(A.puntajeobtenido) AS PUNTAJE_OBTENIDO
 	from RRHH.tb_respuestaexamen A
 	WHERE A.FK_USUARIO = CODIGO_POSTULANTE
 	group by a.tiempo;
@@ -1210,7 +1209,28 @@ END //;
 
 DELIMITER ;
 
-CALL SPS_RESULTRESUMENBYPOSTULANTE(10);
+CALL SPS_RESULTRESUMENBYPOSTULANTE(6);
+
+DELIMITER //
+create PROCEDURE rrhh.SPS_REPSPUESTAS_BY_POSTULANTE
+(IN CODIGO_POSTULANTE INT)
+BEGIN
+	
+	select a.PK_codigorespuesta,
+		   b.Pregunta,
+           a.correcto,
+           a.fk_preguntaopcion,
+           a.puntajeobtenido
+	from RRHH.tb_respuestaexamen a
+		inner join rrhh.tb_preguntaexamen b on a.fk_preguntaexamen = b.pk_codigopregunta and a.fk_examen = b.fk_codigoExamen
+	WHERE A.FK_USUARIO = CODIGO_POSTULANTE
+    order by b.pk_codigopregunta;
+    
+END //;
+
+DELIMITER ;
+
+CALL SPS_REPSPUESTAS_BY_POSTULANTE(6);
 
 DELIMITER //
 CREATE PROCEDURE rrhh.SPS_RESPUESTAS
@@ -1273,7 +1293,23 @@ END //;
 
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE rrhh.SPU_POSTULANTE_EXAMEN
+(
+IN COD_USUARIO INT,
+IN RINDIO_EXAMEN INT,
+IN PUNTAJE INT
+)
+BEGIN
+	
+    UPDATE tb_colaborador
+    SET RindioExamen = RINDIO_EXAMEN,
+		PuntajeFinal = PUNTAJE
+	WHERE FK_CodigoUsuario = COD_USUARIO;
+        
+END //;
 
+DELIMITER ;
 
 select * from rrhh.tb_colaborador;
 SELECT * FROM rrhh.tb_perfil;
@@ -1282,7 +1318,7 @@ SELECT * FROM rrhh.tb_area;
 select * from rrhh.TB_Parametros;
 select * from rrhh.TB_CONVOCATORIA;
 
-
+-- drop database rrhh;
 select * from rrhh.tb_respuestaexamen;
 
 SELECT * FROM RRHH.tb_usuario;

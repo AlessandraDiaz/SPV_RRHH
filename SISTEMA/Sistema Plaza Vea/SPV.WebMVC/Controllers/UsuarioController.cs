@@ -35,6 +35,9 @@ namespace SPV.WebMVC.Controllers
                     formsAuth.SetAuthCookie(usuario.NombreUsuario, true);
                     mensaje = "Exito";
                     FachadaSesion.Usuario = usuarioLogeado;
+
+                    ColaboradorBE colaborador = new ColaboradorBL().GetColaboradorByID(0, FachadaSesion.Usuario.CodigoUsuario);
+                    FachadaSesion.Colaborador = colaborador;
                 }
                 else
                 {

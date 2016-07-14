@@ -30,7 +30,7 @@
     </div>
     <br />
     <br />
-    <div id="Examen" style="display:block;">
+    <div id="Examen" style="display:none;">
         <input type="hidden" id="hddCodigoUsuario" value="@FachadaSesion.Usuario.CodigoUsuario">
         <input type="hidden" id="hddCodigoExamen" value="@FachadaSesion.Usuario.Perfil.Examen.ID">
         <input type="hidden" id="hddAuto" value="0">
@@ -214,8 +214,8 @@
                     'month': 0,
                     'year': 0,
                     'hour': 0,
-                    'min': 0,
-                    'sec': 30
+                    'min': 30,
+                    'sec': 0
                 }
             });
             $('#countdown_dashboard').startCountDown();
@@ -244,7 +244,7 @@
 
             var minutos = $('#hddCodigoExamen').val();
             var segundos = $('#hddCodigoExamen').val();
-            var tiempo = "10:15";
+            var tiempo = "00:10:15";
 
             if (p1 == null) { p1 = 'NR'; } else { cant++; }
             if (p2 == null) { p2 = 'NR'; } else { cant++; }
@@ -277,9 +277,9 @@
                     success: function (data) {
                         if (data.status == "Success") {
                             alert("Registrado Correctamente");
-                            //var url = "/Examen/Resultados";
+                            var url = "/Examen/Resultados";
                             $('#progress').hide();
-                            //window.location.href = url;
+                            window.location.href = url;
                         } else {
                             $('#progress').hide();
                             alert("Ha ocurrido un error al registrar");

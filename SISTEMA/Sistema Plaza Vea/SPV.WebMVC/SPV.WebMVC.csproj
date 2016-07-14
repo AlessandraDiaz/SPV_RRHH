@@ -279,6 +279,7 @@
     <Content Include="Views\Postulante\VerCV.cshtml" />
     <Content Include="Views\Postulante\Detalle.cshtml" />
     <Content Include="Views\Postulante\_PostulantesOK.cshtml" />
+    <Content Include="Views\Examen\Resultados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -74,12 +74,15 @@ namespace SPV.DA
                     {
                         respuesta = new PostulanteRespuestaBE();
                         respuesta.Tiempo = rd[0].ToString() != "" ? (String)rd[0] : "";
-                        respuesta.TotalPreguntas = rd[1].ToString() != "" ? (Int32)rd[1] : 0;
-                        respuesta.CantidadCorrecto = rd[2].ToString() != "" ? (Int32)rd[2] : 0;
-                        respuesta.CantidadIncorrecto = rd[3].ToString() != "" ? (Int32)rd[3] : 0;
-                        respuesta.CantidadNoRespondidas = rd[4].ToString() != "" ? (Int32)rd[4] : 0;
-                        respuesta.PuntajeTotal = rd[5].ToString() != "" ? (Int32)rd[5] : 0;
-                        respuesta.PuntajeObtenido = rd[6].ToString() != "" ? (Int32)rd[6] : 0;
+                        respuesta.TotalPreguntas = rd[1].ToString() != "" ? Convert.ToInt32(rd[1]) : 0;
+                        respuesta.CantidadCorrecto = rd[2].ToString() != "" ? Convert.ToInt32(rd[2]) : 0;
+                        respuesta.CantidadIncorrecto = rd[3].ToString() != "" ? Convert.ToInt32(rd[3]) : 0;
+                        respuesta.CantidadNoRespondidas = rd[4].ToString() != "" ? Convert.ToInt32(rd[4]) : 0;
+                        respuesta.PuntajeTotal = rd[5].ToString() != "" ? Convert.ToInt32(rd[5]) : 0;
+                        respuesta.PuntajeObtenido = rd[6].ToString() != "" ? Convert.ToInt32(rd[6]) : 0;
+
+                        List<PostulanteRespuestaBE> respuestas = ListarRespuestas(Id);
+                        respuesta.ListaPreguntas = respuestas;
                     }
                     if (rd != null && rd.IsClosed == false) rd.Close();
                 }
@@ -115,7 +118,7 @@ namespace SPV.DA
                     cmd.Parameters.AddWithValue("@TIEMPO", respuesta.Tiempo);
 
                     cmd.Connection.Open();
-                    salida = (Int32)cmd.ExecuteScalar();
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
@@ -128,6 +131,46 @@ namespace SPV.DA
             }
 
             return salida;
+        }
+
+        public List<PostulanteRespuestaBE> ListarRespuestas(int id)
+        {
+            dbRRHH = new DataBaseDA();
+            List<PostulanteRespuestaBE> lista = new List<PostulanteRespuestaBE>();
+            try
+            {
+                qSQL = "SPS_REPSPUESTAS_BY_POSTULANTE";
+
+                using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CODIGO_POSTULANTE", id);
+                    cmd.Connection.Open();
+                    MySqlDataReader rd = cmd.ExecuteReader();
+                    while (rd.Read())
+                    {
+                        PostulanteRespuestaBE item = new PostulanteRespuestaBE();
+                        item.ID = (Int32)rd[0];
+                        item.DescripcionPregunta = rd[1].ToString() != "" ? rd[1].ToString() : "";
+                        item.Correcto = rd[2].ToString() != "" ? (Int32)rd[2] : 0;
+                        item.CodigoPregunta = rd[3].ToString() != "" ? (Int32)rd[3] : 0;
+                        item.PuntajeObtenido = rd[4].ToString() != "" ? (Int32)rd[4] : 0;
+                        lista.Add(item);
+                    }
+
+                    if (rd != null && rd.IsClosed == false) rd.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbRRHH = null;
+            }
+
+            return lista;
         }
 
     }

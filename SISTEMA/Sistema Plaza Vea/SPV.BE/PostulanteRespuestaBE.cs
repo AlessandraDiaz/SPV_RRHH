@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace SPV.BE
 {
@@ -17,7 +18,6 @@ namespace SPV.BE
         public string Respuesta{ get; set; }
         public int Correcto { get; set; }
         public int PuntajePregunta { get; set; }
-
         [Display(Name = "Tiempo")]
         public string Tiempo { get; set; }
         [Display(Name = "Total de Preguntas")]
@@ -32,7 +32,8 @@ namespace SPV.BE
         public int PuntajeTotal { get; set; }
         [Display(Name = "Puntaje Obtenido")]
         public int PuntajeObtenido { get; set; }
-
+        public List<PostulanteRespuestaBE> ListaPreguntas { get; set; }
+        public string DescripcionPregunta { get; set; }
         #endregion
     }
 }

@@ -269,6 +269,31 @@ namespace SPV.DA
             return item;
         }
 
+        public void UpdatePostulanteExamen(ColaboradorBE postulante)
+        {
+            dbRRHH = new DataBaseDA();
+            try
+            {
+                qSQL = "SPU_POSTULANTE_EXAMEN";
+                using (MySqlCommand cmd = new MySqlCommand(qSQL, dbRRHH.getConnectionMysql()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@COD_USUARIO", postulante.Usuario.CodigoUsuario);
+                    cmd.Parameters.AddWithValue("@RINDIO_EXAMEN", postulante.RindioExamen);
+                    cmd.Parameters.AddWithValue("@PUNTAJE", postulante.PuntajeExamen);
+                    cmd.Connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbRRHH = null;
+            }
+        }
 
     }
 }
